@@ -45,6 +45,14 @@ const ContactActivitiesTab = ({ contactId }) => {
         "Action: " +
         evt.value.replace("{{ offer }}", evt.data.metaData.offer.number);
       url1 = `/sales/invoices/${evt.data.metaData.offer.id}`;
+    } else if (evt.data.metaData.expense) {
+      title =
+        "Action: " +
+        evt.value.replace(
+          "{{ expense }}",
+          evt.data.metaData.expense.receiptNumber
+        );
+      url1 = `/accounting/expenses`;
     }
     const words = title.split(" ");
 
@@ -63,7 +71,10 @@ const ContactActivitiesTab = ({ contactId }) => {
           } else if (id === 5) {
             return (
               <span
-                style={{ color: "#00a353", fontWeight: "500" }}
+                style={{
+                  color: url2 ? "#00a353" : "#272d30",
+                  fontWeight: url2 ? "500" : "",
+                }}
                 onClick={() => navigate(url2)}
               >
                 {item + " "}
@@ -98,7 +109,9 @@ const ContactActivitiesTab = ({ contactId }) => {
             },
           },
         ]}
-        fetchUrl={`${oldConfig.resourceHost}history?customerId=${contactId}&offset=0&limit=0&filter=all`}
+        fetchUrl={(offset, limit) =>
+          `${oldConfig.resourceHost}history?customerId=${contactId}&offset=${offset}&limit=${limit}&filter=all`
+        }
       />
     </div>
   );

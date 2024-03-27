@@ -70,7 +70,9 @@ const ContactDocumentsTab = ({ contactId }) => {
             },
           },
         ]}
-        fetchUrl={`${oldConfig.customer.resourceUrl}/${contactId}/history?offset=0&limit=0&orderBy=date&desc=true&filter=all`}
+        fetchUrl={(offset, limit) =>
+          `${oldConfig.customer.resourceUrl}/${contactId}/history?offset=${offset}&limit=${limit}&orderBy=date&desc=true&filter=all`
+        }
       />
     </div>
   );

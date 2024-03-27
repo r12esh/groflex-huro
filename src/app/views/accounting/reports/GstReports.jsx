@@ -304,7 +304,7 @@ const GstReports = () => {
           groflexService.toast.error("Something went wrong");
         } else {
           groflexService.toast.success(
-            "Balance sheet has been sent successfully "
+            "Gst Report has been sent successfully "
           );
         }
         setIsEmailModalVisible(false);
