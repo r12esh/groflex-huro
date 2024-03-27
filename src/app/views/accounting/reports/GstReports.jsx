@@ -196,10 +196,13 @@ const GstReports = () => {
       )
       .then((res) => {
         if (res && res.body) {
-          setPaginationInfo({
-            ...paginationInfo,
-            rowCount: res.body.meta.count,
-          });
+          if (paginationInfo.rowCount === 0) {
+            setPaginationInfo({
+              ...paginationInfo,
+              rowCount: res.body.meta.count,
+            });
+          }
+
           numberOfPages =
             (1 / paginationInfo.entriesPerPage) * res.body.meta.count;
 
