@@ -3,7 +3,7 @@ import { ButtonGroup } from "../../../shared/components/button/buttonGroup/Butto
 import { Button } from "../../../shared/components/button/Button";
 import { useSelector } from "react-redux";
 
-const GstrDetailHeader = ({ reportType }) => {
+const GstrDetailHeader = ({ reportType, handleExport }) => {
   const { companyAddress } = useSelector(
     (state) => state?.accountData?.tenantData || ""
   );
@@ -34,6 +34,7 @@ const GstrDetailHeader = ({ reportType }) => {
             <Button
               icon={<i className={`fa-solid fa-download`}></i>}
               className={"utility-btn"}
+              onClick={() => handleExport()}
             >
               Export
             </Button>

@@ -9,17 +9,18 @@ import groflexService from "../../../services/groflex.service";
 import config from "../../../../../newConfig";
 import moment from "moment";
 import { useSelector } from "react-redux";
-
+import oldConfig from "../../../../../oldConfig";
 const Gstr1List = () => {
   const { indiaStateId } = useSelector(
     (state) => state?.accountData?.tenantData || ""
   );
   const { reportId } = useParams();
   const [header, setHeader] = useState({});
+  const [exportUrl, setExportUrl] = useState("");
 
   useEffect(() => {
     groflexService
-      .request(`${config.resourceUrls.getGstReport}/${reportId}`, {
+      .request(`${config.resourceUrls.getGstReport}${reportId}`, {
         auth: true,
       })
       .then((res) => {
@@ -35,9 +36,14 @@ const Gstr1List = () => {
           data: reportData,
           method: "POST",
         });
+        setExportUrl(res.body.data.documentUrl);
       });
   }, []);
   const handleActionClick = () => {};
+
+  const handleExport = () => {
+    window.location.href = `${oldConfig.resourceHost}${exportUrl}`;
+  };
 
   const createListData = (response) => {
     let b2bSummary = {
@@ -248,7 +254,7 @@ const Gstr1List = () => {
     <PageContent title={"Reports GSTR-1"}>
       <div className="gstReportsListMain">
         <AdvancedCard type={"s-card"}>
-          <GstrDetailHeader reportType={"1"} />
+          <GstrDetailHeader reportType={"1"} handleExport={handleExport} />
           {Object.keys(header).length > 0 && indiaStateId ? (
             <ListAdvancedComponent
               onRowClicked={(e) => {}}
