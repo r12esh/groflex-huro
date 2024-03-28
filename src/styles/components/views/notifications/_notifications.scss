@@ -1,0 +1,41 @@
+.notifications-wrapper {
+  h1 {
+    font-size: 21px;
+    font-weight: 600;
+  }
+  .notification-type-dropdown {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+    margin-right: 10px;
+    margin-bottom: 10px;
+  }
+  .notifications-container {
+    .collapse {
+      border: 0;
+      border-bottom: 2px solid #ddd;
+      border-radius: 0;
+    }
+    overflow-y: scroll;
+    height: 580px;
+    .accordian-header-left-container {
+      min-width: 150px;
+    }
+    .accordian-header-right-container {
+      .accordian-header-right {
+        font-size: 12px;
+        color: #c6c6c6;
+      }
+    }
+  }
+  .notifications-container::-webkit-scrollbar {
+    width: 7px;
+  }
+  .notifications-container::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+  .notifications-container::-webkit-scrollbar-thumb {
+    background: #00a353;
+    border-radius: 10px;
+  }
+}

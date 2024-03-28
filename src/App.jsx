@@ -212,7 +212,7 @@ function App() {
           {/* ---------------------Miscilaneous----------------------*/}
           <Route path="account-settings" element={<AccountSettings />} />
           <Route path="preferences" element={<Preferences />} />
-          <Route path="notifications" element={<Notifications />} />
+          {/* <Route path="notifications" element={<Notifications />} /> */}
           <Route path="teams" element={<Teams />} />
         </Route>
 

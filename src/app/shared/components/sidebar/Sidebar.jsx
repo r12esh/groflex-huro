@@ -9,6 +9,7 @@ import config from "../../../../../newConfig";
 import { SET_SIDEBAR_PANEL_ACTIVE } from "../../../redux/actions/actions.types";
 import Tooltip from "@mui/material/Tooltip";
 import CustomToolTip from "../customToolTip/CustomToolTip";
+import Notifications from "../../../views/notifications/Notifications";
 const sidebarRoutes = [
   {
     route: "/",
@@ -65,6 +66,7 @@ const sidebarRoutes = [
 ];
 
 const Sidebar = () => {
+  const [isNotificationsActive, setIsNotificationsActive] = useState(false);
   const { sidebarIsActive } = useSelector((state) => state.themeData);
   const [profileMenuIsActive, setProfileMenuIsActive] = useState(false);
   const dispatch = useDispatch();
@@ -150,7 +152,7 @@ const Sidebar = () => {
     return (
       <ul className="bottom-menu icon-menu">
         <li style={{ cursor: "auto" }}>
-          <NavLink
+          {/* <NavLink
             style={({ isActive }) => {
               return {
                 backgroundColor: isActive ? "white" : "",
@@ -165,7 +167,13 @@ const Sidebar = () => {
             className={notificationsIsActiveClasses}
           >
             <FeatherIcon name={"Bell"} />
-          </NavLink>
+          </NavLink> */}
+
+          <FeatherIcon
+            name={"Bell"}
+            onClick={() => setIsNotificationsActive(true)}
+            style={{ cursor: "pointer" }}
+          />
         </li>
 
         {/* Profile menu */}
@@ -212,7 +220,12 @@ const Sidebar = () => {
           <BottomMenuIcons />
         </div>
       </div>
+      {/* notifications */}
 
+      <Notifications
+        isNotificationsActive={isNotificationsActive}
+        setIsNotificationsActive={setIsNotificationsActive}
+      />
       {/* Sidebar panel */}
       <SidebarPanel />
     </>
