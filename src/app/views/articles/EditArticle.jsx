@@ -11,11 +11,12 @@ import groflexService from "../../services/groflex.service";
 import config from "../../../../newConfig";
 import { useNavigate, useParams } from "react-router-dom";
 import ArticleSearchComponent from "../../shared/components/articleSearch/ArticleSearchComponent";
+import HtmlInputComponent from "../../shared/components/input/HtmlInputComponent";
 
 const EditArticle = () => {
   const navigate = useNavigate();
   const { articleId } = useParams();
-  console.log(articleId, "articleId");
+  // console.log(articleId, "articleId");
   const [editArticleFormData, setEditArticleFormData] = useState({
     articleNumber: "",
     hsnSacCode: "",
@@ -41,7 +42,7 @@ const EditArticle = () => {
       groflexService
         .request(`${config.resourceUrls.article}${articleId}`, { auth: true })
         .then((res) => {
-          console.log(res, "Article data from edit");
+          // console.log(res, "Article data from edit");
           if (!res.body.data) {
             navigate("/articles");
             return;
@@ -129,7 +130,7 @@ const EditArticle = () => {
         }
       });
 
-    console.log(payload);
+    // console.log(payload);
   };
 
   const handleArticleNumberChange = (e) => {
@@ -164,7 +165,7 @@ const EditArticle = () => {
 
   const handleArticleImageChange = (e) => {
     if (e.target.files[0].size > 2000000) {
-      console.log("Size more than 2MB");
+      // console.log("Size more than 2MB");
       return;
     }
     setEditArticleFormData({
@@ -320,11 +321,11 @@ const EditArticle = () => {
   const handleNotesChange = (e) => {
     setEditArticleFormData({
       ...editArticleFormData,
-      notes: e.target.value,
+      notes: e,
     });
   };
 
-  console.log(editArticleFormData, "EditArticleData");
+  // console.log(editArticleFormData, "EditArticleData");
 
   return (
     <PageContent
@@ -601,6 +602,7 @@ const EditArticle = () => {
         {/* Notes section */}
         <div className="column is-5">
           <AdvancedCard
+            containerClassName={"article-notes-card"}
             type={"s-card"}
             footer
             footerContentLeft={"Show notes when creating new documents"}
@@ -613,11 +615,17 @@ const EditArticle = () => {
             }
           >
             <h2 className="title is-5 is-bold">Notes</h2>
-            <TextArea
+            {/* <TextArea
               rows={3}
               placeholder="Enter notes here"
               onChange={handleNotesChange}
               value={editArticleFormData.notes}
+            /> */}
+            <HtmlInputComponent
+              placeholder={"Enter notes here"}
+              value={editArticleFormData.notes}
+              onChange={handleNotesChange}
+              className={"notes-quill"}
             />
           </AdvancedCard>
         </div>

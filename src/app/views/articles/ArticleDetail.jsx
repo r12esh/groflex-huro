@@ -60,7 +60,7 @@ const ArticleDetail = () => {
         >
           Edit Details
         </Button>
-        <span style={{ position: "relative" }}>
+        {/* <span style={{ position: "relative" }}>
           <Button
             onClick={() => setIsDropdownOpen(true)}
             isPrimary
@@ -85,7 +85,7 @@ const ArticleDetail = () => {
               </div>
             </OnClickOutside>
           )}
-        </span>
+        </span> */}
       </div>
     );
   };
