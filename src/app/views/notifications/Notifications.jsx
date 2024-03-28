@@ -56,7 +56,7 @@ const Notifications = ({ isNotificationsActive, setIsNotificationsActive }) => {
     let icon = "AlertCircle";
     const url = notification.link.split("/");
     const heading = url[url.length - 2];
-    console.log(notification);
+
     switch (notification.icon) {
       case "alert":
         icon = "AlertCircle";
@@ -90,7 +90,6 @@ const Notifications = ({ isNotificationsActive, setIsNotificationsActive }) => {
     const notificationId = notification.id;
     const viewUrl = `/sales/invoices/${documentId}`;
 
-    console.log(viewUrl);
     return (
       <div>
         <div>{notification.text}</div>
