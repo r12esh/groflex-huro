@@ -133,7 +133,8 @@ const resourceUrls = {
   getGstDetail: `${resourceHost}accountantExport/jsonDocument`,
   exportGstReport: `${resourceHost}accountantExport/`,
   //Delivery Challan
-  deliveryChallanList: `${resourceHost}deliveryChallan?offset=0&searchText=&limit=9999999&orderBy=date&desc=true&filter=all&trigger=true`,
+  deliveryChallanList: (offset, limit) =>
+    `${resourceHost}deliveryChallan?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=all&trigger=true`,
 
   //InventoryDashboard
   lastOrder: `${resourceHost}/inventoryDashboard/lastPurchaseOrder?limit=6`,
