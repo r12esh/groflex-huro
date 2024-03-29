@@ -1,0 +1,37 @@
+.global-search-wrapper {
+  .right-panel-body {
+    padding: 0 !important;
+    padding-top: 20px !important;
+    .recent {
+      padding: 0 !important;
+      .recent-block {
+        h4 {
+          padding-left: 10px;
+        }
+        h2 {
+          //   padding-left: 10px;
+          padding: 5px;
+          border: 2px solid #ddd;
+          font-size: 14px;
+          font-weight: 600;
+          text-transform: uppercase;
+          background: #f1f8fb;
+        }
+        a {
+          text-decoration: none;
+          padding: 20px;
+          border-bottom: 1px solid #ddd;
+        }
+      }
+    }
+  }
+  .has-slimscroll::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+  .has-slimscroll::-webkit-scrollbar {
+    width: 7px;
+  }
+  .has-slimscroll::-webkit-scrollbar-thumb {
+    background: #00a353;
+  }
+}

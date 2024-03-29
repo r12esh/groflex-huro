@@ -10,6 +10,7 @@ import { SET_SIDEBAR_PANEL_ACTIVE } from "../../../redux/actions/actions.types";
 import Tooltip from "@mui/material/Tooltip";
 import CustomToolTip from "../customToolTip/CustomToolTip";
 import Notifications from "../../../views/notifications/Notifications";
+import GlobalSearch from "../../../views/globalSearch/GlobalSearch";
 const sidebarRoutes = [
   {
     route: "/",
@@ -67,6 +68,7 @@ const sidebarRoutes = [
 
 const Sidebar = () => {
   const [isNotificationsActive, setIsNotificationsActive] = useState(false);
+  const [isSeachVisible, setIsSearchVisible] = useState(false);
   const { sidebarIsActive } = useSelector((state) => state.themeData);
   const [profileMenuIsActive, setProfileMenuIsActive] = useState(false);
   const dispatch = useDispatch();
@@ -95,7 +97,7 @@ const Sidebar = () => {
         className="icon-menu"
         style={{
           overflowY: "auto",
-          maxHeight: "calc(100% - 128px)",
+          maxHeight: "calc(100% - 200px)",
           overflowX: "hidden",
         }}
       >
@@ -175,6 +177,13 @@ const Sidebar = () => {
             style={{ cursor: "pointer" }}
           />
         </li>
+        <li>
+          <FeatherIcon
+            name={"Search"}
+            onClick={() => setIsSearchVisible(true)}
+            style={{ cursor: "pointer" }}
+          />
+        </li>
 
         {/* Profile menu */}
         <li
@@ -220,6 +229,13 @@ const Sidebar = () => {
           <BottomMenuIcons />
         </div>
       </div>
+
+      {/* search */}
+      <GlobalSearch
+        isSeachVisible={isSeachVisible}
+        setIsSearchVisible={setIsSearchVisible}
+      />
+
       {/* notifications */}
 
       <Notifications
