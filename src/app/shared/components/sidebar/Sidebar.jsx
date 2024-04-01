@@ -153,36 +153,19 @@ const Sidebar = () => {
   const BottomMenuIcons = () => {
     return (
       <ul className="bottom-menu icon-menu">
-        <li style={{ cursor: "auto" }}>
-          {/* <NavLink
-            style={({ isActive }) => {
-              return {
-                backgroundColor: isActive ? "white" : "",
-                width: isActive ? "100%" : "98%",
-                height: "100%",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-              };
-            }}
-            to="/notifications"
-            className={notificationsIsActiveClasses}
-          >
-            <FeatherIcon name={"Bell"} />
-          </NavLink> */}
-
-          <FeatherIcon
-            name={"Bell"}
-            onClick={() => setIsNotificationsActive(true)}
-            style={{ cursor: "pointer" }}
-          />
+        <li
+          style={{ cursor: "pointer" }}
+          onClick={() => setIsNotificationsActive(true)}
+          className="search-notification-icon"
+        >
+          <FeatherIcon name={"Bell"} />
         </li>
-        <li>
-          <FeatherIcon
-            name={"Search"}
-            onClick={() => setIsSearchVisible(true)}
-            style={{ cursor: "pointer" }}
-          />
+        <li
+          onClick={() => setIsSearchVisible(true)}
+          style={{ cursor: "pointer" }}
+          className="search-notification-icon"
+        >
+          <FeatherIcon name={"Search"} />
         </li>
 
         {/* Profile menu */}

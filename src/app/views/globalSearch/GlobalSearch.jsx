@@ -238,7 +238,7 @@ const GlobalSearch = ({ isSeachVisible, setIsSearchVisible }) => {
         </div>
 
         <div className="right-panel-body has-slimscroll">
-          <div className="field">
+          <div className="field" style={{ padding: "20px" }}>
             <div className="control has-icon">
               <input
                 type="text"
@@ -254,7 +254,7 @@ const GlobalSearch = ({ isSeachVisible, setIsSearchVisible }) => {
             </div>
           </div>
           <div className="recent">
-            <h4>Search Results</h4>
+            <h4 style={{ textAlign: "center" }}>Search Results</h4>
             {searchResults}
           </div>
         </div>

@@ -653,3 +653,14 @@ body {
     }
   }
 }
+
+//search notification css
+.main-sidebar {
+  .sidebar-inner {
+    .bottom-menu {
+      .search-notification-icon:hover {
+        border-left: 5px solid #00a353;
+      }
+    }
+  }
+}

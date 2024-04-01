@@ -74,7 +74,7 @@ const QuotationsList = () => {
   };
   return (
     <PageContent
-      title="Quotaiton List"
+      title="Quotation List"
       titleActionContent={
         <Button onClick={() => navigate("/quotations/new")} isSuccess>
           Create Quotation
