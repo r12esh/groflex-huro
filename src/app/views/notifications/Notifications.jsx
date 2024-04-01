@@ -113,6 +113,7 @@ const Notifications = ({ isNotificationsActive, setIsNotificationsActive }) => {
       </div>
     );
   };
+  console.log(notifications);
 
   return (
     <div
