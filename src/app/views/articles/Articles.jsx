@@ -40,12 +40,12 @@ const Articles = () => {
 
   return (
     <PageContent
-      title="Articles"
+      title="Products"
       titleIsBreadCrumb
       breadCrumbData={["Home", "Articles"]}
       titleActionContent={
         <Button onClick={() => navigate("/articles/new")} isSuccess>
-          Create Article
+          Create Product
         </Button>
       }
     >
@@ -59,7 +59,7 @@ const Articles = () => {
             field: "number",
             headerName: "No.",
           },
-          { field: "title", headerName: "Article Name" },
+          { field: "title", headerName: "Product Name" },
           {
             field: "mrp",
             headerName: "MRP",

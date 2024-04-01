@@ -330,8 +330,8 @@ const EditArticle = () => {
   return (
     <PageContent
       loading={editArticleFormData.articleNumber ? false : true}
-      title={"Edit Article"}
-      breadCrumbData={["Home", "Articles", "Edit Article"]}
+      title={"Edit Product"}
+      breadCrumbData={["Home", "Articles", "Edit Product"]}
       titleActionContent={
         <Button onClick={handleEdit} isSuccess>
           Save
@@ -341,11 +341,11 @@ const EditArticle = () => {
       <div className="columns is-multiline">
         <div className="column is-7">
           <AdvancedCard type={"s-card"}>
-            <h2 className="title is-5 is-bold">Article Info</h2>
+            <h2 className="title is-5 is-bold">Product Info</h2>
             <div className="columns is-multiline m-b-5">
               <div className="column is-6">
                 <div className="field">
-                  <label>Article number *</label>
+                  <label>Product number *</label>
                   <Input
                     onChange={handleArticleNumberChange}
                     placeholder={"Enter Article number"}
@@ -370,7 +370,7 @@ const EditArticle = () => {
             <div className="columns is-multiline m-b-5">
               <div className="column is-12">
                 <div className="field">
-                  <label>Article name *</label>
+                  <label>Product name *</label>
                   <ArticleSearchComponent
                     value={{
                       label: editArticleFormData.articleName,
@@ -385,7 +385,7 @@ const EditArticle = () => {
             <div className="columns is-multiline m-b-5">
               <div className="column is-6">
                 <div className="field">
-                  <label>Article description</label>
+                  <label>Product description</label>
                   <TextArea
                     rows={3}
                     placeholder="Enter Details"
@@ -397,7 +397,7 @@ const EditArticle = () => {
 
               <div className="column is-6">
                 <div className="field">
-                  <label>Article Image</label>
+                  <label>Product Image</label>
                   {editArticleFormData.articleImage ? (
                     <div
                       style={{
@@ -474,10 +474,10 @@ const EditArticle = () => {
             <div className="columns is-multiline m-b-5">
               <div className="column is-6">
                 <div className="field">
-                  <label>Article category *</label>
+                  <label>Product category *</label>
                   <SelectInput
                     onChange={handleArticleCategoryChange}
-                    placeholder={<p>Search or type article name</p>}
+                    placeholder={<p>Search or type product name</p>}
                     options={[
                       { label: "Not specified", value: "Not specified" },
                       { label: "Equipment", value: "Equipment" },
