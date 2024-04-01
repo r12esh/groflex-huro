@@ -28,4 +28,14 @@
       }
     }
   }
+  .notifications-container::-webkit-scrollbar {
+    width: 6px;
+  }
+  .notifications-container::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+  .notifications-container::-webkit-scrollbar-thumb {
+    background: rgb(0, 163, 83);
+    border-radius: 10px;
+  }
 }

@@ -99,6 +99,10 @@ const ProfileMenu = ({ profileMenuIsActive, setProfileMenuIsActive }) => {
               <FeatherIcon name={"Settings"} size={15} />
               <span style={{ marginLeft: "8px" }}>Account Settings </span>
             </Link>
+            <Link to="/billing-info" className="dropdown-item is-media">
+              <FeatherIcon name={"CreditCard"} size={15} />
+              <span style={{ marginLeft: "8px" }}>Your billing </span>
+            </Link>
             <Link className="dropdown-item is-media" to="/teams">
               <FeatherIcon name={"Users"} size={15} />
               <span style={{ marginLeft: "8px" }}>Teams </span>

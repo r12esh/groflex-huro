@@ -66,6 +66,7 @@ import Gstr1List from "./app/views/accounting/reports/Gstr1List";
 import Gstr2AList from "./app/views/accounting/reports/Gstr2AList";
 import Gstr3BList from "./app/views/accounting/reports/Gstr3BList";
 import DeliveryChallan from "./app/views/accounting/deliveryChallan/DeliveryChallan";
+import BillingInfo from "./app/views/billingInfo/BillingInfo";
 
 store.subscribe(() => {
   // console.log(store.getState());
@@ -211,6 +212,7 @@ function App() {
 
           {/* ---------------------Miscilaneous----------------------*/}
           <Route path="account-settings" element={<AccountSettings />} />
+          <Route path="billing-info" element={<BillingInfo />} />
           <Route path="preferences" element={<Preferences />} />
           {/* <Route path="notifications" element={<Notifications />} /> */}
           <Route path="teams" element={<Teams />} />

@@ -1,0 +1,31 @@
+.billing-info-wrapper {
+  .billing-info-account-details-tab {
+    .subscription-plan-contents {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
+    }
+    .plan-time-period {
+      display: flex;
+      justify-content: space-between;
+      span {
+        font-size: 12px;
+      }
+    }
+    .next-payment-date {
+      font-weight: 600;
+      font-size: 14px;
+      line-height: 21px;
+      color: #272d30;
+    }
+    .subscription-quota-bar {
+      width: 100%;
+      height: 15px;
+      margin: 5px 0 15px 0;
+      background: #e5e5e5;
+      .subscription-quota-used {
+        height: 100%;
+      }
+    }
+  }
+}
