@@ -16,8 +16,6 @@ import PurchaseOrder from "../../models/purchase-order.model";
 import { getInvoiceNumber } from "../../helpers/transaction/getInvoiceNumber";
 import groflexService from "../../services/groflex.service";
 import { Input } from "../components/input/Input";
-import LetterMetaEditComponent from "./LetterMetaEditComponent";
-import LetterMetaDisplayComponent from "./LetterMetaDisplayComponent";
 import NumberRangeModal from "../components/numberRange/NumberRangeModal";
 import DateInput from "../components/datePicker/DateInput";
 import resources from "../resources/resources";
@@ -36,6 +34,7 @@ const DATE_NAME = "date";
 const DELIVERY_PERIOD_NAME = "deliveryPeriod";
 const DELIVERY_PERIOD_START_NAME = "deliveryPeriodStartDate";
 const DELIVERY_PERIOD_END_NAME = "deliveryPeriodEndDate";
+const FORM_EMPTY_ERROR_MSG = "Field can't be empty";
 
 const LetterMetaComponent = ({
   numerationOptions,
@@ -62,6 +61,40 @@ const LetterMetaComponent = ({
     recurringInvoice,
     isInvoice,
   });
+  const [fieldErrorMsgs, setFieldErrorMsgs] = useState({
+    invoiceNumber: "",
+    offerNumber: "",
+    purchaseOrderNumber: "",
+    customerNumber: "",
+    number: "",
+    date: "",
+    offerNumber: "",
+    date: "",
+    offerDate: "",
+    purchaseOrderDate: "",
+    invoiceDate: "",
+    deliveryPeriod: "",
+    deliveryDate: "",
+    deliveryPeriodStartDate: "",
+    deliveryPeriodEndDate: "",
+  });
+  const [labelErrorMsgs, setLabelErrorMsgs] = useState({
+    invoiceNumber: "",
+    offerNumber: "",
+    purchaseOrderNumber: "",
+    customerNumber: "",
+    number: "",
+    date: "",
+    offerNumber: "",
+    date: "",
+    offerDate: "",
+    purchaseOrderDate: "",
+    invoiceDate: "",
+    deliveryPeriod: "",
+    deliveryDate: "",
+    deliveryPeriodStartDate: "",
+    deliveryPeriodEndDate: "",
+  });
 
   useEffect(() => {}, [editMetaActive]);
 
@@ -84,6 +117,10 @@ const LetterMetaComponent = ({
       ? new PurchaseOrder(data)
       : new Invoice(data);
     setState({ ...state, data: newData });
+    setFieldErrorMsgs({
+      ...fieldErrorMsgs,
+      customerNumber: !String(number).length ? FORM_EMPTY_ERROR_MSG : "",
+    });
   };
 
   const handleDateChange = (name, value) => {
@@ -92,7 +129,7 @@ const LetterMetaComponent = ({
     value = formatApiDate(value);
     const newData = Object.assign({}, data, { [name]: value });
 
-    console.log(name, value, "New obj in handle date format");
+    // console.log(name, value, "New obj in handle date format");
 
     if (name === DATE_NAME) {
       const { infoSectionFields } = newData;
@@ -117,6 +154,12 @@ const LetterMetaComponent = ({
       : new Invoice(newData);
 
     setState({ ...state, data: newObj });
+
+    setFieldErrorMsgs({
+      ...fieldErrorMsgs,
+      [name]: !String(value).length ? FORM_EMPTY_ERROR_MSG : "",
+    });
+
     onChange(newObj);
   };
 
@@ -124,7 +167,7 @@ const LetterMetaComponent = ({
     const { data, isPurchaseOrder, isQuotation, isProformaInvoice } = state;
     date = formateClientDateMonthYear(date, config.dateFormat.client);
     const newData = Object.assign({}, data, { [name]: date });
-    console.log(date, "date range handler");
+    // console.log(date, "date range handler");
     if (name === DELIVERY_PERIOD_START_NAME) {
       const deliveryEnd = data.deliveryPeriod.split(" - ")[1];
       newData[DELIVERY_PERIOD_NAME] = `${date} - ${deliveryEnd}`;
@@ -142,6 +185,11 @@ const LetterMetaComponent = ({
       : new Invoice(newData);
 
     setState({ ...state, data: newObj });
+    setFieldErrorMsgs({
+      ...fieldErrorMsgs,
+      [name]: !String(date).length ? FORM_EMPTY_ERROR_MSG : "",
+    });
+
     onChange(newObj);
   };
 
@@ -179,6 +227,10 @@ const LetterMetaComponent = ({
       ? new PurchaseOrder(data)
       : new Invoice(data);
     setState({ ...state, data: newData });
+    setLabelErrorMsgs({
+      ...labelErrorMsgs,
+      [name]: !String(value).length ? FORM_EMPTY_ERROR_MSG : "",
+    });
   };
 
   // Custom Field Label and Value change
@@ -206,6 +258,36 @@ const LetterMetaComponent = ({
       ? new PurchaseOrder(data)
       : new Invoice(data);
     setState({ ...state, data: newData });
+  };
+
+  const handleContextMenuClick = (entry) => {
+    const { data, isQuotation, isPurchaseOrder, isInvoice } = state;
+
+    if (entry.isCustomField) {
+      let fieldActivated = false;
+      data.infoSectionCustomFields.forEach((field) => {
+        if (!fieldActivated && !field.active) {
+          field.value = "";
+          field.label = "";
+          field.active = true;
+          fieldActivated = true;
+        }
+      });
+    } else {
+      data.infoSectionFields.forEach((field) => {
+        if (field.name === entry.name) {
+          field.active = true;
+        }
+      });
+    }
+
+    const newObj = isQuotation
+      ? new Offer(data)
+      : isPurchaseOrder
+      ? new PurchaseOrder(data)
+      : new Invoice(data);
+
+    setState({ ...state, data: newObj });
   };
 
   // Create Form
@@ -258,6 +340,9 @@ const LetterMetaComponent = ({
                   e.stopPropagation();
                   setNumberRangeModalActive(true);
                 }}
+                hasValidation={true}
+                hasError={fieldErrorMsgs.invoiceNumber}
+                helpText={fieldErrorMsgs.invoiceNumber}
               />
             </div>
           );
@@ -293,6 +378,13 @@ const LetterMetaComponent = ({
                   e.stopPropagation();
                   setNumberRangeModalActive(true);
                 }}
+                onFocus={(e) => {
+                  e.stopPropagation();
+                  setNumberRangeModalActive(true);
+                }}
+                hasValidation={true}
+                hasError={fieldErrorMsgs.invoiceNumber}
+                helpText={fieldErrorMsgs.invoiceNumber}
               />
             </div>
           );
@@ -310,6 +402,9 @@ const LetterMetaComponent = ({
                 value={customerNumber}
                 onChange={handleCustomerNumberChange}
                 placeholder={"Customer No."}
+                hasValidation={true}
+                hasError={fieldErrorMsgs.customerNumber}
+                helpText={fieldErrorMsgs.customerNumber}
               />
             </div>
           );
@@ -331,11 +426,17 @@ const LetterMetaComponent = ({
             valueField = (
               <div className="letter-meta-form-field">
                 <DateInput
+                  disableTyping
                   selectedDate={moment(data.displayDate, "DD-MM-YYYY")}
                   onDateChange={(value) => handleDateChange("date", value)}
                   format="DD-MM-YYYY"
                   style={{ width: "100%" }}
                 />
+                {fieldErrorMsgs.date && (
+                  <p className={`help danger-text font-14px is-weight-400`}>
+                    {fieldErrorMsgs.date}
+                  </p>
+                )}
               </div>
             );
           }
@@ -353,11 +454,17 @@ const LetterMetaComponent = ({
             valueField = (
               <div className="letter-meta-form-field">
                 <DateInput
+                  disableTyping
                   selectedDate={moment(data.displayDeliveryDate, "DD-MM-YYYY")}
                   onDateChange={(value) => handleDateChange(name, value)}
                   format="DD-MM-YYYY"
                   style={{ width: "100%" }}
                 />
+                {fieldErrorMsgs.deliveryDate && (
+                  <p className={`help danger-text font-14px is-weight-400`}>
+                    {fieldErrorMsgs.deliveryDate}
+                  </p>
+                )}
               </div>
             );
           }
@@ -378,6 +485,7 @@ const LetterMetaComponent = ({
               <div className="letter-meta-form-field letter-meta-form-delivery-period">
                 <DateInput
                   // name={DELIVERY_PERIOD_START_NAME}
+                  disableTyping
                   format={"DD-MM-YYYY"}
                   className={"delivery-period-start"}
                   maxDate={moment(
@@ -392,11 +500,17 @@ const LetterMetaComponent = ({
                     handleDateRangeChange(DELIVERY_PERIOD_START_NAME, date)
                   }
                 />
+                {fieldErrorMsgs[DELIVERY_PERIOD_START_NAME] && (
+                  <p className={`help danger-text font-14px is-weight-400`}>
+                    {fieldErrorMsgs[DELIVERY_PERIOD_START_NAME]}
+                  </p>
+                )}
                 <span className="letter-meta-delivery-period-divider horizontal-margin-auto">
                   -
                 </span>
                 <DateInput
                   // name={DELIVERY_PERIOD_END_NAME}
+                  disableTyping
                   format={"DD-MM-YYYY"}
                   className={"delivery-period-end"}
                   minDate={moment(
@@ -411,6 +525,11 @@ const LetterMetaComponent = ({
                     handleDateRangeChange(DELIVERY_PERIOD_END_NAME, date)
                   }
                 />
+                {fieldErrorMsgs[DELIVERY_PERIOD_END_NAME] && (
+                  <p className={`help danger-text font-14px is-weight-400`}>
+                    {fieldErrorMsgs[DELIVERY_PERIOD_END_NAME]}
+                  </p>
+                )}
               </div>
             );
           }
@@ -428,6 +547,11 @@ const LetterMetaComponent = ({
               onChange={(e) => handleFieldLabelChange(e, name)}
               placeholder={resources.letterMetaInfoLabel[name]}
             />
+            {labelErrorMsgs[name] && (
+              <p className={`help danger-text font-14px is-weight-400`}>
+                {labelErrorMsgs[name]}
+              </p>
+            )}
           </div>
 
           {valueField}
@@ -714,45 +838,27 @@ const LetterMetaComponent = ({
     return menu;
   };
 
-  const handleContextMenuClick = (entry) => {
-    const { data, isQuotation, isPurchaseOrder, isInvoice } = state;
-
-    if (entry.isCustomField) {
-      let fieldActivated = false;
-      data.infoSectionCustomFields.forEach((field) => {
-        if (!fieldActivated && !field.active) {
-          field.value = "";
-          field.label = "";
-          field.active = true;
-          fieldActivated = true;
-        }
-      });
-    } else {
-      data.infoSectionFields.forEach((field) => {
-        if (field.name === entry.name) {
-          field.active = true;
-        }
-      });
-    }
-
-    const newObj = isQuotation
-      ? new Offer(data)
-      : isPurchaseOrder
-      ? new PurchaseOrder(data)
-      : new Invoice(data);
-
-    setState({ ...state, data: newObj });
-  };
-
   const handleOutsideClick = () => {
-    const formIsValid = true;
+    let formIsValid = true;
+
+    Object.values(fieldErrorMsgs).forEach((msg) => {
+      if (msg?.length) {
+        formIsValid = false;
+      }
+    });
+    Object.values(labelErrorMsgs).forEach((msg) => {
+      if (msg?.length) {
+        formIsValid = false;
+      }
+    });
     if (formIsValid) {
+      onChange(state.data);
       closeEdit();
     }
   };
 
-  console.log(data, "PROP data in letter meta component");
-  console.log(state.data, "STATE data in letter meta component");
+  // console.log(data, "PROP data in letter meta component");
+  // console.log(state.data, "STATE data in letter meta component");
   const letterMetacontent = editMetaActive ? createForm() : createDisplay();
 
   return (
