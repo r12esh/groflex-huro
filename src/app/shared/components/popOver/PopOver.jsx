@@ -5,15 +5,15 @@ import { Button } from "../button/Button";
 
 const PopOver = ({
   elements = [{ title: "", subTitle: "", handleClick: () => {} }],
-  openUp,
+  isUp = 0,
+  isRight = 0,
   label,
 }) => {
   const [isActive, setIsActive] = useState(false);
 
-  const handleFunction = (handleOperation) => {
+  const handleOptionClick = (item) => {
     closePopOver();
-    handleOperation();
-    // console.log("Function");
+    item?.handleClick && item.handleClick(item);
   };
   const closePopOver = () => {
     setIsActive(false);
@@ -27,42 +27,39 @@ const PopOver = ({
   };
 
   return (
-    <OnClickOutside onClickOutside={closePopOver}>
+    <OnClickOutside
+      onClickOutside={closePopOver}
+      onClickInside={togglePopOver}
+      className={`${"dropdown is-spaced is-right dropdown-trigger is-pushed-mobile cursor-pointer "}${
+        isUp ? "is-up " : ""
+      }${isActive && "is-active"}`}
+    >
+      <div onClick={togglePopOver} className="is-trigger">
+        {label ? label : <FeatherIcon primaryColor name={"MoreVertical"} />}
+      </div>
       <div
-        style={{ cursor: "pointer" }}
-        onClick={togglePopOver}
-        className={`${"dropdown is-spaced is-right dropdown-trigger is-pushed-mobile "}${
-          openUp ? "is-up " : ""
-        }${isActive && "is-active"}`}
+        className="dropdown-menu m-b-5"
+        style={{
+          minWidth: "90px",
+          right: isRight ? "auto" : "",
+        }}
       >
-        <div onClick={togglePopOver} className="is-trigger">
-          {label ? label : <FeatherIcon primaryColor name={"MoreVertical"} />}
-        </div>
-        <div
-          className="dropdown-menu m-b-5"
-          style={{
-            minWidth: "90px",
-            // right: "50%",
-            // translate: "50%",
-          }}
-        >
-          <div style={{ cursor: "default" }} className="dropdown-content">
-            {elements.map((item, index) => {
-              return (
-                <div
-                  onClick={() => handleFunction(item.handleClick)}
-                  className="dropdown-item is-media m-t-5 m-b-5 cursor-pointer p-5"
-                  key={item?.title.toLowerCase()}
-                  style={{ minHeight: "35px" }}
-                >
-                  <div className="text-nowrap meta m-r-5">
-                    <span>{item?.title}</span>
-                    <span>{item?.subTitle}</span>
-                  </div>
+        <div style={{ cursor: "default" }} className="dropdown-content">
+          {elements.map((item, index) => {
+            return (
+              <div
+                onClick={() => handleOptionClick(item)}
+                className="dropdown-item is-media m-t-5 m-b-5 cursor-pointer p-5"
+                key={item?.title?.toLowerCase()}
+                style={{ minHeight: "35px" }}
+              >
+                <div className="text-nowrap meta m-r-5">
+                  <span>{item?.title}</span>
+                  <span>{item?.subTitle}</span>
                 </div>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </div>
       </div>
     </OnClickOutside>

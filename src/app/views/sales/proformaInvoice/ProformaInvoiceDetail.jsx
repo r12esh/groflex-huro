@@ -79,7 +79,7 @@ const ProformaInvoiceDetail = ({ id }) => {
     quotationInfo.push(
       <>
         <div className="is-weight-500 font-14px color-secondary">
-          Quotaion Amount:
+          Proforma Invoice Amount:
         </div>
 
         <div className="title is-3 m-t-10 m-b-10">{amount}</div>

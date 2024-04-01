@@ -86,6 +86,7 @@ export const SelectInput = ({
   }
   return (
     <Select
+      isClearable
       placeholder={placeholder}
       value={selectedOption}
       options={options}

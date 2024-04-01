@@ -2,17 +2,27 @@ import React from "react";
 import OnClickOutside from "../components/onClickOutside/OnClickOutside";
 import { Input } from "../components/input/Input";
 
-const LetterMetaEditComponent = ({ onChange }) => {
+const LetterMetaEditComponent = ({
+  letterMetaFormData,
+  handleOutsideClick,
+}) => {
   const handleChange = () => {
-    onChange();
+    // onChange();
   };
 
   return (
-    <OnClickOutside className="letter-meta-edit-component">
-      <Input value={"Invoice Number: "} onChange={handleChange} />
-      <Input value={"Cusomer No.: "} onChange={handleChange} />
-      <Input value={"Invoice Date: "} onChange={handleChange} />
-      <Input value={"Delivery Time: "} onChange={handleChange} />
+    <OnClickOutside
+      onClickOutside={handleOutsideClick}
+      className="letter-meta-edit-component m-t-20"
+    >
+      {Object.entries(letterMetaFormData).map(([name, field]) => {
+        if (!field.active) {
+          return;
+        }
+        console.log(field);
+
+        return field?.getEditField && field.getEditField();
+      })}
     </OnClickOutside>
   );
 };

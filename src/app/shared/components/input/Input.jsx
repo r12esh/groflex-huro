@@ -18,6 +18,9 @@ export const Input = ({
   rightIcon,
   onBlur,
   disabled,
+  fieldClassName,
+  onClick,
+  onFocus,
   ...rest
 }) => {
   const getFocusType = () => {
@@ -70,10 +73,12 @@ export const Input = ({
     },
   };
   return (
-    <div className="field">
+    <div className={`field ${fieldClassName ? fieldClassName : ""}`}>
       <label>{label}</label>
       <div className={`control ${getControlClassOptions()}`}>
         <input
+          onClick={onClick}
+          onFocus={onFocus}
           style={errorStyles.border}
           type={type}
           className={`input ${getFocusType()} ${getInputClassOptions()}`}

@@ -193,10 +193,10 @@
   flex-direction: column;
 }
 
-.flex-align-center- {
+.flex-align-center {
   align-items: center;
 }
-.flex-justify-center- {
+.flex-justify-center {
   justify-content: center;
 }
 
@@ -229,7 +229,6 @@
 }
 
 // Note: Override other classes
-
 .ql-bubble {
   .ql-editor {
     padding: 10px !important;
@@ -253,4 +252,9 @@
       }
     }
   }
+}
+
+*::selection {
+  background-color: $primary;
+  color: white;
 }

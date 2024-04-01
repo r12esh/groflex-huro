@@ -62,6 +62,23 @@
     .transaction-letter-recipient-container {
       .transaction-form-sender-quill-container {
         .sender-quill {
+          height: 39px;
+          .ql-container {
+            .ql-editor {
+              overflow-y: hidden;
+            }
+            p {
+              color: $dark-text;
+              font-size: 14px;
+              font-weight: 600;
+            }
+          }
+        }
+      }
+    }
+    .transaction-letter-shipping-container {
+      .sender-address-quill-container {
+        .sender-address-quill {
           .ql-container {
             .ql-editor {
             }
@@ -74,17 +91,65 @@
         }
       }
     }
-    .transaction-letter-shipping-address-container {
-      .sender-address-quill-container {
-        .sender-address-quill {
-          .ql-container {
-            .ql-editor {
-            }
-            p {
-              color: $dark-text;
-              font-size: 14px;
-              font-weight: 600;
-            }
+
+    .transaction-form-meta {
+      .letter-meta-display {
+        .letter-meta-display-row {
+          display: flex;
+          margin-bottom: 4px;
+          .letter-meta-display-label {
+            color: $font-color-secondary;
+            font-weight: 600;
+            flex-basis: 43%;
+            max-width: 43%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+          .letter-meta-display-value {
+            text-align: right;
+            flex-basis: 57%;
+            padding-left: 5px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            text-align: right;
+          }
+        }
+      }
+
+      .letter-meta-form {
+        margin-right: 11px;
+        .letter-meta-form-row {
+          position: relative;
+          display: flex;
+          margin-bottom: 4px;
+          // align-items: center;
+          .letter-meta-form-label {
+            flex-basis: 46%;
+            max-width: 46%;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+          }
+          .letter-meta-form-field {
+            flex-basis: 54%;
+            max-width: 54%;
+            padding-left: 5px;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            text-align: right;
+          }
+          .letter-meta-form-delivery-period {
+            display: flex;
+            // align-items: center;
+            height: 100%;
+            flex-wrap: wrap;
+          }
+          .letter-meta-form-hide-button {
+            position: absolute;
+            right: -30px;
           }
         }
       }

@@ -142,14 +142,14 @@ const InvoiceEditPage = () => {
 
   return preFetchData ? (
     <TransactionEditComponent
-      transaction={preFetchData?.invoice}
-      letter={preFetchData?.letter}
-      numerationOptions={preFetchData?.numerationOptions}
-      miscOptions={preFetchData?.miscOptions}
-      payConditions={preFetchData?.payConditions}
-      paymentSetting={preFetchData?.paymentSetting}
-      isDeposit={preFetchData?.isDeposit}
-      isClosing={preFetchData?.isClosing}
+      transaction={preFetchData.invoice}
+      letter={preFetchData.letter}
+      numerationOptions={preFetchData.numerationOptions}
+      miscOptions={preFetchData.miscOptions}
+      payConditions={preFetchData.payConditions}
+      paymentSetting={preFetchData.paymentSetting}
+      isDeposit={preFetchData.isDeposit}
+      isClosing={preFetchData.isClosing}
       isInvoice
     />
   ) : (

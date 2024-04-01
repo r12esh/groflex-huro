@@ -55,9 +55,19 @@ const DateInput = ({
   onDateChange,
   style,
   format = "DD/MM/YYYY",
+  disableFuture,
+  disablePast,
+  minDate,
+  maxDate,
+  className,
 }) => {
   return (
     <DatePicker
+      className={className}
+      minDate={minDate}
+      maxDate={maxDate}
+      disableFuture={disableFuture}
+      disablePast={disablePast}
       format={format}
       sx={{ ...style }}
       value={selectedDate}

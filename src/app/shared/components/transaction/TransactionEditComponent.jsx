@@ -305,7 +305,7 @@ const TransactionEditComponent = ({
           onFinish={(elements) => onLetterHeaderEdited(elements)}
         />
         {/* First row -> BILLED TO, SHiP TO, ANd INVOICE NUMBE STUFF  */}
-        <div className="transaction-form-row columns is-multiline">
+        <div className="transaction-form-row columns is-multiline m-t-10">
           {/* BIll to */}
           <div className="transaction-letter-recipient-container column is-4 p-0">
             <EditableIndicatorDiv className="transaction-form-sender-quill-container">
@@ -313,6 +313,7 @@ const TransactionEditComponent = ({
                 className={"sender-quill"}
                 value={transactionStates.letter.sender}
                 onChange={handelLetterSenderChange}
+                placeholder={"BILLED TO"}
               />
               {/* Enter customer */}
             </EditableIndicatorDiv>
@@ -329,7 +330,7 @@ const TransactionEditComponent = ({
             />
           </div>
           {/* Ship to */}
-          <div className="transaction-letter-shipping-address-container column is-4">
+          <div className="transaction-letter-shipping-container column is-4 p-0">
             {/* <EditableIndicatorDiv className="sender-address-quill-container">
               <HtmlInputComponent
                 className={"sender-address-quill"}
@@ -338,8 +339,18 @@ const TransactionEditComponent = ({
             </EditableIndicatorDiv> */}
           </div>
           {/* Meta */}
-          <div className="transaction-form-meta column is-4">
-            {/* <LetterMetaComponent onChange={() => {}} /> */}
+          <div className="transaction-form-meta column is-4 p-0">
+            <LetterMetaComponent
+              numerationOptions={numerationOptions}
+              isRecurring={isRecurring}
+              recurringInvoice={recurringInvoice}
+              data={transaction}
+              isQuotation={isQuotation}
+              isPurchaseOrder={isPurchaseOrder}
+              isProformaInvoice={isProformaInvoice}
+              isInvoice={isInvoice}
+              onChange={() => {}}
+            />
           </div>
         </div>
         {/* Letter Footer */}
