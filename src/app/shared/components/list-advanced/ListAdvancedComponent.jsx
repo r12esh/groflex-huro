@@ -23,6 +23,7 @@ export const ListAdvancedComponent = ({
   responseDataMapFunc,
   pagination = true,
   headers,
+  checkBoxes = true,
 }) => {
   const [dataIsEmptyFlag, setDataIsEmptyFlag] = useState(false);
   const [gridApi, setGridApi] = useState();
@@ -105,7 +106,9 @@ export const ListAdvancedComponent = ({
 
   const gridOptions = {
     rowData: rowData,
-    columnDefs: [checkboxSelection, ...columnDefs, actionColumn],
+    columnDefs: checkBoxes
+      ? [checkboxSelection, ...columnDefs, actionColumn]
+      : [...columnDefs, actionColumn],
     defaultColDef: {
       sortable: true,
       resizable: true,

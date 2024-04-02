@@ -548,6 +548,7 @@ const ArticleDetail = () => {
     return (
       <div id="article-history-tab">
         <ListAdvancedComponent
+          checkBoxes={false}
           columnDefs={[
             {
               field: "number",

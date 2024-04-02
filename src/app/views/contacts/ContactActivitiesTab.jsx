@@ -80,6 +80,16 @@ const ContactActivitiesTab = ({ contactId }) => {
                 {item + " "}
               </span>
             );
+          } else if (id === 0) {
+            return (
+              <span
+                style={{
+                  fontWeight: "600",
+                }}
+              >
+                {item + " "}
+              </span>
+            );
           } else {
             return item + " ";
           }
@@ -90,6 +100,7 @@ const ContactActivitiesTab = ({ contactId }) => {
   return (
     <div className="contact-activities-tab-main">
       <ListAdvancedComponent
+        checkBoxes={false}
         onRowClicked={(e) => {}}
         onActionClick={handleActionClick}
         columnDefs={[
