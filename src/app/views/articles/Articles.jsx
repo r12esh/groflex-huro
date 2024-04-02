@@ -42,7 +42,7 @@ const Articles = () => {
     <PageContent
       title="Products"
       titleIsBreadCrumb
-      breadCrumbData={["Home", "Articles"]}
+      breadCrumbData={["Home", "Products"]}
       titleActionContent={
         <Button onClick={() => navigate("/articles/new")} isSuccess>
           Create Product

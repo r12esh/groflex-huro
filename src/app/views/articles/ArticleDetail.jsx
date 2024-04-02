@@ -163,7 +163,7 @@ const ArticleDetail = () => {
                         whiteSpace: "nowrap",
                       }}
                     >
-                      Article no
+                      Product no
                     </p>
                     <div>{articleData?.number}</div>
                   </span>
@@ -611,13 +611,13 @@ const ArticleDetail = () => {
 
   console.log(articleData, "Article Data in Article Detail");
   const tabList = [
-    { label: "Article Overview", content: <OverviewTab /> },
+    { label: "Product Overview", content: <OverviewTab /> },
     { label: "History", content: <HistoryTab /> },
   ];
   return (
     <PageContent
-      title={overViewActive ? "Article Overview" : "History"}
-      breadCrumbData={["Home", "Articles", "Article Overview"]}
+      title={overViewActive ? "Product Overview" : "History"}
+      breadCrumbData={["Home", "Products", "Product Overview"]}
       loading={articleData?.id ? false : true}
       titleActionContent={<DropdownMenu />}
     >

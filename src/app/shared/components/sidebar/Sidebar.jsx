@@ -41,7 +41,7 @@ const sidebarRoutes = [
     route: "/articles",
     icon: "Inbox",
     isModule: false,
-    name: "Articles",
+    name: "Products",
   },
   {
     route: "/accounting/transactions",
