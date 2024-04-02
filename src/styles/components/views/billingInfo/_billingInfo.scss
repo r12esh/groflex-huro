@@ -28,4 +28,54 @@
       }
     }
   }
+  .pro-modules-tab-warpper {
+    .plan-card-body {
+      padding: 0;
+    }
+    .selected-plan {
+      padding: 20px;
+      height: 40px;
+      background: #bef9dc;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .not-selected {
+      padding: 20px;
+      height: 40px;
+      background: #f1f8fb;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 16px;
+      font-weight: 600;
+    }
+    .plan-name {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    h3 {
+      padding: 20px;
+      color: #888787;
+      margin-bottom: 10px;
+    }
+    .plan-description {
+      padding: 20px;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      div {
+        width: 190px;
+        display: flex;
+        gap: 5px;
+        margin-bottom: 10px;
+      }
+    }
+  }
 }
