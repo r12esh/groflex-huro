@@ -168,7 +168,7 @@ const EditBankModal = ({
         ...formErrors,
         bankNameError: "This is a mandatory field",
       });
-      console.log(newBankData.bankName);
+      // console.log(newBankData.bankName);
       emptyFlag = true;
     }
     if (!newBankData.accountNumber) {
@@ -222,10 +222,10 @@ const EditBankModal = ({
     }
   };
 
-  console.log("Add bank Form data", newBankData);
+  // console.log("Add bank Form data", newBankData);
   // console.log("Add bank Form errors", formErrors);
-  console.log(newBankData.openingBalance);
-  console.log(initialBankData);
+  // console.log(newBankData.openingBalance);
+  // console.log(initialBankData);
   return (
     <Modal
       title={modeToEdit ? "Edit bank details" : "Add bank account details"}

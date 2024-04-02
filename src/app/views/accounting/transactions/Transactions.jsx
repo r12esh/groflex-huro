@@ -14,11 +14,12 @@ import {
 } from "../../../helpers/sortComparators";
 import groflexService from "../../../services/groflex.service";
 import DropDownButton from "../../../shared/components/button/dropDownButton/DropDownButton";
-import MoneyInModal from "./MoneyInModal";
+import MoneyInMoneyOutModal from "./MoneyInMoneyOutModal";
+import moment from "moment";
 
 const actions = [{ name: "Delete", icon: "edit" }];
 const reconcile = (p) => {
-  console.log(p);
+  // console.log(p);
   return <>{p.val ? "Reconcile" : "Not reconcile"}</>;
 };
 
@@ -62,7 +63,7 @@ const Transactions = () => {
         />
       }
     >
-      <MoneyInModal
+      <MoneyInMoneyOutModal
         isMoneyInActive={isMoneyInActive}
         setIsMoneyInActive={setIsMoneyInActive}
         modalTitle={modalTitle}
@@ -78,6 +79,9 @@ const Transactions = () => {
             headerName: "Date",
             field: "date",
             filter: true,
+            cellRenderer: (evt) => {
+              return moment(evt.value).format("DD-MM-YYYY");
+            },
             comparator: (date1, date2) =>
               dateCompareSort(date1, date2, config.dateFormat.client),
           },

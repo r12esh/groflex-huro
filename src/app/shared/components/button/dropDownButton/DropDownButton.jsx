@@ -23,10 +23,11 @@ const DropDownButton = ({ buttonTitle = "", dropDownItems = [] }) => {
           </div>
           <div className="dropdown-menu">
             <div className="dropdown-content">
-              {dropDownItems.map((item) => (
+              {dropDownItems.map((item, id) => (
                 <a
                   className="dropdown-item font-size-base"
                   onClick={item.action}
+                  key={`drowdown-btn-entry-${id}`}
                 >
                   {item.title}
                 </a>

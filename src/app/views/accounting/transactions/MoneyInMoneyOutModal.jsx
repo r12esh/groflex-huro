@@ -8,7 +8,11 @@ import moment from "moment";
 import { Input } from "../../../shared/components/input/Input";
 import HtmlInputComponent from "../../../shared/components/input/HtmlInputComponent";
 
-const MoneyInModal = ({ isMoneyInActive, setIsMoneyInActive, modalTitle }) => {
+const MoneyInMoneyOutModal = ({
+  isMoneyInActive,
+  setIsMoneyInActive,
+  modalTitle,
+}) => {
   const [accountDropDownValues, setAccountDropDownValues] = useState([]);
   const [paymentMethodDropDown, setPaymentMethodDropDown] = useState([]);
   const [moneyInFormData, setMoneyInFormData] = useState({
@@ -211,4 +215,4 @@ const MoneyInModal = ({ isMoneyInActive, setIsMoneyInActive, modalTitle }) => {
   );
 };
 
-export default MoneyInModal;
+export default MoneyInMoneyOutModal;

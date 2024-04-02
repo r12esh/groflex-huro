@@ -30,7 +30,7 @@ const CashListComponent = () => {
     groflexService
       .request(`${config.resourceUrls.bank}`, { auth: true })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
 
         setCashList([...res.body.data.filter((bank) => bank.type === "cash")]);
       });
@@ -43,7 +43,7 @@ const CashListComponent = () => {
         method: "DELETE",
       })
       .then((res) => {
-        console.log(res, "DELETE KIYA BANK");
+        // console.log(res, "DELETE KIYA BANK");
         setDeleteCashVisibility(false);
         getBanksList();
         groflexService.toast.success("Cash deleted successfully");
@@ -66,7 +66,7 @@ const CashListComponent = () => {
         groflexService.toast.success("Cash added successfully");
       });
 
-    console.log("Working");
+    // console.log("Working");
   };
 
   const checkForEmptyFields = () => {
@@ -91,12 +91,12 @@ const CashListComponent = () => {
     //   handleAddCashSubmit(newCashData, setNewCashData);
     // }
     if (Object.values(formErrors).some((error) => error === "")) {
-      console.log("Working");
+      // console.log("Working");
 
       handleAddCashSubmit(newCashData, setNewCashData);
     }
 
-    console.log(newCashData);
+    // console.log(newCashData);
   };
   const handleOpeningBalanceChange = (value) => {
     if (!value) {

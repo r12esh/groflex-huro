@@ -26,7 +26,7 @@ const BankListComponent = () => {
     groflexService
       .request(`${config.resourceUrls.bank}`, { auth: true })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
 
         setBanks([...res.body.data].filter((bank) => bank.type === "bank"));
       });
@@ -60,11 +60,11 @@ const BankListComponent = () => {
   };
 
   const openEditBankModal = (id) => {
-    console.log("editing");
-    console.log(id);
+    // console.log("editing");
+    // console.log(id);
 
     getBankDetails(id).then((res) => {
-      console.log(res);
+      // console.log(res);
       setEditBankDetail(res.body.data);
       setBankModalVisibility(true);
     });
@@ -77,13 +77,13 @@ const BankListComponent = () => {
         method: "DELETE",
       })
       .then((res) => {
-        console.log(res, "DELETE KIYA BANK");
+        // console.log(res, "DELETE KIYA BANK");
 
         getBanksList();
         setDeleteBankVisibility(false);
         groflexService.toast.success("Bank deleted successfully");
       });
-    console.log(selectedBankId);
+    // console.log(selectedBankId);
   };
 
   const handleAddBankSubmit = (
