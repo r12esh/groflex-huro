@@ -1,0 +1,17 @@
+.money-in-modal-wrapper {
+  .notes-quill {
+    border: 1px solid #ddd;
+    min-height: 139px;
+    .ql-container {
+      min-height: 139px;
+      .ql-editor {
+        min-height: 139px;
+      }
+      p {
+        color: $dark-text;
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+  }
+}

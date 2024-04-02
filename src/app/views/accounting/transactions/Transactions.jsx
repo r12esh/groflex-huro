@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PageContent from "../../../shared/components/pageContent/PageContent";
 import { useNavigate } from "react-router-dom";
 import config from "../../../../../newConfig";
@@ -13,6 +13,8 @@ import {
   localeCompare,
 } from "../../../helpers/sortComparators";
 import groflexService from "../../../services/groflex.service";
+import DropDownButton from "../../../shared/components/button/dropDownButton/DropDownButton";
+import MoneyInModal from "./MoneyInModal";
 
 const actions = [{ name: "Delete", icon: "edit" }];
 const reconcile = (p) => {
@@ -21,33 +23,51 @@ const reconcile = (p) => {
 };
 
 const Transactions = () => {
-  // const navigate = useNavigate();
-  //  const handleActionClick = (action, row, params) => {
-  //   switch (action.name) {
-  //     case "Delete":
-  //       groflexService
-  //         .request(`${config.resourceUrls.quotation}${row.id}`, {
-  //           auth: true,
-  //           method: "DELETE",
-  //         })
-  //         .then((res) => {
-  //           if (res?.body?.message) {
-  //             console.log(res, "Delete Failed");
-  //           } else {
-  //             params.api.applyTransaction({ remove: [row] });
-  //             console.log(res, "Deleted Succesfullyyy");
-  //           }
-  //         });
-  //       break;
-  //     // case "Edit":
-  //     //   navigate(`/articles/edit/${row.id}`);
-  //   }
-  // };
+  const [isMoneyInActive, setIsMoneyInActive] = useState(false);
+
+  const [modalTitle, setModalTitle] = useState("");
+  const navigate = useNavigate();
   return (
     <PageContent
       title="Transactions"
-      titleActionContent={<Button isSuccess>Create recurring invoice</Button>}
+      titleActionContent={
+        <DropDownButton
+          buttonTitle={"New Transactions"}
+          dropDownItems={[
+            {
+              title: "Money In",
+              action: () => {
+                setModalTitle("Money_In"), setIsMoneyInActive(true);
+              },
+            },
+            {
+              title: "Money Out",
+              action: () => {
+                setModalTitle("Money_Out"), setIsMoneyInActive(true);
+              },
+            },
+            {
+              title: "Sales Income",
+              action: () => navigate("/sales/invoices"),
+            },
+            {
+              title: "Purchase",
+              action: () => navigate("/expneses/new"),
+            },
+            {
+              title: "Expenses",
+              action: () => navigate("/expnese/new"),
+            },
+          ]}
+        />
+      }
     >
+      <MoneyInModal
+        isMoneyInActive={isMoneyInActive}
+        setIsMoneyInActive={setIsMoneyInActive}
+        modalTitle={modalTitle}
+      />
+
       <ListAdvancedComponent
         // onRowClicked={(e) => {
         //   navigate(`/articles/${e.data.id}`);
