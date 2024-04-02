@@ -4,23 +4,7 @@ import groflexService from "../../services/groflex.service";
 import oldConfig from "../../../../oldConfig";
 import FontAwesomeIcon from "../../shared/fontAwesomeIcon/FontAwesomeIcon";
 
-const ProModulesTab = () => {
-  const [planType, setPlanType] = useState("");
-  useEffect(() => {
-    fetchSubscriptionDetail();
-  }, []);
-  const fetchSubscriptionDetail = () => {
-    groflexService
-      .request(`${oldConfig.settings.endpoints.getSubscriptionDetails}`, {
-        auth: true,
-      })
-      .then((res) => {
-        if (res && res.body.data) {
-          setPlanType(res.body.data.planId);
-        }
-      });
-  };
-
+const ProModulesTab = ({ planType }) => {
   return (
     <div className="pro-modules-tab-warpper">
       <div className="columns is-multiline">

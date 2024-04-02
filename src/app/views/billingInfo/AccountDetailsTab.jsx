@@ -6,7 +6,7 @@ import groflexService from "../../services/groflex.service";
 import oldConfig from "../../../../oldConfig";
 import moment from "moment";
 
-const AccountDetailsTab = () => {
+const AccountDetailsTab = ({ planDetails }) => {
   const [subscriptionDetails, setSubscriptionDetails] = useState({
     startDate: "",
     endDate: "",
@@ -17,19 +17,9 @@ const AccountDetailsTab = () => {
     currentPlan: "",
   });
   useEffect(() => {
-    fetchSubscriptionDetail();
+    getPlanDetails(planDetails);
   }, []);
-  const fetchSubscriptionDetail = () => {
-    groflexService
-      .request(`${oldConfig.settings.endpoints.getSubscriptionDetails}`, {
-        auth: true,
-      })
-      .then((res) => {
-        if (res && res.body.data) {
-          getPlanDetails(res.body.data);
-        }
-      });
-  };
+
   const getPlanDetails = (subscriptionDetail) => {
     let subscriptionDatePercentage = 0;
     let subscriptionDateColor = "";
