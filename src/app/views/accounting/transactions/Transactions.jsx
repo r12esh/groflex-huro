@@ -70,6 +70,7 @@ const Transactions = () => {
       />
 
       <ListAdvancedComponent
+        isFilter={false}
         // onRowClicked={(e) => {
         //   navigate(`/articles/${e.data.id}`);
         // }}

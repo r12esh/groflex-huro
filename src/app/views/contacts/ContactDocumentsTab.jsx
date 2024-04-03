@@ -71,8 +71,8 @@ const ContactDocumentsTab = ({ contactId }) => {
             },
           },
         ]}
-        fetchUrl={(offset, limit) =>
-          `${oldConfig.customer.resourceUrl}/${contactId}/history?offset=${offset}&limit=${limit}&orderBy=date&desc=true&filter=all`
+        fetchUrl={(offset, limit, filter) =>
+          `${oldConfig.customer.resourceUrl}/${contactId}/history?offset=${offset}&limit=${limit}&orderBy=date&desc=true&filter=${filter}`
         }
       />
     </div>

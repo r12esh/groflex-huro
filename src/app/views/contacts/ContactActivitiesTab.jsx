@@ -120,8 +120,8 @@ const ContactActivitiesTab = ({ contactId }) => {
             },
           },
         ]}
-        fetchUrl={(offset, limit) =>
-          `${oldConfig.resourceHost}history?customerId=${contactId}&offset=${offset}&limit=${limit}&filter=all`
+        fetchUrl={(offset, limit, filter) =>
+          `${oldConfig.resourceHost}history?customerId=${contactId}&offset=${offset}&limit=${limit}&filter=${filter}`
         }
       />
     </div>

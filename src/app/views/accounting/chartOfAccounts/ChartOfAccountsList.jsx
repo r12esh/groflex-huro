@@ -40,6 +40,7 @@ const ChartOfAccounts = () => {
       }
     >
       <ListAdvancedComponent
+        isFilter={false}
         fetchUrl={config.resourceUrls.chartOfAccounts}
         columnDefs={[
           {

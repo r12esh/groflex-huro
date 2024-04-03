@@ -132,10 +132,11 @@ const TimesheetsList = () => {
 
           return result;
         }}
-        fetchUrl={(offset, limit) =>
-          `${oldConfig.timetracking.resourceUrl}?offset=${offset}&searchText=&limit=${limit}&orderBy=customerName&desc=true&filter=default`
+        fetchUrl={(offset, limit, filter) =>
+          `${oldConfig.timetracking.resourceUrl}?offset=${offset}&searchText=&limit=${limit}&orderBy=customerName&desc=true&filter=${filter}`
         }
         actionMenuData={getActionPopupButtons}
+        defaultFilterValue="default"
       />
     </PageContent>
   );

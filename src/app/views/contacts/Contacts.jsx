@@ -97,6 +97,7 @@ const Contacts = () => {
         contactId={contactId}
       />
       <ListAdvancedComponent
+        isFilter={false}
         onRowClicked={(e) => {
           navigate(`/contacts/${e.data.id}`);
         }}

@@ -546,7 +546,7 @@ const ArticleDetail = () => {
   //History Tab Component
   const HistoryTab = () => {
     return (
-      <div id="article-history-tab">
+      <div id="article-history-tab" className="article-history-tab-wrapper">
         <ListAdvancedComponent
           checkBoxes={false}
           columnDefs={[
@@ -601,8 +601,8 @@ const ArticleDetail = () => {
             // },
           ]}
           // fetchUrl={config.resourceUrls.articleHistory(articleId)}
-          fetchUrl={(offset, limit) =>
-            `${oldConfig.article.resourceUrl}/${articleId}/history?offset=${offset}&limit=${limit}&orderBy=date&desc=true&filter=all`
+          fetchUrl={(offset, limit, filter) =>
+            `${oldConfig.article.resourceUrl}/${articleId}/history?offset=${offset}&limit=${limit}&orderBy=date&desc=true&filter=${filter}`
           }
           // actionMenuData={actions}
         />

@@ -9,6 +9,7 @@ import groflexService from "../../../services/groflex.service";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import PaginationComponent from "../pagination/PaginationComponent";
+import { SelectInput } from "../select/SelectInput";
 
 export const GridApiContext = createContext();
 
@@ -24,8 +25,11 @@ export const ListAdvancedComponent = ({
   pagination = true,
   headers,
   checkBoxes = true,
+  defaultFilterValue = "all",
+  isFilter = true,
 }) => {
   const [dataIsEmptyFlag, setDataIsEmptyFlag] = useState(false);
+  const [response, setResponse] = useState("");
   const [gridApi, setGridApi] = useState();
   const [gridColumnApi, setGridColumnApi] = useState();
   const [isFiltered, setIsFiltered] = useState(false);
@@ -42,32 +46,52 @@ export const ListAdvancedComponent = ({
   });
 
   const [rowData, setRowData] = useState([]);
+  const [filter, setFilter] = useState(defaultFilterValue);
+  const [filterValues, setFilterValues] = useState([]);
+  const [isGridReadyCalled, setIGridReadyCalled] = useState(false);
 
   useEffect(() => {
-    if (rowData.length !== 0) {
+    if (isGridReadyCalled) {
       fetchListData();
     }
-  }, [paginationInfo.currentPage, paginationInfo.entriesPerPage]);
+  }, [paginationInfo.currentPage, paginationInfo.entriesPerPage, filter]);
+
+  useEffect(() => {
+    if (isGridReadyCalled) {
+      createListPage();
+    }
+  }, [response]);
 
   const fetchListData = () => {
     const offset =
       (paginationInfo.currentPage - 1) * paginationInfo.entriesPerPage;
-    const newUrl = fetchUrl(offset, paginationInfo.entriesPerPage);
+    const newUrl = fetchUrl(offset, paginationInfo.entriesPerPage, filter);
     groflexService
       .request(newUrl, headers ? headers : { auth: true })
       .then((res) => {
-        let rowData = responseDataMapFunc
-          ? responseDataMapFunc(res.body.data)
-          : res.body.data;
-        rowData.forEach((row) => {
-          row.actionItems =
-            typeof actionMenuData === "function"
-              ? actionMenuData(row)
-              : actionMenuData;
-        });
-
-        setRowData(rowData);
+        setResponse(res);
       });
+  };
+
+  const createListPage = () => {
+    let rowData = responseDataMapFunc
+      ? responseDataMapFunc(response.body.data)
+      : response.body.data;
+    rowData.forEach((row) => {
+      row.actionItems =
+        typeof actionMenuData === "function"
+          ? actionMenuData(row)
+          : actionMenuData;
+    });
+    pagination &&
+      setPaginationInfo({
+        ...paginationInfo,
+        rowCount: response.body?.meta.count || 0,
+        numberOfPages: Math.ceil(
+          (1 / paginationInfo.entriesPerPage) * response.body?.meta.count
+        ),
+      });
+    setRowData(rowData);
   };
   const customActionCellRenderer = (params) => {
     // console.log(params, "ON ACTION CLICK MENu CLICK");
@@ -175,13 +199,15 @@ export const ListAdvancedComponent = ({
       if (customRowData) {
         useCustomRowData(params);
       } else {
+        setIGridReadyCalled(true);
         const offset =
           (paginationInfo.currentPage - 1) * paginationInfo.entriesPerPage;
-        const newUrl = fetchUrl(offset, paginationInfo.entriesPerPage);
+        const newUrl = fetchUrl(offset, paginationInfo.entriesPerPage, filter);
 
         groflexService
           .request(newUrl, headers ? headers : { auth: true })
           .then((res) => {
+            let filterValues = [];
             pagination &&
               setPaginationInfo({
                 ...paginationInfo,
@@ -190,6 +216,21 @@ export const ListAdvancedComponent = ({
                   (1 / paginationInfo.entriesPerPage) * res.body?.meta.count
                 ),
               });
+
+            if (res && res.body.meta.filter) {
+              let label = "";
+
+              Object.keys(res.body.meta.filter).forEach((item, index) => {
+                label = item + " " + `(${res.body.meta.filter[item].count})`;
+                filterValues.push({
+                  label: label,
+                  value: item,
+                });
+              });
+
+              setFilterValues(filterValues);
+              setFilter(filterValues[0].value);
+            }
 
             let rowData = responseDataMapFunc
               ? responseDataMapFunc(res.body.data)
@@ -257,6 +298,13 @@ export const ListAdvancedComponent = ({
     }
     onRowClicked(e);
   };
+  const handleFilterChange = (option) => {
+    setFilter(option.value);
+    setPaginationInfo({
+      ...paginationInfo,
+      currentPage: 1,
+    });
+  };
 
   return (
     <GridApiContext.Provider
@@ -272,6 +320,16 @@ export const ListAdvancedComponent = ({
       <div className="list-container">
         <div className="list-container__sub-header">
           <ListSearchComponent />
+
+          {isFilter && (
+            <div style={{ width: "170px" }}>
+              <SelectInput
+                value={filter}
+                onChange={handleFilterChange}
+                options={filterValues}
+              />
+            </div>
+          )}
 
           <ListHeadbarControls isFiltered={isFiltered} />
         </div>

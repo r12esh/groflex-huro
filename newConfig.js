@@ -81,18 +81,18 @@ const resourceUrls = {
   miscellaneous: `${resourceHost}setting/miscellaneous`,
 
   //Invoices
-  invoices: (offset, limit) =>
-    `${resourceHost}invoice?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=all&trigger=true`,
+  invoices: (offset, limit, filter) =>
+    `${resourceHost}invoice?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=${filter}&trigger=true`,
   invoice: `${resourceHost}invoice/`, // Contatenate invoiceId
 
   //Quotation
-  quotations: (offset, limit) =>
-    `${resourceHost}offer?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=all&trigger=true`,
+  quotations: (offset, limit, filter) =>
+    `${resourceHost}offer?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=${filter}&trigger=true`,
   quotation: `${resourceHost}offer/`, //Concatenate QuotationId
 
   //Recurring
-  recurring: (offset, limit) =>
-    `${resourceHost}recurringinvoice?offset=${offset}&searchText=&limit=${limit}&orderBy=name&desc=true`,
+  recurring: (offset, limit, filter) =>
+    `${resourceHost}recurringinvoice?offset=${offset}&searchText=&limit=${limit}&orderBy=name&desc=true&filter=${filter}`,
 
   //Accounting
   //Transaction
@@ -100,14 +100,14 @@ const resourceUrls = {
     `${resourceHost}bankTransaction?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true`,
   bank: `${resourceHost}bank`,
   // Debit notes
-  expenseCancellation: (offset, limit) =>
-    `${resourceHost}expenseCancellation?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=debitsAndBalance&trigger=true`,
+  expenseCancellation: (offset, limit, filter) =>
+    `${resourceHost}expenseCancellation?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=${filter}&trigger=true`,
   // Credit notes
-  cancellation: (offset, limit) =>
-    `${resourceHost}cancellation?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=creditsAndBalance&trigger=true`,
+  cancellation: (offset, limit, filter) =>
+    `${resourceHost}cancellation?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=${filter}&trigger=true`,
   //Expenditure
-  expenses: (offset, limit) =>
-    `${resourceHost}expense?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=all`,
+  expenses: (offset, limit, filter) =>
+    `${resourceHost}expense?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=${filter}`,
   expense: `${resourceHost}expense/`,
   // Chart of Accounts
   chartOfAccounts: (offset, limit) =>
@@ -133,8 +133,8 @@ const resourceUrls = {
   getGstDetail: `${resourceHost}accountantExport/jsonDocument`,
   exportGstReport: `${resourceHost}accountantExport/`,
   //Delivery Challan
-  deliveryChallanList: (offset, limit) =>
-    `${resourceHost}deliveryChallan?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=all&trigger=true`,
+  deliveryChallanList: (offset, limit, filter) =>
+    `${resourceHost}deliveryChallan?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=${filter}&trigger=true`,
 
   //InventoryDashboard
   lastOrder: `${resourceHost}/inventoryDashboard/lastPurchaseOrder?limit=6`,
