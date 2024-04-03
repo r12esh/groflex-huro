@@ -5,6 +5,7 @@ import FontAwesomeIcon from "../../shared/fontAwesomeIcon/FontAwesomeIcon";
 import groflexService from "../../services/groflex.service";
 import oldConfig from "../../../../oldConfig";
 import moment from "moment";
+import chargebeePlanEnum from "../../enums/chargebee-plan.enum";
 
 const AccountDetailsTab = ({ planDetails }) => {
   const [subscriptionDetails, setSubscriptionDetails] = useState({
@@ -74,6 +75,23 @@ const AccountDetailsTab = ({ planDetails }) => {
       currentPlan: currentPlan,
     });
   };
+
+  const subscriptionEndText = () => {
+    let endText = "";
+    switch (planDetails.planName) {
+      case chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN:
+        endText = `Your free trial ends on ${subscriptionDetails.endDate}`;
+        break;
+      case chargebeePlanEnum.FREE_PLAN:
+        endText = "";
+        break;
+      case chargebeePlanEnum.ACCOUNTING_YEARLY_PLAN:
+        endText = `Your next payment will be on ${subscriptionDetails.endDate}`;
+        break;
+    }
+    return endText;
+  };
+
   const iconColor =
     subscriptionDetails.currentPlan === "Free plan" ? "#0071ca" : "#00a353";
 
@@ -148,11 +166,7 @@ const AccountDetailsTab = ({ planDetails }) => {
             }}
           ></div>
         </div>
-        {subscriptionDetails.currentPlan !== "Free plan" && (
-          <span className="next-payment-date">
-            Your next payment will be on {subscriptionDetails.endDate}
-          </span>
-        )}
+        {subscriptionEndText()}
       </AdvancedCard>
       <AdvancedCard type={"scard"}></AdvancedCard>
     </div>
