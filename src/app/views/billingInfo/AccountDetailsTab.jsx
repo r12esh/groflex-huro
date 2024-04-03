@@ -59,10 +59,14 @@ const AccountDetailsTab = ({ planDetails }) => {
     }
     setSubscriptionDetails({
       ...subscriptionDetails,
-      startDate: moment(subscriptionDetail.currentTermStart).format(
-        "DD-MM-YYY"
-      ),
-      endDate: moment(subscriptionDetail.currentTermEnd).format("DD-MM-YYYY"),
+      startDate:
+        subscriptionDetail.planName === "Free_Plan"
+          ? moment().format("LL")
+          : moment(subscriptionDetail.currentTermStart).format("LL"),
+      endDate:
+        subscriptionDetail.planName === "Free_Plan"
+          ? moment().format("LL")
+          : moment(subscriptionDetail.currentTermEnd).format("LL"),
       subscriptionRemaining: {
         percentage: subscriptionDatePercentage,
         color: subscriptionDateColor,

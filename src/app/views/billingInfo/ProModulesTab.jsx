@@ -3,8 +3,27 @@ import { AdvancedCard } from "../../shared/components/cards/AdvancedCard";
 import groflexService from "../../services/groflex.service";
 import oldConfig from "../../../../oldConfig";
 import FontAwesomeIcon from "../../shared/fontAwesomeIcon/FontAwesomeIcon";
+import { Button } from "../../shared/components/button/Button";
+import chargebeePlanEnum from "../../enums/chargebee-plan.enum";
+import { redirectToChargebee } from "../../helpers/redirectToChargebee";
 
-const ProModulesTab = ({ planType }) => {
+const ProModulesTab = ({ planDetails }) => {
+  const onBuyClick = (portal) => {
+    let plan = chargebeePlanEnum.ACCOUNTING_YEARLY_PLAN;
+
+    if (portal) {
+      redirectToChargebee(plan, false);
+    }
+  };
+
+  const onTryForFreeClick = (portal) => {
+    let plan = chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN;
+
+    if (portal) {
+      redirectToChargebee(plan, false);
+    }
+  };
+
   return (
     <div className="pro-modules-tab-warpper">
       <div className="columns is-multiline">
@@ -12,10 +31,14 @@ const ProModulesTab = ({ planType }) => {
           <AdvancedCard type={"s-card"} className={"plan-card-body"}>
             <div
               className={`${
-                planType === "Free_Plan" ? "selected-plan" : "not-selected"
+                planDetails.planId === "Free_Plan"
+                  ? "selected-plan"
+                  : "not-selected"
               }`}
             >
-              {planType === "Free_Plan" ? "Your current plan" : "Free plan"}
+              {planDetails.planId === "Free_Plan"
+                ? "Your current plan"
+                : "Free plan"}
             </div>
             <div className="plan-name">
               <h2 style={{ fontSize: "36px", fontWeight: "600" }}>Free</h2>
@@ -78,12 +101,12 @@ const ProModulesTab = ({ planType }) => {
           <AdvancedCard type={"s-card"} className={"plan-card-body"}>
             <div
               className={`${
-                planType === "Accounting_Yearly_Plan"
+                planDetails.planId === "Accounting_Yearly_Plan"
                   ? "selected-plan"
                   : "not-selected"
               }`}
             >
-              {planType === "Accounting_Yearly_Plan"
+              {planDetails.planId === "Accounting_Yearly_Plan"
                 ? "Your current plan"
                 : "Most popular"}
             </div>
@@ -136,6 +159,28 @@ const ProModulesTab = ({ planType }) => {
                   size={15}
                 />
                 <span>General Ledger</span>
+              </div>
+            </div>
+            <div style={{ padding: "20px", paddingBottom: "0" }}>
+              <div className="column is-12">
+                <Button
+                  isPrimary
+                  className={"column is-12"}
+                  onClick={() => onBuyClick(true)}
+                >
+                  Buy
+                </Button>
+              </div>
+            </div>
+            <div style={{ padding: "20px", paddingTop: "0" }}>
+              <div className="column is-12">
+                <Button
+                  isSecondary
+                  className={"column is-12"}
+                  onClick={() => onTryForFreeClick(true)}
+                >
+                  Try for free
+                </Button>
               </div>
             </div>
           </AdvancedCard>

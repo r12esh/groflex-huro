@@ -5,6 +5,7 @@ import AccountDetailsTab from "./AccountDetailsTab";
 import ProModulesTab from "./ProModulesTab";
 import groflexService from "../../services/groflex.service";
 import oldConfig from "../../../../oldConfig";
+import { updateSubscriptionDetails } from "../../helpers/updateSubsciptionDetails";
 
 const BillingInfo = () => {
   useEffect(() => {
@@ -26,12 +27,17 @@ const BillingInfo = () => {
         }
       });
   };
+
+  updateSubscriptionDetails();
   const billingTabList = [
     {
       label: "Account Details",
       content: <AccountDetailsTab planDetails={planDetails} />,
     },
-    { label: "Pro Modules", content: <ProModulesTab planType={planType} /> },
+    {
+      label: "Pro Modules",
+      content: <ProModulesTab planDetails={planDetails} />,
+    },
   ];
   return (
     <PageContent title={"Your billing"} loading={loading}>
