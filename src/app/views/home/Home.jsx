@@ -38,8 +38,8 @@ const Home = () => {
     fetchQuickLinks();
     fetchLastViewedDocumentsAndCustomers();
     if (
-      (subscriptionData.planId === chargebeePlanEnum.FREE_PLAN ||
-        subscriptionData.planId === chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN) &&
+      (subscriptionData?.planId === chargebeePlanEnum.FREE_PLAN ||
+        subscriptionData?.planId === chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN) &&
       !hasNewSubscriptionModalOpened
     ) {
       openNewSubscriptionPlanModal();

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Tabs = ({ tabList = [] }) => {
-  const [selectedTab, setSelectedTab] = useState(0);
+const Tabs = ({ tabList = [], initialTab = 0 }) => {
+  const [selectedTab, setSelectedTab] = useState(initialTab);
   // console.log(tabList);
 
   return (

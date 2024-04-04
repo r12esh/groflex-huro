@@ -9,7 +9,7 @@ const NewSubscriptionPlanModal = ({ isModalActive, setIsModalActive }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const handleBuy = () => {
-    navigate("/billing-info");
+    navigate("/billing-info", { state: { initialTab: 1 } });
     dispatch({
       type: actionTypes.SET_HAS_NEW_SUBSCRIPTION_MODAL_OPENED,
       payload: true,

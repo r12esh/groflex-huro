@@ -33,7 +33,13 @@ const ProModulesTab = ({ planDetails }) => {
 
   const FreePlanCard = () => {
     return (
-      <AdvancedCard type={"s-card"} className={"plan-card-body"}>
+      <AdvancedCard
+        type={"s-card"}
+        className={"plan-card-body"}
+        style={{
+          height: planDetails.planId === chargebeePlanEnum.FREE_PLAN && "574px",
+        }}
+      >
         <div
           className={`${
             planDetails.planId === "Free_Plan"
@@ -117,7 +123,9 @@ const ProModulesTab = ({ planDetails }) => {
           }`}
         >
           {planDetails.planId === chargebeePlanEnum.ACCOUNTING_YEARLY_PLAN
-            ? "Your current plan"
+            ? `Your current plan (ends on ${moment(
+                planDetails.currentTermEnd
+              ).format("LL")})`
             : planDetails.planId === chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN
             ? `Accounting trial active (ends on ${moment(
                 planDetails.currentTermEnd
@@ -181,20 +189,20 @@ const ProModulesTab = ({ planDetails }) => {
             <span>General Ledger</span>
           </div>
         </div>
-        {planDetails.planId === chargebeePlanEnum.FREE_PLAN ||
-          (planDetails.planId === chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN && (
-            <div style={{ padding: "20px", paddingBottom: "0" }}>
-              <div className="column is-12">
-                <Button
-                  isPrimary
-                  className={"column is-12"}
-                  onClick={() => onBuyClick(true)}
-                >
-                  Buy
-                </Button>
-              </div>
+        {(planDetails.planId === chargebeePlanEnum.FREE_PLAN ||
+          planDetails.planId === chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN) && (
+          <div style={{ padding: "20px", paddingBottom: "0" }}>
+            <div className="column is-12">
+              <Button
+                isPrimary
+                className={"column is-12"}
+                onClick={() => onBuyClick(true)}
+              >
+                Buy
+              </Button>
             </div>
-          ))}
+          </div>
+        )}
 
         {planDetails.planId === chargebeePlanEnum.FREE_PLAN && (
           <div style={{ padding: "20px", paddingTop: "0" }}>

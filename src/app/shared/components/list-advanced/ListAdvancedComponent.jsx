@@ -221,7 +221,11 @@ export const ListAdvancedComponent = ({
               let label = "";
 
               Object.keys(res.body.meta.filter).forEach((item, index) => {
-                label = item + " " + `(${res.body.meta.filter[item].count})`;
+                label =
+                  item.charAt(0).toUpperCase() +
+                  item.slice(1) +
+                  " " +
+                  `(${res.body.meta.filter[item].count})`;
                 filterValues.push({
                   label: label,
                   value: item,

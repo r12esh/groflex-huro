@@ -6,8 +6,10 @@ import ProModulesTab from "./ProModulesTab";
 import groflexService from "../../services/groflex.service";
 import oldConfig from "../../../../oldConfig";
 import { updateSubscriptionDetails } from "../../helpers/updateSubsciptionDetails";
+import { useLocation } from "react-router-dom";
 
 const BillingInfo = () => {
+  const location = useLocation();
   useEffect(() => {
     fetchSubscriptionDetail();
   }, []);
@@ -39,10 +41,16 @@ const BillingInfo = () => {
       content: <ProModulesTab planDetails={planDetails} />,
     },
   ];
+
   return (
     <PageContent title={"Your billing"} loading={loading}>
       <div className="billing-info-wrapper">
-        <Tabs tabList={billingTabList} />
+        <Tabs
+          tabList={billingTabList}
+          initialTab={
+            location?.state?.initialTab ? location?.state?.initialTab : 0
+          }
+        />
       </div>
     </PageContent>
   );
