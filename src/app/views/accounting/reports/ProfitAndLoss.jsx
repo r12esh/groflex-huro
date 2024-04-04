@@ -273,10 +273,8 @@ const ProfitAndLoss = () => {
       case "lastQuarter":
         setShowCustomDateRangeSelector(false);
         startDate = moment().subtract(3, "months").startOf("quarter");
-        endDate = moment()
-          .subtract(3, "months")
-          .endOf("quarter")
-          .format("DD MMMM YYYY");
+        endDate = moment().subtract(3, "months").endOf("quarter");
+
         break;
       case "secondLastQuarter":
         setShowCustomDateRangeSelector(false);

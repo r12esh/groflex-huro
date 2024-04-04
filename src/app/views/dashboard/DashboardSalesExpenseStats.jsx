@@ -8,6 +8,8 @@ import config from "../../../../newConfig";
 import CreateChart from "../../shared/components/chartjs/CreateChart";
 import DateInput from "../../shared/components/datePicker/DateInput";
 import { formatCurrency } from "../../helpers/formatCurrency";
+import { Button } from "../../shared/components/button/Button";
+import { useNavigate } from "react-router-dom";
 
 const dateFilterTypes = {
   fiscalYear: "Fiscal Year",
@@ -25,6 +27,7 @@ const dateFilterTypes = {
     .format("Q/YYYY"),
 };
 const DashboardSalesExpenseStats = () => {
+  const navigate = useNavigate();
   const [date, setDate] = useState({
     startDate: "",
     endDate: "",
@@ -115,10 +118,8 @@ const DashboardSalesExpenseStats = () => {
         break;
       case "lastQuarter":
         startDate = moment().subtract(3, "months").startOf("quarter");
-        endDate = moment()
-          .subtract(3, "months")
-          .endOf("quarter")
-          .format("DD MMMM YYYY");
+        endDate = moment().subtract(3, "months").endOf("quarter");
+
         break;
       case "secondLastQuarter":
         startDate = moment().subtract(6, "months").startOf("quarter");
@@ -260,31 +261,35 @@ const DashboardSalesExpenseStats = () => {
                 value={dateFilter}
               />
             </div>
-            <div
-              className="column is-9 columns"
-              style={{ justifyContent: "flex-end" }}
-            >
-              <div className="column is-4">
-                <AdvancedCard type={"s-card"} style={{ padding: "0" }}>
-                  <div className="total-sales-label">Total Sales</div>
-                  <div className="total-sales-value">
-                    {formatCurrency(
-                      parseFloat(totalValues.totalSales).toFixed(0)
-                    )}
+
+            {totalValues.totalSales === 0 &&
+              totalValues.totalExpenses !== 0 && (
+                <div
+                  className="column is-9 columns"
+                  style={{ justifyContent: "flex-end" }}
+                >
+                  <div className="column is-4">
+                    <AdvancedCard type={"s-card"} style={{ padding: "0" }}>
+                      <div className="total-sales-label">Total Sales</div>
+                      <div className="total-sales-value">
+                        {formatCurrency(
+                          parseFloat(totalValues.totalSales).toFixed(0)
+                        )}
+                      </div>
+                    </AdvancedCard>
                   </div>
-                </AdvancedCard>
-              </div>
-              <div className="column is-4">
-                <AdvancedCard type={"s-card"} style={{ padding: "0" }}>
-                  <div className="total-expense-label">Total Expenses</div>
-                  <div className="total-expense-value">
-                    {formatCurrency(
-                      parseFloat(totalValues.totalExpenses).toFixed(0)
-                    )}
+                  <div className="column is-4">
+                    <AdvancedCard type={"s-card"} style={{ padding: "0" }}>
+                      <div className="total-expense-label">Total Expenses</div>
+                      <div className="total-expense-value">
+                        {formatCurrency(
+                          parseFloat(totalValues.totalExpenses).toFixed(0)
+                        )}
+                      </div>
+                    </AdvancedCard>
                   </div>
-                </AdvancedCard>
-              </div>
-            </div>
+                </div>
+              )}
           </div>
           {showCustomDateRangeSelector && (
             <div className="columns is-multiline" style={{ marginTop: "10px" }}>
@@ -303,45 +308,67 @@ const DashboardSalesExpenseStats = () => {
             </div>
           )}
 
-          <div
-            className="columns is-mulitline"
-            style={{ justifyContent: "flex-end" }}
-          >
-            <div
-              className="column is-2"
-              style={{ display: "flex", alignItems: "center" }}
+          {totalValues.totalSales === 0 && totalValues.totalExpenses !== 0 ? (
+            <>
+              <div
+                className="columns is-mulitline"
+                style={{ justifyContent: "flex-end" }}
+              >
+                <div
+                  className="column is-2"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <span
+                    className="category-dot"
+                    style={{ backgroundColor: "rgb(0, 163, 83)" }}
+                  ></span>
+                  <span className="category-text">Sales</span>
+                </div>
+                <div
+                  className="column is-2"
+                  style={{ display: "flex", alignItems: "center" }}
+                >
+                  <span
+                    className="category-dot"
+                    style={{ backgroundColor: "rgb(0, 113, 202)" }}
+                  ></span>
+                  <span className="category-text">Expense</span>
+                </div>
+              </div>
+              <div className="column is-12 bar-chart-wrapper">
+                <CreateChart
+                  chartData={chartData}
+                  chartOptions={chartOptions}
+                  chartType={"barChart"}
+                />
+              </div>
+            </>
+          ) : (
+            <AdvancedCard
+              containerClassName={"dashboard-turnover-no-data-content"}
+              style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                flexDirection: "column",
+                gap: "10px",
+              }}
+              type={"s-card"}
             >
-              <span
-                className="category-dot"
-                style={{ backgroundColor: "rgb(0, 163, 83)" }}
-              ></span>
-              <span className="category-text">Sales</span>
-            </div>
-            <div
-              className="column is-2"
-              style={{ display: "flex", alignItems: "center" }}
-            >
-              <span
-                className="category-dot"
-                style={{ backgroundColor: "rgb(0, 113, 202)" }}
-              ></span>
-              <span className="category-text">Expense</span>
-            </div>
-          </div>
-
-          <div className="column is-12 bar-chart-wrapper">
-            {/* <CreateChart
-              data={chartData}
-              options={chartOptions}
-              chartType={"barChart"}
-              chartId={"sales-expense"}
-            /> */}
-            <CreateChart
-              chartData={chartData}
-              chartOptions={chartOptions}
-              chartType={"barChart"}
-            />
-          </div>
+              <h2
+                style={{
+                  fontSize: "16px",
+                  color: "#747474",
+                  fontWeight: "500",
+                }}
+              >
+                Create your first invoice and complete it.
+              </h2>
+              <Button isPrimary onClick={() => navigate("/sales/invoices")}>
+                Get Started
+              </Button>
+            </AdvancedCard>
+          )}
         </AdvancedCard>
       </div>
     </div>
