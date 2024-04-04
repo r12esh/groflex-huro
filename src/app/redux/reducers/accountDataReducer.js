@@ -4,6 +4,8 @@ const initialState = {
   tenantData: undefined,
   userData: undefined,
   accountInfoData: undefined,
+  subscriptionData: undefined,
+  hasNewSubscriptionModalOpened: false,
 };
 
 export function accountDataReducer(state = initialState, action) {
@@ -14,6 +16,10 @@ export function accountDataReducer(state = initialState, action) {
       return { ...state, userData: action.payload };
     case actionTypes.SET_ACCOUNTINFO_DATA:
       return { ...state, accountInfoData: action.payload };
+    case actionTypes.SET_SUBSCRIPTION_DATA:
+      return { ...state, subscriptionData: action.payload };
+    case actionTypes.SET_HAS_NEW_SUBSCRIPTION_MODAL_OPENED:
+      return { ...state, hasNewSubscriptionModalOpened: action.payload };
     default:
       return state;
   }

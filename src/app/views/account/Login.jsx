@@ -15,6 +15,7 @@ import { Checkbox } from "../../shared/components/checkbox/Checkbox";
 import FirstColumn from "./FirstColumn";
 import _ from "lodash";
 import { multiFetchHandler } from "../../helpers/multiFetchHandler";
+import oldConfig from "../../../../oldConfig";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -30,7 +31,7 @@ const Login = () => {
   });
   useEffect(() => {
     if (config.checkLoginTokenIsValid()) {
-      navigate("/"); 
+      navigate("/");
     }
   }, []);
 
@@ -45,6 +46,12 @@ const Login = () => {
       groflexService.request(config.resourceUrls.accountSettings, {
         auth: true,
       }),
+      groflexService.request(
+        oldConfig.settings.endpoints.getSubscriptionDetails,
+        {
+          auth: true,
+        }
+      ),
     ];
 
     multiFetchHandler(calls)
@@ -52,6 +59,7 @@ const Login = () => {
         const tenantData = responses[0];
         const user = responses[1];
         const accountSettings = responses[2];
+        const subscription = responses[3];
         dispatch({
           type: actionTypes.SET_TENANT_DATA,
           payload: tenantData.body.data,
@@ -63,6 +71,10 @@ const Login = () => {
         dispatch({
           type: actionTypes.SET_ACCOUNTINFO_DATA,
           payload: accountSettings.body.data,
+        });
+        dispatch({
+          type: actionTypes.SET_SUBSCRIPTION_DATA,
+          payload: subscription.body.data,
         });
       })
       .then(() => {

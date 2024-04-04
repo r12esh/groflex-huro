@@ -18,17 +18,32 @@ import { useNavigate } from "react-router-dom";
 import KanbanBoard from "../../shared/components/kanbanBoard/KanbanBoard";
 import groflexService from "../../services/groflex.service";
 import config from "../../../../newConfig";
+import { useSelector } from "react-redux";
+import NewSubscriptionPlanModal from "./NewSubscriptionPlanModal";
+import chargebeePlanEnum from "../../enums/chargebee-plan.enum";
 
 const Home = () => {
+  const { subscriptionData, hasNewSubscriptionModalOpened } = useSelector(
+    (state) => state.accountData
+  );
+
   const navigate = useNavigate();
   const [isEditableDisabled, setIsEditableDisbaled] = useState(true);
   const [lastViewedDocuments, setLastViewedDocuments] = useState([]);
   const [lastViewedCustomers, setLastViewedCustomers] = useState([]);
+  const [isModalActive, setIsModalActive] = useState(false);
 
   const [board, setBoard] = useState({});
   useEffect(() => {
     fetchQuickLinks();
     fetchLastViewedDocumentsAndCustomers();
+    if (
+      (subscriptionData.planId === chargebeePlanEnum.FREE_PLAN ||
+        subscriptionData.planId === chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN) &&
+      !hasNewSubscriptionModalOpened
+    ) {
+      openNewSubscriptionPlanModal();
+    }
   }, []);
 
   const fetchQuickLinks = () => {
@@ -145,6 +160,10 @@ const Home = () => {
     setIsEditableDisbaled(true);
   };
 
+  const openNewSubscriptionPlanModal = () => {
+    setIsModalActive(true);
+  };
+
   return (
     <PageContent
       breadCrumbIcon={
@@ -159,6 +178,10 @@ const Home = () => {
       title="Home page"
       loading={Object.keys(board).length === 0}
     >
+      <NewSubscriptionPlanModal
+        isModalActive={isModalActive}
+        setIsModalActive={setIsModalActive}
+      />
       <div className="home-wrapper">
         <ReactSlickCarousel settings={{ fade: false }}>
           <div className="welcome-container">

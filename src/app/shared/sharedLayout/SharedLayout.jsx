@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import groflexService from "../../services/groflex.service";
 import * as actionTypes from "../../redux/actions/actions.types";
 import { multiFetchHandler } from "../../helpers/multiFetchHandler";
-
+import oldConfig from "../../../../oldConfig";
 const SharedLayout = () => {
   const navigate = useNavigate();
   const tenantData = useSelector((state) => state.accountData.tenantData);
@@ -23,12 +23,19 @@ const SharedLayout = () => {
       groflexService.request(config.resourceUrls.accountSettings, {
         auth: true,
       }),
+      groflexService.request(
+        oldConfig.settings.endpoints.getSubscriptionDetails,
+        {
+          auth: true,
+        }
+      ),
     ];
 
     multiFetchHandler(calls).then((responses) => {
       const tenant = responses[0];
       const user = responses[1];
       const accountSettings = responses[2];
+      const subscription = responses[3];
       dispatch({
         type: actionTypes.SET_TENANT_DATA,
         payload: tenant.body.data,
@@ -40,6 +47,10 @@ const SharedLayout = () => {
       dispatch({
         type: actionTypes.SET_ACCOUNTINFO_DATA,
         payload: accountSettings.body.data,
+      });
+      dispatch({
+        type: actionTypes.SET_SUBSCRIPTION_DATA,
+        payload: subscription.body.data,
       });
     });
   };
