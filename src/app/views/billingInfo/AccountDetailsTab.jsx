@@ -57,6 +57,26 @@ const AccountDetailsTab = ({ planDetails }) => {
       ) {
         subscriptionDateColor = "#dd7474";
       }
+    } else if (
+      subscriptionDetail.planName === chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN
+    ) {
+      currentPlan = "Accounting trial plan";
+      subscriptionDateColor = "#00a353";
+      currentTermStart = moment(subscriptionDetail.currentTermStart);
+      currentTermEnd = moment(subscriptionDetail.currentTermEnd);
+      currentDate = moment();
+      totalDays = currentTermEnd.diff(currentTermStart, "days");
+      remainingDays = currentDate.diff(currentTermStart, "days");
+      subscriptionDatePercentage = (remainingDays / totalDays) * 100;
+      if (subscriptionDatePercentage > 100) {
+        subscriptionDatePercentage = 100;
+        subscriptionDateColor = "#F03636";
+      } else if (
+        subscriptionDatePercentage > 85 &&
+        subscriptionDatePercentage < 99
+      ) {
+        subscriptionDateColor = "#dd7474";
+      }
     }
     setSubscriptionDetails({
       ...subscriptionDetails,
