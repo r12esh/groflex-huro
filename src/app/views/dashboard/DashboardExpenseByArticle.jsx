@@ -196,6 +196,9 @@ const DashboardExpenseByArticle = () => {
 
   return (
     <DashboardChartCard
+      linkToNavigate="/accounting/expenses"
+      createButtonTitle="Create expense"
+      dataLength={series.length}
       pieChartSummary={totalValue}
       className={"dashboard-expense-by-tab-wrapper"}
       headerClassName={"expense-by-tab-header"}

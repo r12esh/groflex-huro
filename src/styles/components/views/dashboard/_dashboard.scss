@@ -96,4 +96,14 @@
       width: 50%;
     }
   }
+
+  .dashboard-no-data-content {
+    height: 143px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border: 0;
+    margin-top: 150px;
+  }
 }

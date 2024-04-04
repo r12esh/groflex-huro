@@ -127,6 +127,9 @@ const DashboardQuotation = () => {
       };
   return (
     <DashboardChartCard
+      createButtonTitle="Create Quotations"
+      linkToNavigate="/sales/quotations"
+      dataLength={quotations.length}
       pieChartSummary={totalValue}
       className={"dashboard-quotation-tab-wrapper"}
       headerClassName={"quotation-tab-header"}

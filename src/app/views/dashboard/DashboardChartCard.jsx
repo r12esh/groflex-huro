@@ -18,6 +18,9 @@ import {
 import CreateChart from "../../shared/components/chartjs/CreateChart";
 import DateInput from "../../shared/components/datePicker/DateInput";
 import { formatCurrency } from "../../helpers/formatCurrency";
+import { AdvancedCard } from "../../shared/components/cards/AdvancedCard";
+import { Button } from "../../shared/components/button/Button";
+import { useNavigate } from "react-router-dom";
 
 ChartJS.register(
   CategoryScale,
@@ -61,7 +64,11 @@ const DashboardChartCard = ({
     label: "",
     value: 0,
   },
+  dataLength = 0,
+  createButtonTitle = "",
+  linkToNavigate = "",
 }) => {
+  const navigate = useNavigate();
   const [dateFilter, setDateFilter] = useState("fiscalYear");
   const [showCustomDateRangeSelector, setShowCustomDateRangeSelector] =
     useState(false);
@@ -248,49 +255,77 @@ const DashboardChartCard = ({
         </div>
       )}
 
-      <div className="column is-12 donut-chart-wrapper">
-        {chartType === false && (
-          <div className="pie-chart-label-container">
-            <div className="container-text">{pieChartSummary.label}</div>
-            <div className="contianer-value">
-              {formatCurrency(pieChartSummary.value)}
-            </div>
-          </div>
-        )}
+      {dataLength > 0 ? (
+        <>
+          <div className="column is-12 donut-chart-wrapper">
+            {chartType === false && (
+              <div className="pie-chart-label-container">
+                <div className="container-text">{pieChartSummary.label}</div>
+                <div className="contianer-value">
+                  {formatCurrency(pieChartSummary.value)}
+                </div>
+              </div>
+            )}
 
-        {chartData.datasets.length > 0 && (
-          <CreateChart
-            chartData={chartData}
-            chartOptions={chartOptions}
-            chartType={chartType ? "barChart" : "doughnutChart"}
-          />
-        )}
-      </div>
-      <div className="columns is-multiline value-categories">
-        {chartEntries.map((entry, id) => (
-          <div className="column is-6" key={`category-${id}`}>
-            <span
-              className="value-category-dot"
-              style={{ backgroundColor: entry.color }}
-            ></span>
-            <div>
-              {" "}
-              <p className="value-category-text">
-                {`${entry.label} ${entry.count ? `(${entry.count})` : ""}`}
-                <FeatherIcon
-                  name={"ArrowUpRight"}
-                  size={20}
-                  color="rgb(17, 138, 178)"
-                />
-              </p>
-              <p className="value-category-value">
-                {formatCurrency(parseFloat(entry.value).toFixed(0))}{" "}
-                <span>{"| "} 100 %</span>
-              </p>
-            </div>
+            {chartData.datasets.length > 0 && (
+              <CreateChart
+                chartData={chartData}
+                chartOptions={chartOptions}
+                chartType={chartType ? "barChart" : "doughnutChart"}
+              />
+            )}
           </div>
-        ))}
-      </div>
+
+          <div className="columns is-multiline value-categories">
+            {chartEntries.map((entry, id) => (
+              <div className="column is-6" key={`category-${id}`}>
+                <span
+                  className="value-category-dot"
+                  style={{ backgroundColor: entry.color }}
+                ></span>
+                <div>
+                  {" "}
+                  <p className="value-category-text">
+                    {`${entry.label} ${entry.count ? `(${entry.count})` : ""}`}
+                    <FeatherIcon
+                      name={"ArrowUpRight"}
+                      size={20}
+                      color="rgb(17, 138, 178)"
+                    />
+                  </p>
+                  <p className="value-category-value">
+                    {formatCurrency(parseFloat(entry.value).toFixed(0))}{" "}
+                    <span>{"| "} 100 %</span>
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <AdvancedCard
+          containerClassName={"dashboard-no-data-content"}
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            flexDirection: "column",
+            gap: "10px",
+          }}
+          type={"s-card"}
+        >
+          <h2 style={{ fontSize: "16px", color: "#747474", fontWeight: "500" }}>
+            No data available for the selected period
+          </h2>
+          <Button
+            isRounded
+            className={"create-expense-btn"}
+            onClick={() => navigate(linkToNavigate)}
+          >
+            {createButtonTitle}
+          </Button>
+        </AdvancedCard>
+      )}
     </div>
   );
 };

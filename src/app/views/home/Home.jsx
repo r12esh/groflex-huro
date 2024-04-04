@@ -477,37 +477,39 @@ const Home = () => {
             </div>
           </div>
         </AdvancedCard>
-        <AdvancedCard type={"s-card"} className={"home-recent-activites"}>
-          <h3 className="recent-activities-heading">Recently Used</h3>
-          <div className="recent-activies-container">
-            <div className="recent-documents">
-              {lastViewedDocuments.map((document, id) => (
-                <div
-                  className={"recent-activites-entry"}
-                  key={`document-${id}`}
-                >
-                  <div className="recent-entry-header">
-                    <div className="recent-title">{document.state}</div>
-                    <div className="recent-number">{document.number}</div>
+        {(lastViewedCustomers.length > 0 || lastViewedDocuments.length > 0) && (
+          <AdvancedCard type={"s-card"} className={"home-recent-activites"}>
+            <h3 className="recent-activities-heading">Recently Used</h3>
+            <div className="recent-activies-container">
+              <div className="recent-documents">
+                {lastViewedDocuments.map((document, id) => (
+                  <div
+                    className={"recent-activites-entry"}
+                    key={`document-${id}`}
+                  >
+                    <div className="recent-entry-header">
+                      <div className="recent-title">{document.state}</div>
+                      <div className="recent-number">{document.number}</div>
+                    </div>
+                    <div className="recent-entry-content">
+                      <div className="recent-title">{document.name}</div>
+                      <div className="recent-number">{document.value}</div>
+                    </div>
                   </div>
-                  <div className="recent-entry-content">
-                    <div className="recent-title">{document.name}</div>
-                    <div className="recent-number">{document.value}</div>
+                ))}
+              </div>
+              <div className="recent-activities-divider"></div>
+              <div className="recent-customers-container">
+                {lastViewedCustomers.map((customer, id) => (
+                  <div className="recent-customer" key={`customer-${id}`}>
+                    <div className="initials">{customer.initials}</div>
+                    <div className="full-name">{customer.name}</div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-            <div className="recent-activities-divider"></div>
-            <div className="recent-customers-container">
-              {lastViewedCustomers.map((customer, id) => (
-                <div className="recent-customer" key={`customer-${id}`}>
-                  <div className="initials">{customer.initials}</div>
-                  <div className="full-name">{customer.name}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </AdvancedCard>
+          </AdvancedCard>
+        )}
       </div>
     </PageContent>
   );

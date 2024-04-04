@@ -225,12 +225,12 @@ const Dashboard = () => {
 
         <div className="columns is-mulitline">
           <div className="column is-6 dashboard-invoice-expense-card">
-            <AdvancedCard type={"s-card"}>
+            <AdvancedCard type={"s-card"} style={{ minHeight: "582px" }}>
               <Tabs tabList={invoicesTabList} />
             </AdvancedCard>
           </div>
           <div className="column is-6 quotation-card">
-            <AdvancedCard type={"s-card"}>
+            <AdvancedCard type={"s-card"} style={{ minHeight: "582px" }}>
               <Tabs tabList={quotationTabList} />
             </AdvancedCard>
           </div>
@@ -240,12 +240,12 @@ const Dashboard = () => {
 
         <div className="columns is-mulitline">
           <div className="column is-6 sale-tabs">
-            <AdvancedCard type={"s-card"}>
+            <AdvancedCard type={"s-card"} style={{ minHeight: "582px" }}>
               <Tabs tabList={salesTabList} />
             </AdvancedCard>
           </div>
           <div className="column is-6 expense-tabs">
-            <AdvancedCard type={"s-card"}>
+            <AdvancedCard type={"s-card"} style={{ minHeight: "582px" }}>
               <Tabs tabList={expenseTabList} />
             </AdvancedCard>
           </div>

@@ -118,6 +118,9 @@ const DashBoardInvoiceTab = () => {
 
   return (
     <DashboardChartCard
+      linkToNavigate="/sales/invoices"
+      createButtonTitle="Create Invoices"
+      dataLength={invoiceList.length}
       date={date}
       pieChartSummary={totalValue}
       className={"dashboard-invoice-expense-tab-wrapper"}

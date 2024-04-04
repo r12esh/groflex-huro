@@ -172,6 +172,9 @@ const DashboardSalesByArticle = () => {
 
   return (
     <DashboardChartCard
+      createButtonTitle="Create Invoice"
+      linkToNavigate="/sales/invoices"
+      dataLength={series.length}
       pieChartSummary={totalvalue}
       className={"dashboard-sales-by-article-tab-wrapper"}
       headerClassName={"sales-by-article-tab-header"}
