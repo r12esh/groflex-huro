@@ -7,6 +7,7 @@ import { Button } from "../../shared/components/button/Button";
 import chargebeePlanEnum from "../../enums/chargebee-plan.enum";
 import { redirectToChargebee } from "../../helpers/redirectToChargebee";
 import { Switch } from "../../shared/components/switch/Switch";
+import moment from "moment";
 
 const ProModulesTab = ({ planDetails }) => {
   const [planPriceYearly, setPlanPriceYearly] = useState(false);
@@ -118,7 +119,9 @@ const ProModulesTab = ({ planDetails }) => {
           {planDetails.planId === chargebeePlanEnum.ACCOUNTING_YEARLY_PLAN
             ? "Your current plan"
             : planDetails.planId === chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN
-            ? "Accounting trial active"
+            ? `Accounting trial active (ends on ${moment(
+                planDetails.currentTermEnd
+              ).format("LL")})`
             : "Most popular"}
         </div>
         <div className="plan-name">
@@ -212,7 +215,16 @@ const ProModulesTab = ({ planDetails }) => {
 
   const ComingSoonCard = () => {
     return (
-      <AdvancedCard type={"s-card"} className={"plan-card-body"}>
+      <AdvancedCard
+        type={"s-card"}
+        className={"plan-card-body"}
+        style={{
+          height:
+            planDetails.planId === chargebeePlanEnum.ACCOUNTING_YEARLY_PLAN
+              ? "418px"
+              : "",
+        }}
+      >
         <div className={`not-selected`} style={{ background: "#F2F2F2" }}>
           More Plan
         </div>
