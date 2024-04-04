@@ -222,6 +222,7 @@ const TimesheetsBilling = () => {
           <div className="column is-12">
             <AdvancedCard type={"s-card"}>
               <ListAdvancedComponent
+                isFilter={false}
                 pagination={false}
                 onRowClicked={(e) => {
                   status === "invoiced" &&
