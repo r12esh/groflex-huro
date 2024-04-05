@@ -59,7 +59,7 @@ const TimesheetsList = () => {
   };
   return (
     <PageContent
-      title="Timesheets List"
+      title="Timesheets"
       titleActionContent={
         <Button
           onClick={() => {

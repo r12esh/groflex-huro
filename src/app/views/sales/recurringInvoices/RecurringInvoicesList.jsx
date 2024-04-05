@@ -91,7 +91,7 @@ const RecurringInvoicesList = () => {
   // };
   return (
     <PageContent
-      title="Recurring Invoices List"
+      title="Recurring Invoices"
       titleActionContent={<Button isSuccess>Create recurring invoice</Button>}
     >
       <ListAdvancedComponent

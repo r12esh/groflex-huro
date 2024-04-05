@@ -21,6 +21,7 @@ import config from "../../../../newConfig";
 import { useSelector } from "react-redux";
 import NewSubscriptionPlanModal from "./NewSubscriptionPlanModal";
 import chargebeePlanEnum from "../../enums/chargebee-plan.enum";
+import FontAwesomeIcon from "../../shared/fontAwesomeIcon/FontAwesomeIcon";
 
 const Home = () => {
   const { subscriptionData, hasNewSubscriptionModalOpened } = useSelector(
@@ -488,7 +489,10 @@ const Home = () => {
                     key={`document-${id}`}
                   >
                     <div className="recent-entry-header">
-                      <div className="recent-title">{document.state}</div>
+                      <div className="recent-title">
+                        {document.state.charAt(0).toUpperCase() +
+                          document.state.slice(1)}
+                      </div>
                       <div className="recent-number">{document.number}</div>
                     </div>
                     <div className="recent-entry-content">
@@ -502,7 +506,13 @@ const Home = () => {
               <div className="recent-customers-container">
                 {lastViewedCustomers.map((customer, id) => (
                   <div className="recent-customer" key={`customer-${id}`}>
-                    <div className="initials">{customer.initials}</div>
+                    <div className="initials">
+                      {customer.kind === "company" ? (
+                        <FontAwesomeIcon name={"building"} size={25} />
+                      ) : (
+                        <FontAwesomeIcon name={"user"} size={25} />
+                      )}
+                    </div>
                     <div className="full-name">{customer.name}</div>
                   </div>
                 ))}

@@ -241,7 +241,7 @@ const InvoicesList = () => {
 
   return (
     <PageContent
-      title="Invoices List"
+      title="Invoices"
       titleActionContent={<Button isSuccess>Create Invoices</Button>}
       breadCrumbData={["Home", "Sales", "Invoices"]}
     >
