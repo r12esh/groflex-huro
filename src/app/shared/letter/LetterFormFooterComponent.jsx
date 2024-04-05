@@ -1,110 +1,112 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import HtmlInputComponent from "../components/input/HtmlInputComponent";
+import resources from "../resources/resources";
+import EditableIndicatorDiv from "../editableIndicatorDiv/EditableIndicatorDiv";
+import { FeatherIcon } from "../featherIcon/FeatherIcon";
+import LetterFooterSignatureComponent from "./LetterFooterSignatureComponent";
 
-const LetterFormFooterComponent = () => {
-  return (
-    <div className="flex-row">
-      <HtmlInputComponent
-        value={
-          <div class="htmlInput_wrapper">
-            <div class="quill htmlInput_input">
-              <div class="ql-container ql-bubble">
-                <div
-                  class="ql-editor"
-                  data-gramm="false"
-                  contenteditable="true"
-                  data-placeholder="Column 1"
-                >
-                  <p>test-ritesh</p>
-                  <p>
-                    <br />
-                  </p>
-                  <p>rgupta@groflex.io</p>
-                  <p>Phone: +91 9370330473</p>
-                  <p>E-Mail: rgupta@groflex.io</p>
-                </div>
-                <div
-                  class="ql-clipboard"
-                  contenteditable="true"
-                  tabindex="-1"
-                ></div>
-                <div class="ql-tooltip ql-hidden">
-                  <span class="ql-tooltip-arrow"></span>
-                  <div class="ql-tooltip-editor">
-                    <input
-                      type="text"
-                      data-formula="e=mc^2"
-                      data-link="https://quilljs.com"
-                      data-video="Embed URL"
-                    />
-                    <a class="ql-close"></a>
-                  </div>
-                  <div class="ql-toolbar">
-                    <span class="ql-formats">
-                      <button type="button" class="ql-bold">
-                        <svg viewBox="0 0 18 18">
-                          {" "}
-                          <path
-                            class="ql-stroke"
-                            d="M5,4H9.5A2.5,2.5,0,0,1,12,6.5v0A2.5,2.5,0,0,1,9.5,9H5A0,0,0,0,1,5,9V4A0,0,0,0,1,5,4Z"
-                          ></path>{" "}
-                          <path
-                            class="ql-stroke"
-                            d="M5,9h5.5A2.5,2.5,0,0,1,13,11.5v0A2.5,2.5,0,0,1,10.5,14H5a0,0,0,0,1,0,0V9A0,0,0,0,1,5,9Z"
-                          ></path>{" "}
-                        </svg>
-                      </button>
-                      <button type="button" class="ql-italic">
-                        <svg viewBox="0 0 18 18">
-                          {" "}
-                          <line
-                            class="ql-stroke"
-                            x1="7"
-                            x2="13"
-                            y1="4"
-                            y2="4"
-                          ></line>{" "}
-                          <line
-                            class="ql-stroke"
-                            x1="5"
-                            x2="11"
-                            y1="14"
-                            y2="14"
-                          ></line>{" "}
-                          <line
-                            class="ql-stroke"
-                            x1="8"
-                            x2="10"
-                            y1="14"
-                            y2="4"
-                          ></line>{" "}
-                        </svg>
-                      </button>
-                      <button type="button" class="ql-underline">
-                        <svg viewBox="0 0 18 18">
-                          {" "}
-                          <path
-                            class="ql-stroke"
-                            d="M5,3V9a4.012,4.012,0,0,0,4,4H9a4.012,4.012,0,0,0,4-4V3"
-                          ></path>{" "}
-                          <rect
-                            class="ql-fill"
-                            height="1"
-                            rx="0.5"
-                            ry="0.5"
-                            width="12"
-                            x="3"
-                            y="15"
-                          ></rect>{" "}
-                        </svg>
-                      </button>
-                    </span>
-                  </div>
-                </div>
+const LetterFormFooterComponent = ({ columns, onSave, onChange, onReset }) => {
+  const [state, setState] = useState({
+    columns,
+  });
+
+  // useEffect(() => {
+  //   window.addEventListener(
+  //     "DOMNodeInserted",
+  //     (event) => {
+  //       event.stopImmediatePropagation();
+  //     },
+  //     true
+  //   );
+  //   return () => {
+  //     window.removeEventListener("DOMNodeInserted", (event) => {
+  //       event.stopImmediatePropagation();
+  //     });
+  //   };
+  // }, []);
+
+  const handleFooterTwoSectionTextChange = (value, columnIndex) => {
+    const footerArr = state.columns;
+    footerArr[columnIndex].metaData.html = value;
+    setState({
+      ...state,
+      columns: footerArr,
+    });
+  };
+
+  const handleAddParagraphToLetterFooter = (columnIndex) => {
+    const footerArr = state.columns;
+    footerArr[columnIndex].metaData.html +=
+      "<p>................ : ...............</p>";
+    setState({
+      ...state,
+      columns: footerArr,
+    });
+  };
+
+  const handleLetterFooterSignatureEdited = (elements) => {
+    console.log(elements, "Elements");
+  };
+
+  const createFirstTwoFooter = () => {
+    // const elements = [];
+    return state.columns.map((column, index) => {
+      if (index < 2) {
+        const {
+          sortId,
+          metaData: { html },
+        } = column;
+        // console.log(html, "HTML FROM BACKEND");
+        // elements[sortId - 1] = (
+        // elements.push(
+        return (
+          <div
+            key={`letter-footer-column-${index}`}
+            className="letter-footer-column column is-4 p-0"
+          >
+            {/* <div className="p-10 font-color-dark is-weight-600">
+              {index === 1 ? "BANK DETAILS" : "COMPANY DETAILS"}
+            </div> */}
+            <EditableIndicatorDiv
+              className="m-r-10"
+              keyProp={`letter-footer-column-${index}`}
+            >
+              <HtmlInputComponent
+                placeholder={`${resources.str_column} ${sortId}`}
+                value={html}
+                onChange={(value) => handleFooterTwoSectionTextChange(value, index)}
+              />
+              <div
+                onClick={() => {
+                  handleAddParagraphToLetterFooter(index);
+                }}
+                className="add-field-button cursor-pointer flex-row flex-align-center color-primary m-10 is-weight-500"
+              >
+                <FeatherIcon
+                  name="PlusCircle"
+                  color="#00a353"
+                  size={17}
+                  className={"m-r-5"}
+                />
+                Add Field
               </div>
-            </div>
+            </EditableIndicatorDiv>
           </div>
-        }
+        );
+      }
+    });
+  };
+
+  // console.log(state, "State: ");
+  const firstTwoColumns = createFirstTwoFooter();
+  const signatureArr = state.columns.slice(2);
+
+  return (
+    <div className="letter-form-footer columns is-multiline">
+      {firstTwoColumns}
+      <LetterFooterSignatureComponent
+        items={signatureArr}
+        onFinish={handleLetterFooterSignatureEdited}
       />
     </div>
   );

@@ -75,12 +75,31 @@
           }
         }
       }
+
+      // .recipient-display-component {
+      //    margin-top: -10px;
+      // }
+
+      .billing-address-toggle-container {
+        .billing-address-toggle-label {
+          color: $dark-text;
+          display: flex;
+          padding-right: 20px;
+          span {
+            width: 23px;
+            margin-top: 3px;
+            margin-right: 10px;
+          }
+        }
+      }
     }
     .transaction-letter-shipping-container {
-      .sender-address-quill-container {
-        .sender-address-quill {
+      .transaction-form-shipping-quill-container {
+        .shippping-quill {
+          height: 39px;
           .ql-container {
             .ql-editor {
+              overflow-y: hidden;
             }
             p {
               color: $dark-text;
@@ -152,6 +171,173 @@
             right: -30px;
           }
         }
+      }
+    }
+  }
+
+  .transaction-form-title-and-subtitle-container {
+    .transaction-form-title-container {
+      width: 50%;
+      .transaction-form-title {
+        height: 59px;
+        .ql-container {
+          .ql-editor {
+            overflow-y: hidden;
+          }
+          p {
+            color: $dark-text;
+            font-size: 27px;
+            font-weight: 600;
+          }
+        }
+      }
+    }
+    .transaction-form-subtitle-container {
+      margin-top: -5px;
+      .transaction-form-subtitle {
+        height: 38px;
+        .ql-container {
+          .ql-editor {
+            overflow-y: hidden;
+          }
+          p {
+            // color: $dark-text;
+            color: $font-color-secondary;
+            font-size: 14px;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+  }
+
+  .transaction-form-positions-and-total-container {
+    .transaction-form-positions {
+      height: 300px;
+    }
+    .transaction-form-total-container {
+      .transaction-positions-payment-info {
+        .payment-info-row {
+          color: $font-color-secondary;
+          width: 100%;
+          padding: 10px;
+          margin-bottom: -7px;
+        }
+        .transaction-positions-totalInWords {
+          font-weight: 600;
+        }
+        .transaction-form-pay-conditions {
+          cursor: pointer;
+        }
+        .transaction-form-conclusion-textarea {
+          padding: 0;
+          .paycondition-text {
+            // height: 38px;
+            .ql-container {
+              .ql-editor {
+                overflow-y: hidden;
+              }
+              p {
+                // color: $dark-text;
+                color: $font-color-secondary;
+                font-size: 14px;
+                font-weight: 400;
+              }
+            }
+          }
+        }
+      }
+    }
+    .letter-positions-total-content {
+      min-height: 280px;
+    }
+  }
+
+  .letter-form-footer {
+    margin-top: 50px;
+    .letter-footer-column {
+      .ql-container {
+        .ql-editor {
+          overflow-y: hidden;
+          p {
+            color: $font-color-secondary;
+            font-size: 14px;
+            font-weight: 500;
+            strong {
+              color: $font-color-secondary;
+              font-weight: bold;
+            }
+          }
+        }
+      }
+    }
+    .letter-footer-signature-edit {
+      height: 82%;
+      .upload-btn-container {
+        border: 1px solid $font-grey-dark;
+        border-radius: 4px;
+        padding: 10px;
+        .image-upload-btn {
+          width: 100%;
+          cursor: pointer;
+          color: $primary;
+          font-weight: 500;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+      }
+      .signature-input {
+        input {
+          font-size: 30px;
+          padding: 0 10px;
+          font-family: Caveat, cursive !important;
+          overflow-y: hidden;
+          height: 1.8em;
+        }
+      }
+    }
+
+    .letter-footer-signature-display {
+      cursor: default;
+      height: 82%;
+      user-select: none;
+      .signature-text {
+        font-family: Caveat, cursive;
+        font-weight: 400;
+        font-size: 30px;
+      }
+      .signature-image {
+        max-width: 180px;
+        max-height: 90px;
+        object-fit: contain;
+      }
+    }
+  }
+
+  .last-footer-msg-container {
+    .thank-you-msg {
+      text-align: center;
+    }
+    .groflex-ad {
+      height: 30px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 15px;
+      background-color: #f2f2f2;
+      padding: 5px;
+      font-size: 12px;
+      .footer-logo {
+        object-fit: contain;
+        height: 15px;
+        padding-right: 7px;
+        border-right: 1px solid #dddddd;
+        margin-right: 7px;
+      }
+      .app-link {
+        color: $primary;
+        font-weight: 600;
       }
     }
   }

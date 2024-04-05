@@ -1,4 +1,6 @@
 //Font classes
+@import url("https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&display=swap");
+
 .font-14px {
   font-size: 14px;
 }
@@ -228,6 +230,10 @@
   }
 }
 
+.test-border {
+  border: 1px dashed $font-grey-dark;
+}
+
 // Note: Override other classes
 .ql-bubble {
   .ql-editor {
@@ -257,4 +263,11 @@
 *::selection {
   background-color: $primary;
   color: white;
+}
+
+label {
+  &.checkbox::selection {
+    background-color: $primary;
+    color: white;
+  }
 }

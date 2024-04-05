@@ -85,7 +85,8 @@ const RecipientDisplayComponent = ({
         marginTop: "-10px",
       }}
       onClick={handleDisplayClick}
-      className="cursor-pointer p-10"
+      // className="cursor-pointer p-10"
+      className="recipient-display-component cursor-pointer p-t-10 p-b-10 p-l-10 p-r-20 m-r-10"
       icon={
         <FontAwesomeIcon
           onClick={handleRemoveClick}

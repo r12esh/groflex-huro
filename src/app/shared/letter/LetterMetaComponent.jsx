@@ -160,7 +160,7 @@ const LetterMetaComponent = ({
       [name]: !String(value).length ? FORM_EMPTY_ERROR_MSG : "",
     });
 
-    onChange(newObj);
+    // onChange(newObj);
   };
 
   const handleDateRangeChange = (name, date) => {
@@ -190,7 +190,7 @@ const LetterMetaComponent = ({
       [name]: !String(date).length ? FORM_EMPTY_ERROR_MSG : "",
     });
 
-    onChange(newObj);
+    // onChange(newObj);
   };
 
   const handleFieldHideClick = (field, index) => {
@@ -852,8 +852,8 @@ const LetterMetaComponent = ({
       }
     });
     if (formIsValid) {
-      onChange(state.data);
       closeEdit();
+      onChange(state.data);
     }
   };
 

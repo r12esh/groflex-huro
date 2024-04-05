@@ -17,6 +17,11 @@ import Modal from "../modal/Modal";
 import { Input } from "../input/Input";
 import LetterMetaComponent from "../../letter/LetterMetaComponent";
 import LetterFormFooterComponent from "../../letter/LetterFormFooterComponent";
+import { Checkbox } from "../checkbox/Checkbox";
+import { convertToWords } from "../../../helpers/convertRupeesIntoWords";
+import groflexLetterFooterIcon from "../../../../assets/groflex/logos/groflex_name_logo_color_no_tag.png";
+import LetterFooterGroflexAd from "../../letter/LetterFooterGroflexAd";
+import LetterPayConditionsComponent from "../../letter/LetterPayConditionsComponent";
 
 const TransactionEditComponent = ({
   transaction,
@@ -36,7 +41,7 @@ const TransactionEditComponent = ({
   isDeliveryChallan,
   isPurchaseOrder,
 }) => {
-  const [transactionStates, setTransactionStates] = useState({
+  const [state, setState] = useState({
     transaction,
     letter,
     miscOptions,
@@ -50,6 +55,7 @@ const TransactionEditComponent = ({
     isActiveComponentHasError: false,
     activeComponent: "none",
     isReloadingLetterHeader: false,
+    billingIsSameAsShipping: false,
     // canCreateOffer:
     //   invoiz.user && invoiz.user.hasPermission(userPermissions.CREATE_OFFER),
     // canCreateChallan:
@@ -69,10 +75,10 @@ const TransactionEditComponent = ({
   });
 
   otherRefs.current.activeComponentHandler = (activeComponent, error) => {
-    setTransactionStates({ ...transactionStates, activeComponent });
+    setState({ ...state, activeComponent });
     if (typeof error !== "undefined") {
-      setTransactionStates({
-        ...transactionStates,
+      setState({
+        ...state,
         isActiveComponentHasError: error,
       });
     }
@@ -84,12 +90,12 @@ const TransactionEditComponent = ({
 
   // Note: Fabric Canvas Functions
   const onLetterHeaderEdited = (elements) => {
-    let editedLetter = transactionStates.letter;
+    let editedLetter = state.letter;
     editedLetter.header = elements;
 
-    setTransactionStates(
+    setState(
       {
-        ...transactionStates,
+        ...state,
         letter: editedLetter,
       },
       () => {
@@ -104,8 +110,8 @@ const TransactionEditComponent = ({
               body: { data },
             } = response;
             const newLetter = new Letter(data);
-            setTransactionStates({
-              ...transactionStates,
+            setState({
+              ...state,
               // isReloadingLetterHeader: true,
               // isReloadingLetterHeader: false,
               letter: newLetter,
@@ -156,7 +162,7 @@ const TransactionEditComponent = ({
     baseCurrency,
     exchangeRate
   ) => {
-    const { transaction } = transactionStates;
+    const { transaction } = state;
 
     if (selectedOption) {
       const { customerData } = selectedOption;
@@ -209,8 +215,8 @@ const TransactionEditComponent = ({
 
       newTransaction.setCustomer(customerData);
       newTransaction.positions = calculatePositions(newTransaction);
-      setTransactionStates({
-        ...transactionStates,
+      setState({
+        ...state,
         transaction: newTransaction,
       });
     } else {
@@ -228,8 +234,8 @@ const TransactionEditComponent = ({
       newTransaction.exchangeRate = 0.0;
       newTransaction.setCustomer({});
       newTransaction.positions = calculatePositions(newTransaction);
-      setTransactionStates({
-        ...transactionStates,
+      setState({
+        ...state,
         transaction: newTransaction,
       });
     }
@@ -280,18 +286,86 @@ const TransactionEditComponent = ({
     return transaction.positions;
   };
 
-  // Note: Letter Recipient Functions
+  // Note: Letter Form row Functions
   const handelLetterSenderChange = (value) => {
-    const transactionSatesCopy = { ...transactionStates };
+    const transactionSatesCopy = { ...state };
     transactionSatesCopy.letter.sender = value;
-    setTransactionStates({ ...transactionSatesCopy });
+    setState({ ...transactionSatesCopy });
+  };
+
+  const handleLetterMetaChange = (data) => {
+    const transactionSatesCopy = { ...state };
+    transactionSatesCopy.transaction = data;
+    setState({ ...transactionSatesCopy });
+  };
+
+  // Note: Title and Subtitle change functions
+  const handleLetterTitleChange = (value) => {
+    const transactionSatesCopy = { ...state };
+    transactionSatesCopy.transaction.title = value;
+    setState({ ...transactionSatesCopy });
+  };
+
+  const handleSubtitleChange = (value) => {
+    const transactionSatesCopy = { ...state };
+    transactionSatesCopy.transaction.texts.introduction = value;
+    setState({ ...transactionSatesCopy });
+  };
+
+  // Note: Positions and total change functions
+  const handleLetterPayConditionsChange = (value) => {
+    const transactionSatesCopy = { ...state };
+  };
+
+  const handleDeliveryConditionChange = (value) => {
+    const transactionSatesCopy = { ...state };
+  };
+
+  // Note: Footer functions
+
+  const handleLetterFooterChange = (columns) => {
+    const { letter } = state;
+    letter.footer = columns;
+    setState({ ...state, letter });
+  };
+
+  const handleLetterFooterSave = (columns) => {
+    const { letter } = state;
+    groflexService
+      .request(config.letter.endpoints.saveLetterPaperUrl, {
+        auth: true,
+        method: "POST",
+        data: letter,
+      })
+      .then(() => {
+        groflexService.toast.success(resources.letterFooterSaveSuccessMessage);
+      })
+      .catch(() => {
+        groflexService.toast.error(resources.letterFooterSaveErrorMessage);
+      });
+  };
+
+  const handleLetterFooterReset = () => {
+    const { letter } = this.state;
+    letter.footer = letter.footer.map((column, index) => {
+      column.metaData.html = otherRefs.current.footerOriginalValues[index];
+      return column;
+    });
+    setState({ ...state, letter });
+  };
+
+  const handleAddParagraphToLetterFooter = (columnIndex) => {
+    const footerArr = state.letter.footer;
+    footerArr[columnIndex].metaData.html +=
+      "<p>................ : ...............</p>";
+    setState({
+      ...state,
+      letter: { ...state.letter, footer: footerArr },
+    });
   };
 
   const { navigateBackTo, pageTitle, breadCrumbData } = getPageInfo();
-  console.log(
-    transactionStates.transaction,
-    "Transaction from Transaction Edit component"
-  );
+  console.log(state.transaction, "Transaction from Transaction Edit component");
   return (
     <PageContent
       navigateBackTo={navigateBackTo}
@@ -300,45 +374,80 @@ const TransactionEditComponent = ({
     >
       <div className="transaction-edit-component">
         <LetterHeaderComponent
-          items={transactionStates.letter.header}
+          items={state.letter.header}
           // onCancel={onLetterHeaderCancel}
           onFinish={(elements) => onLetterHeaderEdited(elements)}
         />
-        {/* First row -> BILLED TO, SHiP TO, ANd INVOICE NUMBE STUFF  */}
+        {/* First row -> BILLED TO, SHiP TO, AND LETTER META FRORM ROW  */}
         <div className="transaction-form-row columns is-multiline m-t-10">
           {/* BIll to */}
           <div className="transaction-letter-recipient-container column is-4 p-0">
             <EditableIndicatorDiv className="transaction-form-sender-quill-container">
               <HtmlInputComponent
                 className={"sender-quill"}
-                value={transactionStates.letter.sender}
+                value={state.letter.sender}
                 onChange={handelLetterSenderChange}
                 placeholder={"BILLED TO"}
               />
-              {/* Enter customer */}
             </EditableIndicatorDiv>
             <RecipientComponent
               onChange={(option, baseCurrency, exchangeRate) =>
                 handleRecipientChange(option, baseCurrency, exchangeRate)
               }
-              transaction={transactionStates.transaction}
-              customerData={transactionStates.transaction.customerData}
-              recipientState={transactionStates.letterRecipientState}
+              transaction={state.transaction}
+              customerData={state.transaction.customerData}
+              recipientState={state.letterRecipientState}
               recipientType={isPurchaseOrder ? "payee" : "customer"}
-              customerFullData={transactionStates.transaction.customer}
+              customerFullData={state.transaction.customer}
               isPurchaseOrder={isPurchaseOrder}
             />
+            <div className="billing-address-toggle-container">
+              <Checkbox
+                label={"Billing address is the same as shipping address"}
+                value={state.billingIsSameAsShipping}
+                labelClass={"billing-address-toggle-label"}
+                onChange={() => {
+                  setState({
+                    ...state,
+                    billingIsSameAsShipping: !state.billingIsSameAsShipping,
+                  });
+                }}
+                {...(state.billingIsSameAsShipping && {
+                  isSolid: true,
+                  isSuccess: true,
+                  checked: true,
+                })}
+              />
+            </div>
           </div>
           {/* Ship to */}
           <div className="transaction-letter-shipping-container column is-4 p-0">
-            {/* <EditableIndicatorDiv className="sender-address-quill-container">
-              <HtmlInputComponent
-                className={"sender-address-quill"}
-                value={"SHIP TO"}
-              />
-            </EditableIndicatorDiv> */}
+            {/* {!state.billingIsSameAsShipping && (
+              <>
+                <EditableIndicatorDiv className="transaction-form-shipping-quill-container">
+                  <HtmlInputComponent
+                    className={"shippping-quill"}
+                    // value={state.letter.sender}
+                    value={"SHIP TO"}
+                    // onChange={handelLetterSenderChange}
+                    placeholder={"SHIP TO"}
+                  />
+                </EditableIndicatorDiv>
+                <RecipientComponent
+                  onChange={(option, baseCurrency, exchangeRate) =>
+                    handleRecipientChange(option, baseCurrency, exchangeRate)
+                  }
+                  transaction={state.transaction}
+                  customerData={state.transaction.customerData}
+                  recipientState={state.letterRecipientState}
+                  recipientType={isPurchaseOrder ? "payee" : "customer"}
+                  customerFullData={state.transaction.customer}
+                  isPurchaseOrder={isPurchaseOrder}
+                />
+              </>
+            )} */}
           </div>
-          {/* Meta */}
+          {/* Letter Meta Component*/}
           <div className="transaction-form-meta column is-4 p-0">
             <LetterMetaComponent
               numerationOptions={numerationOptions}
@@ -349,28 +458,130 @@ const TransactionEditComponent = ({
               isPurchaseOrder={isPurchaseOrder}
               isProformaInvoice={isProformaInvoice}
               isInvoice={isInvoice}
-              onChange={() => {}}
+              onChange={handleLetterMetaChange}
             />
           </div>
         </div>
-        {/* Letter Footer */}
-        <LetterFormFooterComponent />
-        <Modal
-          title={"Note to the Customer"}
-          onSubmit={() => setNotesModalData({ active: false, msg: "" })}
-          closeModalFunction={() => {
-            setNotesModalData({ active: false, msg: "" });
-          }}
-          isActive={notesModalData.active}
-          cancelBtnName={resources.str_shutdown}
-          submitBtnName={resources.str_ok}
-        >
-          <div
-            className="recipient-notes-modal"
-            dangerouslySetInnerHTML={{ __html: notesModalData?.msg }}
-          />
-        </Modal>
+        {/* Transaction Form Title and Subtitle container */}
+        <div className="transaction-form-title-and-subtitle-container columns is-multiline m-t-10">
+          <EditableIndicatorDiv className="transaction-form-title-container column is-12 p-0">
+            <HtmlInputComponent
+              onChange={handleLetterTitleChange}
+              className={"transaction-form-title"}
+              value={state.transaction.title}
+              placeholder={
+                isQuotation
+                  ? resources.str_offer
+                  : isPurchaseOrder
+                  ? resources.str_purchaseOrder
+                  : isDeliveryChallan
+                  ? resources.str_challan
+                  : resources.str_invoice
+              }
+            />
+          </EditableIndicatorDiv>
+          <EditableIndicatorDiv className="transaction-form-subtitle-container column is-12 p-0">
+            <HtmlInputComponent
+              onChange={handleSubtitleChange}
+              className={"transaction-form-subtitle"}
+              value={state.transaction.texts.introduction}
+              placeholder={state.transaction.title}
+            />
+          </EditableIndicatorDiv>
+        </div>
+        {/* TRANSACTION FORM POSITIONS AND TOTAL CONTAINER */}
+        <div className="transaction-form-positions-and-total-container columns is-multiline m-t-10">
+          <div className="transaction-form-positions column is-12 test-border p-0">
+            <EditableIndicatorDiv className="cursor-pointer p-10">
+              Table part
+            </EditableIndicatorDiv>
+          </div>
+          <div className="transaction-form-total-container columns is-multiline column is-12 test-borde m-0 p-0">
+            {/*  TRANSACTION POSITIONS TOTAL IN WORDS*/}
+            <div className="transaction-positions-payment-info columnseee is-multilineee column is-8 p-0 m-0 test-border">
+              <div className="transaction-positions-totalInWords payment-info-row">
+                {state.transaction.totalGross &&
+                state.transaction.customerData &&
+                state.transaction.customerData.countryIso === "IN"
+                  ? `${resources.str_totalInWords}: ${convertToWords(
+                      state.transaction.totalGross
+                    )} ${resources.str_only}`
+                  : ""}
+              </div>
+              {/* LETTER PAY CONDITIONS COMPONENT*/}
+              {isPurchaseOrder ? (
+                <EditableIndicatorDiv className="transaction-form-textarea outlined">
+                  <HtmlInputComponent
+                    value={
+                      state.transaction.payConditionData &&
+                      state.transaction?.payConditionData?.purchaseOrderText
+                    }
+                    onChange={handleLetterPayConditionsChange}
+                    placeholder={resources.str_enterPaymentConditions}
+                  />
+                </EditableIndicatorDiv>
+              ) : (
+                <LetterPayConditionsComponent
+                  onChange={handleLetterPayConditionsChange}
+                />
+              )}
+              {/* DELIVERY CONDITION TEXTAREA */}
+              {isQuotation || isPurchaseOrder || isDeliveryChallan ? (
+                <EditableIndicatorDiv className="transaction-form-textarea outlined">
+                  <HtmlInputComponent
+                    value={state?.transaction?.deliveryConditionData?.text}
+                    onChange={handleDeliveryConditionChange}
+                    placeholder={resources.str_enterDeliveryConditions}
+                  />
+                </EditableIndicatorDiv>
+              ) : null}
+
+              {/* SMALL BUSINESS STATIC TEXT */}
+              {state.transaction.smallBusiness && (
+                <div className="transaction-form-smallbusiness payment-info-row">
+                  {state.transaction.smallBusinessText}
+                </div>
+              )}
+              {/* LETTER PAY CONCLUSION TEXTAREA */}
+              <EditableIndicatorDiv className="transaction-form-conclusion-textarea payment-info-row">
+                <HtmlInputComponent
+                  className={"paycondition-text"}
+                  value={state.transaction.texts.conclusion}
+                />
+              </EditableIndicatorDiv>
+            </div>
+
+            <div className="letter-positions-total-content column is-4 test-border">
+              Total Content
+            </div>
+          </div>
+        </div>
+        {/* LETER FORM FOOTER */}
+        <LetterFormFooterComponent
+          columns={state.letter.footer}
+          onSave={handleLetterFooterSave}
+          onChange={handleLetterFooterChange}
+          onReset={handleLetterFooterReset} 
+          addParagraphToLetterFooter={handleAddParagraphToLetterFooter}
+        />
+        {/* Footer Groflex Ad */}
+        <LetterFooterGroflexAd />
       </div>
+      <Modal
+        title={"Note to the Customer"}
+        onSubmit={() => setNotesModalData({ active: false, msg: "" })}
+        closeModalFunction={() => {
+          setNotesModalData({ active: false, msg: "" });
+        }}
+        isActive={notesModalData.active}
+        cancelBtnName={resources.str_shutdown}
+        submitBtnName={resources.str_ok}
+      >
+        <div
+          className="recipient-notes-modal"
+          dangerouslySetInnerHTML={{ __html: notesModalData?.msg }}
+        />
+      </Modal>
     </PageContent>
   );
 };

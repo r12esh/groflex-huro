@@ -19,7 +19,7 @@ const RecipientSelectComponent = ({
   };
 
   return (
-    <OnClickOutside onClickOutside={showEmpty}>
+    <OnClickOutside onClickOutside={showEmpty} className="p-r-10 p-l-10">
       <ContactSearchComponent
         value={value}
         onChange={handleChange}

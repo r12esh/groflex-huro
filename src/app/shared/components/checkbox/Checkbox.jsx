@@ -14,6 +14,7 @@ export const Checkbox = ({
   checked = false,
   styleContent,
   value,
+  labelClass,
   onChange = () => {},
 }) => {
   const getButtonClasses = () => {
@@ -29,6 +30,7 @@ export const Checkbox = ({
     isInfo && classes.push("is-info");
     isWarning && classes.push("is-warning");
     isDanger && classes.push("is-danger");
+    labelClass && classes.push(labelClass);
 
     return classes.join(" ");
   };

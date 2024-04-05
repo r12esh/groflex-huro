@@ -8,9 +8,11 @@ const EditableIndicatorDiv = ({
   icon,
   onClick = () => {},
   rest,
+  keyProp,
 }) => {
   return (
     <div
+      key={keyProp}
       onClick={onClick}
       style={style}
       className={`editable-indicator-div ${className}`}

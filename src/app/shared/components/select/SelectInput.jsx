@@ -16,6 +16,7 @@ export const SelectInput = ({
   onInputChange,
   isLoading = undefined,
   menuPlacement = "bottom",
+  isClearable,
 }) => {
   const [selectedOption, setSelectedOption] = useState();
 
@@ -86,7 +87,7 @@ export const SelectInput = ({
   }
   return (
     <Select
-      isClearable
+      isClearable={isClearable}
       placeholder={placeholder}
       value={selectedOption}
       options={options}
