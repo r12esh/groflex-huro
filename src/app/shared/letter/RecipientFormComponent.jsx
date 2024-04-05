@@ -72,6 +72,7 @@ const RecipientFormComponent = ({ onBlur, customerData, stateOptions }) => {
   };
 
   // console.log(salutationOptions, titleOptions, "OPTIONS IN FORM");
+  // TODO: Add currency rate
   console.log(customerData, "CUSTOEMR DATA");
 
   return (

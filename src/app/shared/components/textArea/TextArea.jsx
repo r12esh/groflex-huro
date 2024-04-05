@@ -10,7 +10,7 @@ export const TextArea = ({ rows, placeholder, value, onChange, ...rest }) => {
         value={value}
         onChange={onChange}
         {...rest}
-      ></textarea>
+      />
     </div>
   );
 };

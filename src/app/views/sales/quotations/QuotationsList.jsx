@@ -133,7 +133,7 @@ const QuotationsList = () => {
           />
         )
       }
-      {
+      {/* {
         isTextModuleModalActive && (
           <NumberRangeModal
             isActive={isModalActive}
@@ -143,7 +143,7 @@ const QuotationsList = () => {
             setIsLoading={setIsLoading}
           />
         )
-      }
+      } */}
 
       <ListAdvancedComponent
         onRowClicked={(e) => {

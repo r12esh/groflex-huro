@@ -99,19 +99,11 @@ const RecipientFormCompanyComponent = ({
     }
   };
 
-  const handleFirstNameChange = (event) => {
+  const handleCompanyNameChange = (event) => {
     let text = event.target.value.trim();
     setRecipientFormDataCompany({
       ...recipientFormDataCompany,
-      firstName: text,
-    });
-  };
-
-  const handleLastNameChange = (event) => {
-    let text = event.target.value.trim();
-    setRecipientFormDataCompany({
-      ...recipientFormDataCompany,
-      lastName: text,
+      companyName: text,
     });
   };
 
@@ -197,12 +189,12 @@ const RecipientFormCompanyComponent = ({
             placeholder={"Enter Company Name"}
             hasValidation
             value={recipientFormDataCompany.companyName}
-            onChange={handleFirstNameChange}
+            onChange={handleCompanyNameChange}
             helpText={formErrors.companyNameError}
             hasError={formErrors.companyNameError}
           />
         </div>
-        <div className="field column is-12 p-b-0 p-t-0">
+        {/* <div className="field column is-12 p-b-0 p-t-0">
           <label>Contact</label>
           <SelectInput
             options={countriesOptions}
@@ -210,7 +202,7 @@ const RecipientFormCompanyComponent = ({
             value={recipientFormDataCompany.countryIso}
             onChange={handleCountryChange}
           />
-        </div>
+        </div> */}
         <div className="field column is-12 p-b-0 p-t-0">
           <label>Mobile No.</label>
           <Input

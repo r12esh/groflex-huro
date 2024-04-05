@@ -38,16 +38,21 @@ const HtmlInputComponent = ({
   className,
   style,
   placeholder,
+  hideToolbar,
+  onFocus,
+  onKeyUp,
 }) => {
   return (
     <ReactQuill
+      onKeyUp={onKeyUp}
+      onFocus={onFocus}
       placeholder={placeholder}
       className={className}
       style={{
         ...style,
       }}
       theme="bubble"
-      modules={{ toolbar: toolbarOptions }}
+      modules={{ toolbar: hideToolbar ? null : toolbarOptions }}
       value={value}
       onChange={onChange}
     />
