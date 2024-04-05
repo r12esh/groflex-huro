@@ -271,3 +271,19 @@ label {
     color: white;
   }
 }
+
+// .react-pdf__Page__canvas {
+//   margin: 0 auto;
+// }
+// .react-pdf__Page__textContent {
+//   margin: 0 auto;
+// }
+// .react-pdf__Page__annotations {
+//   margin: 0 auto;
+// }
+
+.react-pdf__Page {
+  > * {
+    margin: 0 auto;
+  }
+}
