@@ -67,6 +67,7 @@ import Gstr2AList from "./app/views/accounting/reports/Gstr2AList";
 import Gstr3BList from "./app/views/accounting/reports/Gstr3BList";
 import DeliveryChallan from "./app/views/accounting/deliveryChallan/DeliveryChallan";
 import BillingInfo from "./app/views/billingInfo/BillingInfo";
+import DeliveryChallanDetail from "./app/views/accounting/deliveryChallan/DeliveryChallanDetail";
 
 store.subscribe(() => {
   // console.log(store.getState());
@@ -171,6 +172,10 @@ function App() {
           <Route
             path="accounting/delivery-challan"
             element={<DeliveryChallan />}
+          />
+          <Route
+            path="accounting/delivery-challan/:deliveryChallanId"
+            element={<DeliveryChallanDetail />}
           />
 
           {/* Inventory Module */}

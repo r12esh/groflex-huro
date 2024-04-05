@@ -100,6 +100,7 @@ const ContactActivitiesTab = ({ contactId }) => {
   return (
     <div className="contact-activities-tab-main">
       <ListAdvancedComponent
+        headerControls={false}
         checkBoxes={false}
         onRowClicked={(e) => {}}
         onActionClick={handleActionClick}

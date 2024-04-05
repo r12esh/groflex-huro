@@ -1,0 +1,43 @@
+.delivery-challan-detail-wrapper {
+  .delivery-challan-company-logo {
+    height: 180px;
+  }
+  .delivery-challan-customer-details {
+    min-height: 246px;
+    display: flex;
+    justify-content: space-between;
+    .customer-detail-container {
+      margin-bottom: 10px;
+      h2 {
+        color: #888787;
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+    .delivery-challan-detail-container {
+      .detail-label {
+        width: 100px;
+      }
+      .detail-value {
+        width: 120px;
+        text-align: right;
+      }
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+      h2 {
+        color: #888787;
+        font-size: 14px;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .delivery-challan-table {
+    h2 {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+  }
+}

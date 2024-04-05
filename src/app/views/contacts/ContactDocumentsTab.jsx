@@ -34,6 +34,7 @@ const ContactDocumentsTab = ({ contactId }) => {
     <div className="contact-documents-tab-main">
       {" "}
       <ListAdvancedComponent
+        headerControls={false}
         checkBoxes={false}
         onRowClicked={(e) => handleRowClicked(e)}
         onActionClick={handleActionClick}

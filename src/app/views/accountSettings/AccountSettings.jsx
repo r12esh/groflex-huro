@@ -16,6 +16,7 @@ import groflexService from "../../services/groflex.service";
 import config from "../../../../newConfig";
 import { getCountries } from "../../helpers/getCountries";
 import { useSelector } from "react-redux";
+import AccountDetailsTab from "../billingInfo/AccountDetailsTab";
 
 const countriesOptions = getCountries().map((country) => ({
   label: country.label,
@@ -26,6 +27,7 @@ const isEmail = (email) =>
   /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(email);
 
 const AccountSettings = () => {
+  const { subscriptionData } = useSelector((state) => state?.accountData);
   const tenantData = useSelector((state) => state.accountData.tenantData);
   const userData = useSelector((state) => state.accountData.userData);
   const [changeEmailModalActive, setChangeEmailModalActive] = useState(false);
@@ -348,7 +350,7 @@ const AccountSettings = () => {
           gstNumber: companyInfo.gstNo,
           companyName: companyInfo.companyName,
           // country: companyInfo.country,
-          street: "rgupta lane no 0",
+          street: companyInfo.companyAddress,
           zipCode: "",
 
           // gstType: companyInfo.gstType,
@@ -400,6 +402,7 @@ const AccountSettings = () => {
 
   // console.log(companyInfo, profileInfo);
   // console.log(companyInfo.state);
+
   return (
     <PageContent
       loading={!stateOptions.length}
@@ -419,7 +422,7 @@ const AccountSettings = () => {
         onChange={handleMobileChangeNumber}
         errorMessage={profileError.phoneNoError}
       />
-      <div className="page-content-inner">
+      <div className="page-content-inner account-settings-warpper">
         <div className="tabs-wrapper">
           <div className="tabs-inner">
             <div className="tabs">
@@ -451,7 +454,7 @@ const AccountSettings = () => {
 
                   <>
                     <div className="columns is-multiline m-b-5">
-                      <div className="column is-6">
+                      <div className="column is-12">
                         <div className="field">
                           <label>Registered E-mail Address</label>
                           <InputAddons
@@ -467,7 +470,7 @@ const AccountSettings = () => {
                         </div>
                       </div>
 
-                      <div className="column is-6">
+                      {/* <div className="column is-6">
                         <div className="field ">
                           <label>Phone Number</label>
                           <InputAddons
@@ -488,7 +491,7 @@ const AccountSettings = () => {
                             helpText={profileError.phoneNoError}
                           />
                         </div>
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="columns is-multiline">
@@ -544,7 +547,7 @@ const AccountSettings = () => {
 
                   <>
                     <div className="columns is-multiline m-b-5">
-                      <div className="column is-6">
+                      <div className="column is-12">
                         <div className="field">
                           <label>Company Name *</label>
                           <Input
@@ -561,7 +564,7 @@ const AccountSettings = () => {
                         </div>
                       </div>
 
-                      <div className="column is-6">
+                      {/* <div className="column is-6">
                         <div className="field">
                           <label>Phone Number</label>
                           <InputAddons
@@ -578,7 +581,7 @@ const AccountSettings = () => {
                             helpText={companyError.companyPhoneNoError}
                           />
                         </div>
-                      </div>
+                      </div> */}
                     </div>
 
                     <div className="columns is-multiline m-b-5">
@@ -677,8 +680,10 @@ const AccountSettings = () => {
                     <div className="columns is-multiline m-b-5">
                       <div className="column is-6">
                         <div className="field">
-                          <label>E-mail Address</label>
+                          <label>Registered E-mail Address</label>
                           <Input
+                            value={profileInfo.registerEmail}
+                            disabled
                             placeholder={"Enter Detials"}
                             type="email"
                             onChange={handleCompanyEmailChange}
@@ -700,7 +705,7 @@ const AccountSettings = () => {
                           />
                         </div>
                       </div>
-
+                      {/* 
                       <div className="column is-6">
                         <div className="field">
                           <label>GST Type *</label>
@@ -729,7 +734,7 @@ const AccountSettings = () => {
                             }
                           />
                         </div>
-                      </div>
+                      </div> */}
                       <div className="column is-6">
                         <div className="field">
                           <label>GST</label>
@@ -750,7 +755,7 @@ const AccountSettings = () => {
 
               <div className="column is-5">
                 {/* KYC FORM */}
-                <AdvancedCard
+                {/* <AdvancedCard
                   type={"s-card"}
                   footer
                   footerContentRight={<Button isSuccess>View Form</Button>}
@@ -769,7 +774,10 @@ const AccountSettings = () => {
                       <ApexChart />
                     </div>
                   </div>
-                </AdvancedCard>
+                </AdvancedCard> */}
+                {subscriptionData && (
+                  <AccountDetailsTab planDetails={subscriptionData} />
+                )}
 
                 <div className="m-t-15" />
 

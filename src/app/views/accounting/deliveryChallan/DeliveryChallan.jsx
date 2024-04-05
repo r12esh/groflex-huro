@@ -9,7 +9,9 @@ import InvoiceState from "../../../enums/invoice/invoice-state.enum";
 import FontAwesomeIcon from "../../../shared/fontAwesomeIcon/FontAwesomeIcon";
 import { CustomShowHeaderSum } from "../../../shared/components/list-advanced/CustomShowHeaderSum";
 import { ListAdvancedDefaultSettings } from "../../../helpers/constants";
+import { useNavigate } from "react-router-dom";
 const DeliveryChallan = () => {
+  const navigate = useNavigate();
   const handleActionClick = () => {};
   const getActionPopupButtons = (item) => {
     const entries = [];
@@ -68,7 +70,9 @@ const DeliveryChallan = () => {
     <PageContent title={"Delivery Challan"}>
       <ListAdvancedComponent
         actionMenuData={getActionPopupButtons}
-        onRowClicked={(e) => {}}
+        onRowClicked={(row) =>
+          navigate(`/accounting/delivery-challan/${row.data.id}`)
+        }
         onActionClick={handleActionClick}
         columnDefs={[
           {

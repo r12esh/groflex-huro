@@ -79,6 +79,7 @@ const resourceUrls = {
   user: `${resourceHost}setting/user`,
   contact: `${resourceHost}customer`,
   miscellaneous: `${resourceHost}setting/miscellaneous`,
+  uploadProfileLogo: `${resourceHost}tenant/logo`,
 
   //Invoices
   invoices: (offset, limit, filter) =>
@@ -135,6 +136,7 @@ const resourceUrls = {
   //Delivery Challan
   deliveryChallanList: (offset, limit, filter) =>
     `${resourceHost}deliveryChallan?offset=${offset}&searchText=&limit=${limit}&orderBy=date&desc=true&filter=${filter}&trigger=true`,
+  deliveryChallan: `${resourceHost}deliveryChallan`,
 
   //InventoryDashboard
   lastOrder: `${resourceHost}/inventoryDashboard/lastPurchaseOrder?limit=6`,

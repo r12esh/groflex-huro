@@ -37,7 +37,7 @@ const ProModulesTab = ({ planDetails }) => {
         type={"s-card"}
         className={"plan-card-body"}
         style={{
-          height: planDetails.planId === chargebeePlanEnum.FREE_PLAN && "574px",
+          height: planDetails.planId === chargebeePlanEnum.FREE_PLAN && "559px",
         }}
       >
         <div
@@ -63,7 +63,9 @@ const ProModulesTab = ({ planDetails }) => {
             Forever
           </h2>
         </div>
-        <h3>This Feature includes:</h3>
+        <h3 style={{ paddingTop: chargebeePlanEnum.FREE_PLAN ? "30px" : "" }}>
+          This Feature includes:
+        </h3>
         <div className="plan-description">
           <div>
             <FontAwesomeIcon
@@ -112,8 +114,29 @@ const ProModulesTab = ({ planDetails }) => {
 
   const AccountingPlanCard = () => {
     return (
-      <AdvancedCard type={"s-card"} className={"plan-card-body"}>
+      <AdvancedCard
+        type={"s-card"}
+        className={"plan-card-body"}
+        style={{
+          height:
+            planDetails.planId === chargebeePlanEnum.ACCOUNTING_YEARLY_PLAN
+              ? "460px"
+              : "",
+        }}
+      >
         <div
+          style={{
+            paddingTop:
+              planDetails.planId === chargebeePlanEnum.ACCOUNTING_YEARLY_PLAN ||
+              planDetails.planId === chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN
+                ? "30px"
+                : "",
+            paddingBottom:
+              planDetails.planId === chargebeePlanEnum.ACCOUNTING_YEARLY_PLAN ||
+              planDetails.planId === chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN
+                ? "30px"
+                : "",
+          }}
           className={`${
             planDetails.planId === chargebeePlanEnum.ACCOUNTING_YEARLY_PLAN
               ? "selected-plan"
@@ -123,11 +146,11 @@ const ProModulesTab = ({ planDetails }) => {
           }`}
         >
           {planDetails.planId === chargebeePlanEnum.ACCOUNTING_YEARLY_PLAN
-            ? `Your current plan (ends on ${moment(
+            ? `Your current plan \n(ends on ${moment(
                 planDetails.currentTermEnd
               ).format("LL")})`
             : planDetails.planId === chargebeePlanEnum.ACCOUNTING_TRIAL_PLAN
-            ? `Accounting trial active (ends on ${moment(
+            ? `Accounting trial active \n (ends on ${moment(
                 planDetails.currentTermEnd
               ).format("LL")})`
             : "Most popular"}
@@ -228,9 +251,9 @@ const ProModulesTab = ({ planDetails }) => {
         className={"plan-card-body"}
         style={{
           height:
-            planDetails.planId === chargebeePlanEnum.ACCOUNTING_YEARLY_PLAN
-              ? "418px"
-              : "",
+            planDetails.planId === chargebeePlanEnum.FREE_PLAN
+              ? "559px"
+              : "460px",
         }}
       >
         <div className={`not-selected`} style={{ background: "#F2F2F2" }}>
@@ -257,6 +280,11 @@ const ProModulesTab = ({ planDetails }) => {
           </h2>
         </div>
 
+        <h3
+          style={{ paddingTop: chargebeePlanEnum.FREE_PLAN ? "5px" : "25px" }}
+        >
+          New features coming
+        </h3>
         <div className="plan-description">
           <div>
             <FontAwesomeIcon
@@ -322,28 +350,27 @@ const ProModulesTab = ({ planDetails }) => {
   return (
     <div className="pro-modules-tab-warpper">
       <div className="columns is-multiline">
-        <div className="column is-6">
+        <div className="column is-4">
           {planDetails?.planName === chargebeePlanEnum.FREE_PLAN ? (
             <FreePlanCard />
           ) : (
             <AccountingPlanCard />
           )}
         </div>
-        <div className="column is-6">
+        <div className="column is-4">
           {planDetails?.planName === chargebeePlanEnum.FREE_PLAN ? (
             <AccountingPlanCard />
           ) : (
             <ComingSoonCard />
           )}
         </div>
-      </div>
-      <div className="columns is-mutliline">
-        <div className="column is-6">
+        <div className="column is-4">
           {planDetails?.planName === chargebeePlanEnum.FREE_PLAN && (
             <ComingSoonCard />
           )}
         </div>
       </div>
+      <div className="columns is-mutliline"></div>
     </div>
   );
 };

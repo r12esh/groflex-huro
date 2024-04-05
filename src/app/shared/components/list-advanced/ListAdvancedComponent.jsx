@@ -27,6 +27,7 @@ export const ListAdvancedComponent = ({
   checkBoxes = true,
   defaultFilterValue = "all",
   isFilter = true,
+  headerControls = true,
 }) => {
   const [dataIsEmptyFlag, setDataIsEmptyFlag] = useState(false);
   const [response, setResponse] = useState("");
@@ -75,9 +76,9 @@ export const ListAdvancedComponent = ({
 
   const createListPage = () => {
     let rowData = responseDataMapFunc
-      ? responseDataMapFunc(response.body.data)
-      : response.body.data;
-    rowData.forEach((row) => {
+      ? responseDataMapFunc(response?.body?.data)
+      : response?.body?.data;
+    rowData?.forEach((row) => {
       row.actionItems =
         typeof actionMenuData === "function"
           ? actionMenuData(row)
@@ -326,7 +327,17 @@ export const ListAdvancedComponent = ({
           <ListSearchComponent />
 
           {isFilter && (
-            <div style={{ width: "170px" }}>
+            <div
+              style={{
+                width: "170px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "10px",
+                color: "#888787",
+              }}
+            >
+              <label>Filter:</label>
               <SelectInput
                 value={filter}
                 onChange={handleFilterChange}
@@ -335,7 +346,7 @@ export const ListAdvancedComponent = ({
             </div>
           )}
 
-          <ListHeadbarControls isFiltered={isFiltered} />
+          {headerControls && <ListHeadbarControls isFiltered={isFiltered} />}
         </div>
 
         <div className="my-grid-container ag-theme-alpine">
