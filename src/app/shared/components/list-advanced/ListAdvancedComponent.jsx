@@ -327,27 +327,29 @@ export const ListAdvancedComponent = ({
       <div className="list-container">
         {listHeader && (
           <div className="list-container__sub-header">
-            {listSearch && <ListSearchComponent />}
+            <div style={{ display: "flex", gap: "10px" }}>
+              {listSearch && <ListSearchComponent />}
 
-            {isFilter && (
-              <div
-                style={{
-                  width: "170px",
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  gap: "10px",
-                  color: "#888787",
-                }}
-              >
-                <label>Filter:</label>
-                <SelectInput
-                  value={filter}
-                  onChange={handleFilterChange}
-                  options={filterValues}
-                />
-              </div>
-            )}
+              {isFilter && (
+                <div
+                  style={{
+                    width: "220px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "10px",
+                    color: "#888787",
+                  }}
+                >
+                  <label>Filter:</label>
+                  <SelectInput
+                    value={filter}
+                    onChange={handleFilterChange}
+                    options={filterValues}
+                  />
+                </div>
+              )}
+            </div>
 
             {headerControls && (
               <ListHeadbarControls
