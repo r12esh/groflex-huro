@@ -23,7 +23,15 @@ import {
   PAYMENT_TYPE_LESS_TDSCHARGE,
 } from "../../../helpers/constants";
 import RegisterPaymentModal from "./RegisterPaymentModal";
+import accounting from "accounting";
+import Customer from "../../../models/customer.model";
+import Payment from "../../../models/payment.model";
+import SendEmailModal from "../../../shared/components/sendEmail/SendEmailModal";
 import PdfViewer from "../../../shared/components/pdfViewer/PdfViewer";
+import SendEmailModalComponent from "../../../shared/components/sendEmail/SendEmailModalComponent";
+import TransactionEmail from "../../../models/transaction-email.model";
+import { format } from "util";
+import { getResource } from "../../../helpers/resource";
 
 const allowedPaymentTypesForCancel = [
   PAYMENT_TYPE_LESS_BANKCHARGE,
@@ -32,14 +40,29 @@ const allowedPaymentTypesForCancel = [
 ];
 
 const InvoicesDetail = () => {
+  const [refresh, setRefresh] = useState(false);
+  const [hoveringLoader, setHoveringLoading] = useState(false);
   const [invoiceData, setInvoiceData] = useState();
   const [invoiceHistory, setInvoiceHistory] = useState();
   const [pdfLink, setPdfLink] = useState();
   const [letterElements, setLetterElements] = useState();
   const [finalizeModalOpen, setFinalizeModalOpen] = useState(false);
-  const [reminderModalOpen, setReminderModalOpen] = useState(false);
   const [registerPaymentModalOpen, setRegisterPaymentModalOpen] =
     useState(false);
+  const [sendEmailModalActive, setSendEmailModalActive] = useState(false);
+  const [customer, setCustomer] = useState();
+  const [payment, setPayment] = useState();
+  const [reminderModalOpen, setReminderModalOpen] = useState(false);
+  const [sendEmailFormData, setSendEmailFormData] = useState({
+    attachmentName: `Invoice No. ${invoiceData?.number}`,
+    attachments: [],
+    recipients: [],
+    sendCopy: false,
+    subject: `Payment reminder on account No. ${invoiceData?.number}`,
+    text: "",
+    textAdditional: "",
+  });
+  const [dunningObject, setDunningObject] = useState();
 
   const { invoiceId } = useParams();
   const navigate = useNavigate();
@@ -74,6 +97,9 @@ const InvoicesDetail = () => {
         const pdfDocumentResponse = responses[1];
         const history = responses[2];
         // console.log(responses, "HERE ARE the responses in invoice detail");
+        if (!invoiceResponse.body.data) {
+          navigate("/sales/invoices");
+        }
         setInvoiceData({
           ...invoiceResponse.body.data.invoice,
         });
@@ -89,7 +115,11 @@ const InvoicesDetail = () => {
         // );
       });
     }
-  }, [invoiceId]);
+  }, [invoiceId, refresh]);
+
+  const refreshPage = () => {
+    setRefresh((r) => !r);
+  };
 
   const getInvoiceInfo = () => {
     const invoiceInfo = [];
@@ -193,7 +223,34 @@ const InvoicesDetail = () => {
     setReminderModalOpen(false);
   };
   const openRegisterPaymentModal = () => {
-    setRegisterPaymentModalOpen(true);
+    const invoice = new Invoice(invoiceData);
+    const openAmount = parseFloat(
+      accounting.toFixed(invoice.outstandingAmount, 2),
+      10
+    );
+    const { id, displayName, number, type, customerId } = invoice;
+
+    const payment = new Payment({
+      customerName: displayName,
+      invoiceId: id,
+      invoiceNumber: number,
+      invoiceType: type,
+      amount: openAmount,
+      custId: customerId,
+      outstandingBalance: openAmount,
+    });
+    setHoveringLoading(true);
+    groflexService
+      .request(`${oldConfig.customer.resourceUrl}/${customerId}`, {
+        auth: true,
+      })
+      .then((response) => {
+        const customer = new Customer(response.body.data);
+        setCustomer(customer);
+        setPayment(payment);
+        setHoveringLoading(false);
+        setRegisterPaymentModalOpen(true);
+      });
   };
   const closeRegisterPaymentModal = () => {
     setRegisterPaymentModalOpen(false);
@@ -201,11 +258,16 @@ const InvoicesDetail = () => {
 
   const handleLockInvoice = () => {
     const lockEndpoint = `${oldConfig.invoice.resourceUrl}/${invoiceData.id}/lock`;
+    closeFinalizeModal();
+    setHoveringLoading(true);
     groflexService
       .request(lockEndpoint, { auth: true, method: "PUT" })
       .then(() => {
-        closeFinalizeModal();
-        groflexService.router.reload();
+        // groflexService.router.reload();
+        setHoveringLoading(false);
+        refreshPage();
+
+        // navigate(`/sales/invoices/${invoiceId}`, { replace: true });
         groflexService.toast.success(resources.invoiceLockSuccessMessage);
         // TODO: Handle Finalize Invoice Errors
         // checkAchievementNotification();
@@ -243,7 +305,7 @@ const InvoicesDetail = () => {
       });
   };
 
-  const getPageButtons = () => {
+  const geTopbarButtons = () => {
     const invoice = new Invoice(invoiceData);
     let buttonsFragment = "";
     let createReminder = "";
@@ -292,6 +354,166 @@ const InvoicesDetail = () => {
     );
   };
 
+  const openSendReminderModal = () => {
+    setReminderModalOpen(false);
+    setHoveringLoading(true);
+    const {
+      metaData: { nextDunning: nextDunningLevel },
+    } = invoiceData;
+
+    const responseDunningObjects = {
+      postResponse: null,
+      getResponse: null,
+      invoice: null,
+      customer: null,
+    };
+
+    groflexService
+      .request(`${oldConfig.resourceHost}dunning/${invoiceData.id}`, {
+        method: "POST",
+        auth: true,
+        data: { dunningLevel: nextDunningLevel.dunningLevel },
+      })
+      .then((dunningPostResponse) => {
+        responseDunningObjects.postResponse = dunningPostResponse.body.data;
+      })
+      .then(() => {
+        const { id, customerId, emailText } =
+          responseDunningObjects.postResponse;
+        const calls = [
+          groflexService.request(
+            `${oldConfig.resourceHost}dunning/${invoiceData.id}`,
+            {
+              auth: true,
+            }
+          ),
+          groflexService.request(`${config.resourceUrls.invoice}${invoiceId}`, {
+            auth: true,
+          }),
+          groflexService.request(
+            `${config.resourceUrls.contact}/${customerId}`,
+            {
+              auth: true,
+            }
+          ),
+        ];
+        multiFetchHandler(calls)
+          .then(([dunningResponseGet, invoiceResponse, customerResponse]) => {
+            responseDunningObjects.getResponse = dunningResponseGet.body.data;
+            responseDunningObjects.invoice = invoiceResponse.body.data.invoice;
+            responseDunningObjects.customer = customerResponse.body.data;
+            // console.log(emailText, "Email text after post dunning");
+            // console.log("response dunning objects", responseDunningObjects);
+
+            const recipientsList = [];
+
+            if (responseDunningObjects?.customer?.email) {
+              if (
+                responseDunningObjects?.customer?.firstName ||
+                responseDunningObjects?.customer?.lastName
+              ) {
+                recipientsList.push({
+                  label: `${responseDunningObjects.customer.firstName} ${responseDunningObjects.customer.lastName}`,
+                  value: responseDunningObjects.customer.email,
+                });
+              } else {
+                recipientsList.push({
+                  label: responseDunningObjects.customer.email,
+                  value: responseDunningObjects.customer.email,
+                });
+              }
+            }
+
+            // responseDunningObjects.customer.contactPersons?.forEach((contactPerson) => {
+            //   recipientsList.push({
+            //     label: `${responseDunningObjects.customer.firstName} ${responseDunningObjects.customer.lastName}`,
+            //     value: responseDunningObjects.customer.email,
+            //   });
+            // });
+
+            // const invoiceModel = new Invoice(invoiceResponse);
+            // const emailModel = new TransactionEmail({
+            //   type: "invoice",
+            // });
+            // emailModel.invoice = invoiceModel;
+
+            setSendEmailFormData({
+              attachmentName: `Invoice No. ${responseDunningObjects.invoice?.number}.pdf`,
+              attachments: [],
+              recipients: [...recipientsList],
+              sendCopy: false,
+              subject: `Payment reminder on account No. ${responseDunningObjects.invoice?.number}`,
+              text: emailText,
+              textAdditional: "Yours sincerely,",
+            });
+            refreshPage();
+            setReminderModalOpen(false);
+            setHoveringLoading(false);
+            setDunningObject(responseDunningObjects);
+            groflexService.toast.success(resources.dunningCreateSuccessMessage);
+          })
+          .then(() => {
+            setSendEmailModalActive(true);
+          });
+      })
+      .catch(() => {
+        groflexService.toast.error(resources.dunningCreateErrorMessage);
+      });
+  };
+
+  const handleSendEmailReminder = (formData) => {
+    console.log(dunningObject, "Dunning object in submit");
+    console.log(formData, "Formdata object in submit");
+    const emailContent = { ...formData };
+    const invoiceModel = new Invoice(invoiceData);
+    const emailModel = new TransactionEmail({
+      type: "invoice",
+    });
+    emailModel.invoice = invoiceModel;
+    const endpoint = `${oldConfig.resourceHost}${emailModel.type}/${
+      emailModel[emailModel.type].id
+    }/send`;
+    // console.log(endpoint, "ENDPOINT FOR SEND email");
+    groflexService
+      .request(endpoint, {
+        method: "POST",
+        auth: true,
+        data: emailContent,
+      })
+      .then(() => {
+        groflexService.toast.success(
+          resources.emailViewSendEmailSuccessMessage
+        );
+        setSendEmailModalActive(false);
+        refreshPage();
+        // if (emailModel.type === "dunning") {
+        //   groflexService
+        //     .request(
+        //       `${oldConfig.invoice.resourceUrl}/${oldConfig.emailModel.invoice.id}/dunning/setting`,
+        //       {
+        //         auth: true,
+        //         method: "PUT",
+        //         data: {
+        //           autoDunningEnabled: this.state.autoDunningEnabled,
+        //           dunningRecipients: emailContent.recipients,
+        //         },
+        //       }
+        //     )
+        //     .then(() => {
+        //       groflexService.toast.success(
+        //         resources.emailViewSendEmailSuccessMessage
+        //       );
+        //       // this.navigateToDetails(true);
+        //     })
+        //     .catch(() => {
+        //       groflexService.toast.error(
+        //         resources.emailViewSendEmailErrorMessage
+        //       );
+        //     });
+        // }
+      });
+  };
+
   const getPageTitle = () => {
     let pageTitle = "";
     if (invoiceData?.state === InvoiceState.DRAFT) {
@@ -308,21 +530,22 @@ const InvoicesDetail = () => {
     invoiceData?.totalGross - invoiceData?.outstandingAmount
   );
   const invoiceInfoArr = getInvoiceInfo();
-  const pageButtons = getPageButtons();
+  const topbarButtons = geTopbarButtons();
   const pageTitle = getPageTitle();
 
   // console.log(new Invoice(invoiceData), "Invoice detail");
   // console.log(invoiceHistory, "History");
-  console.log(pdfLink, "PDF liink");
+  // console.log(pdfLink, "PDF liink");
 
   return (
     <PageContent
       navigateBackTo={"/sales/invoices"}
-      // loading={!invoiceData?.id}
+      loading={!invoiceData?.id}
+      hoveringLoader={hoveringLoader}
       title={invoiceData?.id ? pageTitle : ""}
-      titleActionContent={pageButtons}
+      titleActionContent={topbarButtons}
     >
-      <div className="columns">
+      <div className="columns invoice-detail-component">
         <div className="column is-7">
           <div
             id="invoice-pdf-container"
@@ -330,7 +553,7 @@ const InvoicesDetail = () => {
               background: "white",
               height: "900px",
               width: "100%",
-              borderRadius: "4px",
+              borderRadius: "10px",
               border: "1px solid #c6c6c6",
             }}
           >
@@ -364,28 +587,51 @@ const InvoicesDetail = () => {
       >
         <div>{resources.invoiceLockModalContentText}</div>
       </Modal>
+
       <Modal
         isActive={reminderModalOpen}
         closeModalFunction={closeReminderModal}
         title={resources.str_createPaymentReminder}
-        onSubmit={() => {}}
+        onSubmit={openSendReminderModal}
         submitBtnName="Send via email"
-        otherActionButtons={
-          <Button onClick={() => {}} isPrimary>
-            Show PDF
-          </Button>
-        }
+        // otherActionButtons={
+        //   <Button onClick={() => {}} isPrimary>
+        //     Show PDF
+        //   </Button>
+        // }
       >
         <div>
           Do you want to create a payment reminder for the selected invoice?
         </div>
       </Modal>
-      <RegisterPaymentModal
-        isActive={registerPaymentModalOpen}
-        closeFunction={closeRegisterPaymentModal}
-        onSubmit={() => {}}
-        invoice={invoiceData}
-      />
+
+      {registerPaymentModalOpen && (
+        <RegisterPaymentModal
+          isActive={registerPaymentModalOpen}
+          closeFunction={closeRegisterPaymentModal}
+          invoice={new Invoice(invoiceData)}
+          customer={customer}
+          payment={payment}
+          onSubmit={() => {
+            refreshPage();
+            // groflexService.router.reload();
+          }}
+          // dunning={dunning}
+        />
+      )}
+      {sendEmailModalActive && (
+        <SendEmailModalComponent
+          isActive={sendEmailModalActive}
+          title={resources.dunnningEmailSubheadline}
+          fileName={`Invoice No. ${invoiceData?.number}`}
+          formData={sendEmailFormData}
+          closeFunction={() => setSendEmailModalActive(false)}
+          onSubmit={handleSendEmailReminder}
+          submitBtnName={"Send Email"}
+          className={"send-reminder-email-modal"}
+          // setSendEmailFormData={setSendEmailForm}
+        />
+      )}
     </PageContent>
   );
 };

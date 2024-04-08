@@ -1,3 +1,33 @@
+.invoice-detail-component {
+  .invoice-pdf-container {
+    padding: 5px;
+    .pdf-viewer-main {
+      .react-pdf__Document {
+        .react-pdf__Page {
+          .react-pdf__Page__canvas {
+            margin-left: auto;
+            margin-right: auto;
+          }
+        }
+      }
+    }
+  }
+}
+
 .invoice-history-list {
   max-height: 700px;
+}
+
+.send-reminder-email-modal {
+  .ql-container {
+    // height: auto;
+    .ql-editor {
+      // height: auto;
+      p {
+        color: $dark-text;
+        font-size: 14px;
+        // font-weight: 600;
+      }
+    }
+  }
 }

@@ -1,0 +1,108 @@
+.seperator-remove {
+    .css-1u9des2-indicatorSeparator {
+        display: none !important; // Hide the icon
+    }
+}
+.numeration-dropdown{
+    .css-1nmdiq5-menu {
+        width: 150px;
+    }
+}
+
+.numeration-placeholder {
+    // position: relative;
+    margin: 20px 0px 0 0;
+
+    .css-tj5bde-Svg {
+        display: none !important;
+    }
+}
+
+.numeration-end {
+    // float: right;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.numeration-input-box {
+    .input {
+        border: none;
+        outline: none;
+        box-shadow: none;
+        color: #00a353;
+        font-size: x-large;
+        font-weight: 600;
+        margin: 0;
+        border-bottom: 2px solid #c6c6c6;
+        border-radius: 0;
+        
+        &:focus {
+            border-bottom: 3px solid #00a353;
+            border-radius: 0;
+        }
+    }
+    
+            &.digits-2 {
+                width: 65px;
+            }
+    
+            &.digits-3 {
+                width: 80px;
+            }
+    
+            &.digits-4 {
+                width: 96px;
+            }
+    
+            &.digits-5 {
+                width: 114px;
+            }
+    
+            &.digits-6 {
+                width: 129px;
+            }
+    
+            &.digits-7 {
+                width: 149px;
+            }
+    
+            &.digits-8 {
+                width: 169px;
+            }
+    
+            &.digits-9 {
+                width: 190px;
+            }
+    
+            &.digits-10 {
+                width: 210px;
+            }
+}
+
+.numeration-result {
+    
+    .column {
+        display: flex;
+        align-items: center; /* Center content vertically */
+        justify-content: center;
+    }
+    
+    .field {
+        display: flex;
+        align-items: center; /* Center content vertically */
+    }
+    span{
+        color: #00a353;
+        font-size: x-large;
+        font-weight: 600;
+        
+    }
+    
+}
+.triggeredHover {
+    background: #00a353;
+    color: white !important;
+}
+
+

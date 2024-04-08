@@ -159,6 +159,16 @@ const resourceUrls = {
   inviteCa: `${resourceHost}user/cadetails`,
   updateUserRole: (userId) => `${resourceHost}user/${userId}/role`,
   deleteUser: `${resourceHost}tenant/user/`,
+
+  // numerations
+  numeration: `${resourceHost}setting/numeration`,
+  changeNumeration: (module) => `${resourceHost}setting/${module}/changeNumeration`,
+
+  // text modules
+  textModule: `${resourceHost}setting/textModule`,
+  
+  // dunning
+  dunningLevel: `${resourceHost}setting/dunningLevel`,
 };
 
 const checkLoginTokenIsValid = () => {
@@ -188,6 +198,7 @@ const checkLoginTokenIsValid = () => {
 const regex = {
   emailCheck:
     /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/i,
+  amountCheck: /^[0-9]+(\.[0-9]+)?$/,
 };
 
 const modules = {
@@ -196,8 +207,9 @@ const modules = {
     heading: "Sales",
     links: [
       { label: "Invoices", route: "/sales/invoices" },
+      { label: "Proforma Invoices", route: "/sales/proforma-invoices" },
       { label: "Quotations", route: "/sales/quotations" },
-      { label: "Recurring invoices", route: "/sales/recurring-invoices" },
+      { label: "Recurring Invoices", route: "/sales/recurring-invoices" },
       { label: "Timesheets", route: "/sales/time-sheets" },
     ],
   },
@@ -210,6 +222,7 @@ const modules = {
       { label: "Debit Notes", route: "/accounting/debit-notes" },
       { label: "Credit Notes", route: "/accounting/credit-notes" },
       { label: "Expenditure", route: "/accounting/expenses" },
+      { label: "Vendor Payments", route: "/accounting/vendor-payments" },
       { label: "Reports", route: "/accounting/reports" },
       { label: "Chart of Accounts", route: "/accounting/chart-of-accounts" },
       { label: "Delivery Challan", route: "/accounting/delivery-challan" },

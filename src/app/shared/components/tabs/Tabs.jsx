@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-const Tabs = ({ tabList = [], initialTab = 0 }) => {
+const Tabs = ({
+  tabList = [{ label: "", content: "", onClick: () => {} }],
+  initialTab = 0,
+}) => {
   const [selectedTab, setSelectedTab] = useState(initialTab);
   // console.log(tabList);
 
@@ -15,7 +18,10 @@ const Tabs = ({ tabList = [], initialTab = 0 }) => {
                 key={`tab-${id}`}
                 data-tab="team-tab"
                 className={id === selectedTab ? "is-active" : ""}
-                onClick={() => setSelectedTab(id)}
+                onClick={() => {
+                  setSelectedTab(id);
+                  tab.onClick();
+                }}
               >
                 <Link>{tab.label}</Link>
               </li>

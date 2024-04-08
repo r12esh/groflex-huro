@@ -23,6 +23,13 @@ import InvoiceState from "../../../enums/invoice/invoice-state.enum";
 import userPermissions from "../../../enums/user-permissions.enum";
 import Invoice from "../../../models/invoice.model";
 import resources from "../../../shared/resources/resources";
+import CancelDeleteInvoiceModal from "./CancelDeleteInvoiceModal";
+import DeleteInvoiceModal from "./DeleteInvoiceModal";
+import CancelInvoiceModal from "./CancelInvoiceModal";
+import NumberRangeModal from "../../../shared/components/numberRange/NumberRangeModal";
+import LoaderSpinner from "../../../shared/components/loaderSpinner/LoaderSpinner";
+import TextModuleModal from "../../../shared/components/textModuleModal/TextModuleModal";
+import DunningModal from "../../../shared/components/dunngingModal/DunningModal";
 
 const PAYABLE_STATES = [
   InvoiceState.DUNNED,
@@ -104,7 +111,7 @@ const createActivity = (params) => {
 // Note: Component starts here
 const InvoicesList = () => {
   const navigate = useNavigate();
-
+  const [refresh, setRefresh] = useState(false);
   const [invoiceListStates, setInvoiceListStates] = useState({
     isLoading: true,
     invoiceData: null,
@@ -133,27 +140,45 @@ const InvoicesList = () => {
     //     userPermissions.CREATE_INVOICE_REMINDER
     //   ),
   });
+  const [cancelDeleteInvoiceModalActive, setCancelDeleteInvoiceModalActive] =
+    useState(false);
+  const [deleteInvoiceModalActive, setDeleteInvoiceModalActive] =
+    useState(false);
+  const [cancelInvoiceModalActive, setCancelInvoiceModalActive] =
+    useState(false);
+  const [cancelDeleteModalData, setCancelDeleteModalData] = useState();
 
-  const handleActionClick = (action, row, params) => {
+  const refreshPage = () => {
+    setRefresh(!refresh);
+  };
+
+  const handleActionCellPopupClick = (action, row, params) => {
     switch (action.action) {
       case "delete":
-        groflexService
-          .request(`${config.resourceUrls.invoice}${row.id}`, {
-            auth: true,
-            method: "DELETE",
-          })
-          .then(() => {
-            groflexService.toast.success(resources.invoiceDeleteSuccessMessage);
-            params.api.applyTransaction({ remove: [row] });
-            // console.log(res, "Deleted Succesfullyyy");
-          })
-          .catch(() => {
-            groflexService.toast.error("Deleting Invoice failed");
-            // console.log(res, "Delete Failed");
-          });
+        const invoice = new Invoice(row);
+        setCancelDeleteModalData({ row: invoice, params });
+        if (invoice.invoiceType === "cancellation") {
+          groflexService.toast.success(
+            resources.cancellationDeleteErrorMessage
+          );
+        } else if (!invoice.isLocked) {
+          setDeleteInvoiceModalActive(true);
+        } else if (CANCEL_STATES.indexOf(invoice.state) > -1) {
+          setCancelInvoiceModalActive(true);
+        } else {
+          setCancelDeleteInvoiceModalActive(true);
+        }
         break;
       case "edit":
         navigate(`/sales/invoices/edit/${row.id}`);
+        break;
+      case "copyAndEdit":
+        break;
+      case "addPayment":
+        // addPayment(row);
+        break;
+      default:
+        break;
     }
   };
 
@@ -239,18 +264,88 @@ const InvoicesList = () => {
 
   console.log(groflexService.user, "USER FROm INCOICE LIST");
 
+  const [isLoading, setIsLoading] = useState(false);
+  // for number range modal
+  const [isModalActive, setIsModalActive] = useState(false);
+
+  // for Text Module
+  const [isTextModuleModalActive, setIsTextModuleActive] = useState(false);
+
+  // for Dunning
+  const [isDunningModalActive, setIsDunningModalActive] = useState(false);
+
+  // settings elements
+  const elements = [
+    {
+      title: "Text Modules",
+      handleClick: () => {
+        setIsTextModuleActive(true)
+      },
+    },
+    {
+      title: "Number Range",
+      handleClick: () => {
+        setIsModalActive(true);
+      },
+    },
+    {
+      title: "Dunning",
+      handleClick: () => {
+        setIsDunningModalActive(true);
+      },
+    },
+  ]
+
   return (
     <PageContent
       title="Invoices"
       titleActionContent={<Button isSuccess>Create Invoices</Button>}
       breadCrumbData={["Home", "Sales", "Invoices"]}
     >
+      {
+        isModalActive && (
+          <NumberRangeModal
+            isActive={isModalActive}
+            setIsActive={setIsModalActive}
+            numerationType='invoice'
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+          />
+        )
+      }
+      {
+        isTextModuleModalActive && (
+          <TextModuleModal
+            isActive={isTextModuleModalActive}
+            setIsActive={setIsTextModuleActive}
+            textModuleType='invoice'
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+          />
+        )
+      }
+      {
+        isDunningModalActive && (
+          <DunningModal
+            isActive={isDunningModalActive}
+            setIsActive={setIsDunningModalActive}
+            isLoading={isLoading}
+            setIsLoading= {setIsLoading}
+          />
+        )
+      }
+
+
       <ListAdvancedComponent
         onRowClicked={(e) => {
           navigate(`/sales/invoices/${e.data.id}`);
         }}
-        onActionClick={handleActionClick}
+        onActionClick={handleActionCellPopupClick}
         columnDefs={[
+          {
+            field: "number",
+            headerName: "Number",
+          },
           {
             field: "state",
             headerName: "status",
@@ -375,9 +470,33 @@ const InvoicesList = () => {
           },
         ]}
         fetchUrl={config.resourceUrls.invoices}
-        // actionMenuData={actions}
         actionMenuData={getActionPopupButtons}
+        settingsElement={elements}
       />
+      {cancelDeleteInvoiceModalActive && (
+        <CancelDeleteInvoiceModal
+          closeFunction={() => setCancelDeleteInvoiceModalActive(false)}
+          isActive={cancelDeleteInvoiceModalActive}
+          data={cancelDeleteModalData}
+          onSubmit={refreshPage}
+        />
+      )}
+      {deleteInvoiceModalActive && (
+        <DeleteInvoiceModal
+          closeFunction={() => setDeleteInvoiceModalActive(false)}
+          isActive={deleteInvoiceModalActive}
+          data={cancelDeleteModalData}
+          onSubmit={refreshPage}
+        />
+      )}
+      {cancelInvoiceModalActive && (
+        <CancelInvoiceModal
+          closeFunction={() => setCancelInvoiceModalActive(false)}
+          isActive={cancelInvoiceModalActive}
+          data={cancelDeleteModalData}
+          onSubmit={refreshPage}
+        />
+      )}
     </PageContent>
   );
 };

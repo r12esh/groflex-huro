@@ -3,6 +3,7 @@ import React from "react";
 export const Input = ({
   type = "text",
   placeholder,
+  label,
   focusType,
   helpText,
   isRounded,
@@ -16,6 +17,10 @@ export const Input = ({
   onChange,
   rightIcon,
   onBlur,
+  disabled,
+  fieldClassName,
+  onClick,
+  onFocus,
   ...rest
 }) => {
   const getFocusType = () => {
@@ -68,9 +73,12 @@ export const Input = ({
     },
   };
   return (
-    <div className="field">
+    <div className={`field ${fieldClassName ? fieldClassName : ""}`}>
+      <label>{label}</label>
       <div className={`control ${getControlClassOptions()}`}>
         <input
+          onClick={onClick}
+          onFocus={onFocus}
           style={errorStyles.border}
           type={type}
           className={`input ${getFocusType()} ${getInputClassOptions()}`}
@@ -78,6 +86,7 @@ export const Input = ({
           value={value}
           onChange={onChange}
           onBlur={onBlur}
+          disabled={disabled}
           // autoComplete="on"
           {...rest}
         />

@@ -1,4 +1,5 @@
 import { FeatherIcon } from "../../featherIcon/FeatherIcon";
+import { Button } from "../button/Button";
 
 const Modal = ({
   isActive,
@@ -20,6 +21,9 @@ const Modal = ({
   ModalHeaderButton,
   otherHeaderChildren,
   otherActionButtons,
+  submitDisabled,
+  className,
+  submitBtnLoading,
 }) => {
   function getActionPositionClass() {
     if (leftActions) {
@@ -58,7 +62,7 @@ const Modal = ({
     >
       <div className="modal-background  h-modal-close" onClick={closeModal} />
       <div className="modal-content">
-        <div className="modal-card">
+        <div className={`modal-card ${className ? className : ""}`}>
           <header className="modal-card-head">
             <div className="title is-5 no-margin-bottom">{title}</div>
             <div
@@ -98,14 +102,18 @@ const Modal = ({
               {cancelBtnName}
             </a>
             {otherActionButtons}
-            <a
+            <Button
+              isLoading={submitBtnLoading}
+              isDisabled={submitDisabled}
+              isPrimary
               onClick={onSubmit}
-              className={`button h-button is-primary is-raised ${
-                roundedActionButtons ? "is-rounded" : ""
-              }`}
+              className={`${roundedActionButtons ? "is-rounded" : ""}`}
+              // className={`button h-button is-primary is-raised ${
+              //   roundedActionButtons ? "is-rounded" : ""
+              // }`}
             >
               {submitBtnName}
-            </a>
+            </Button>
           </div>
         </div>
       </div>

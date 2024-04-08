@@ -59,8 +59,8 @@ export const Button = ({
 
     isLoading && classes.push("is-loading");
 
-    // isDisabled && classes.push("is-disabled");
-    isDisabled && classes.push("is-light");
+    isDisabled && classes.push("is-disabled");
+    // isDisabled && classes.push("is-light");
 
     isFullWidth && classes.push("is-fullwidth");
 

@@ -23,6 +23,9 @@ class ToastService {
   success(message) {
     toast((t) => (
       <div
+        onClick={() => {
+          toast.dismiss(t.id);
+        }}
         style={{
           padding: "15px 15px 15px 12px",
           minHeight: "105px",
@@ -31,6 +34,7 @@ class ToastService {
           backgroundColor: "#BEF9DC",
           display: "flex",
           flexDirection: "column",
+          cursor: "pointer",
         }}
       >
         <div
@@ -76,6 +80,9 @@ class ToastService {
   error(message) {
     toast((t) => (
       <div
+        onClick={() => {
+          toast.dismiss(t.id);
+        }}
         style={{
           padding: "15px 15px 15px 12px",
           minHeight: "105px",
@@ -84,6 +91,7 @@ class ToastService {
           backgroundColor: "#FFDCDA",
           display: "flex",
           flexDirection: "column",
+          cursor: "pointer",
         }}
       >
         <div
@@ -122,6 +130,9 @@ class ToastService {
   warning(message) {
     toast((t) => (
       <div
+        onClick={() => {
+          toast.dismiss(t.id);
+        }}
         style={{
           padding: "15px 15px 15px 12px",
           minHeight: "105px",
@@ -130,6 +141,7 @@ class ToastService {
           backgroundColor: "#FFEBCC",
           display: "flex",
           flexDirection: "column",
+          cursor: "pointer",
         }}
       >
         <div

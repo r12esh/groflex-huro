@@ -14,6 +14,7 @@ const PageContent = ({
   breadCrumbIcon,
   titleActionContent,
   loading,
+  hoveringLoader,
 }) => {
   const { sidebarIsActive } = useSelector((state) => state.themeData);
   const toggleSidebar = useToggleSidebar();
@@ -103,11 +104,24 @@ const PageContent = ({
           {loading ? (
             <LoaderSpinner
               visible={loading}
-              containerStyle={{ height: "calc(100vh - 285px)" }}
+              containerStyle={{ height: "calc(100vh - 265px)" }}
               // message={"Loading"}
             />
           ) : (
             <div className="page-content-inner">{children}</div>
+          )}
+          {hoveringLoader && (
+            <LoaderSpinner
+              visible={hoveringLoader}
+              containerStyle={{
+                width: "unset",
+                height: "unset",
+                display: "block",
+                position: "fixed",
+                top: "45%",
+                left: "50%",
+              }}
+            />
           )}
         </div>
       </div>

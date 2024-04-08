@@ -15,6 +15,7 @@ export const InputAddons = ({
   helpText,
   hasSuccess,
   hasError,
+  onBlur,
   ...rest
 }) => {
   const [inputType, setInputType] = useState(type);
@@ -37,6 +38,7 @@ export const InputAddons = ({
 
       <div className="control is-expanded ">
         <input
+          onBlur={onBlur}
           disabled={disabled}
           className="input"
           type={inputType}

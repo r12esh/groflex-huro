@@ -212,7 +212,7 @@ const RecipientComponent = ({
     showDisplay();
   };
 
-  console.log(showStates, "SHOW STATES");
+  // console.log(showStates, "THE visibility STATES of all components");
 
   return (
     <>

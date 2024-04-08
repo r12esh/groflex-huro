@@ -458,7 +458,7 @@ const LetterHeaderComponent = ({ items, onFinish }) => {
 
   const saveLetterElements = () => {
     const canvas = canvasRef.current;
-    const fabricObjects = canvas.getObjects();
+    let fabricObjects = canvas.getObjects();
     fabricObjects = fabricObjects.slice(CANVAS_ZINDEX_OFFSET);
     const parsedFabrics = parseFabricObjects(fabricObjects);
 

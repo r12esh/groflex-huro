@@ -61,6 +61,11 @@ import ExpensesList from "./app/views/accounting/expenses/ExpensesList";
 import ChartOfAccounts from "./app/views/accounting/chartOfAccounts/ChartOfAccountsList";
 import TimesheetsBilling from "./app/views/sales/timeTracking/TimesheetsBilling";
 import StockMovement from "./app/views/inventory/stockMovement/StockMovement";
+import ProformaInvoicesListWrapper from "./app/views/sales/proformaInvoice/ProformaInvoicesListWrapper";
+import ProformaInvoiceDetailWrapper from "./app/views/sales/proformaInvoice/ProformaInvoiceDetailWrapper";
+import ProformaInvoiceEditWrapper from "./app/views/sales/proformaInvoice/ProformaInvoiceEditWrapper";
+import VendorPaymentsList from "./app/views/accounting/vendorPayments/VendorPaymentsList";
+import VendorPaymentDetailWrapper from "./app/views/accounting/vendorPayments/VendorPaymentDetailWrappet";
 import RecordTime from "./app/views/sales/timeTracking/RecordTime";
 import Gstr1List from "./app/views/accounting/reports/Gstr1List";
 import Gstr2AList from "./app/views/accounting/reports/Gstr2AList";
@@ -103,6 +108,19 @@ function App() {
             path="sales/invoices/edit/:invoiceId"
             element={<InvoiceEditWrapper />}
           />
+          {/* Proforma Invoice */}
+          <Route
+            path="sales/proforma-invoices"
+            element={<ProformaInvoicesListWrapper />}
+          />
+          <Route
+            path="sales/proforma-invoices/:id"
+            element={<ProformaInvoiceDetailWrapper />}
+          />
+          <Route
+            path="sales/proforma-invoices/edit/:id"
+            element={<ProformaInvoiceEditWrapper />}
+          />
           {/* Quotation */}
           <Route path="sales/quotations" element={<QuotationsList />} />
           <Route
@@ -134,6 +152,14 @@ function App() {
           <Route path="accounting/debit-notes" element={<DebitNotesList />} />
           <Route path="accounting/credit-notes" element={<CreditNotesList />} />
           <Route path="accounting/expenses" element={<ExpensesList />} />
+          <Route
+            path="accounting/vendor-payments"
+            element={<VendorPaymentsList />}
+          />
+          <Route
+            path="accounting/vendor-payments/:id"
+            element={<VendorPaymentDetailWrapper />}
+          />
           <Route path="accounting/reports" element={<Reports />} />
           <Route
             path="accounting/chart-of-accounts"

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import PageContent from "../../../shared/components/pageContent/PageContent";
 import { useNavigate } from "react-router-dom";
 import config from "../../../../../newConfig";
@@ -14,6 +14,8 @@ import {
 } from "../../../helpers/sortComparators";
 import groflexService from "../../../services/groflex.service";
 import FontAwesomeIcon from "../../../shared/fontAwesomeIcon/FontAwesomeIcon";
+import NumberRangeModal from "../../../shared/components/numberRange/NumberRangeModal";
+import TextModuleModal from "../../../shared/components/textModuleModal/TextModuleModal";
 const actions = [
   { name: "edit", icon: "edit" },
   { name: "delete", icon: "trash-alt" },
@@ -72,15 +74,77 @@ const QuotationsList = () => {
       //   navigate(`/articles/edit/${row.id}`);
     }
   };
+
+  // settings elements
+  const elements = [
+    {
+      title: "Text Modules",
+      handleClick: () => {
+        setIsTextModuleActive(true)
+      },
+    },
+    {
+      title: "Number Range",
+      handleClick: () => {
+        setIsModalActive(true);
+      },
+    },
+  ]
+
+
+  const [isLoading, setIsLoading] = useState(false);
+  // for number range modal
+  const [isModalActive, setIsModalActive] = useState(false);
+
+  // for Text Module
+  const [isTextModuleModalActive, setIsTextModuleActive] = useState(false);
+
+
   return (
     <PageContent
       title="Quotations"
       titleActionContent={
-        <Button onClick={() => navigate("/quotations/new")} isSuccess>
+        <Button onClick={() => navigate("/quotations/new")} isPrimary>
           Create Quotation
         </Button>
       }
+      breadCrumbData={["Home", "Sales", "Quotaions"]}
     >
+
+      {
+        isModalActive && (
+          <NumberRangeModal
+            isActive={isModalActive}
+            setIsActive={setIsModalActive}
+            numerationType='offer'
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+          />
+        )
+      }
+      {
+        isTextModuleModalActive && (
+          <TextModuleModal
+            isActive={isTextModuleModalActive}
+            setIsActive={setIsTextModuleActive}
+            textModuleType='offer'
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+          />
+        )
+      }
+      {/* {
+        isTextModuleModalActive && (
+          <NumberRangeModal
+            isActive={isModalActive}
+            setIsActive={setIsModalActive}
+            numerationType='invoice'
+            isLoading={isLoading}
+            setIsLoading={setIsLoading}
+          />
+        )
+      } */}
+
       <ListAdvancedComponent
         onRowClicked={(e) => {
           navigate(`/sales/quotations/${e.data.id}`);
@@ -90,6 +154,11 @@ const QuotationsList = () => {
           {
             field: "number",
             headerName: "Number",
+          },
+          {
+            field: "state",
+            headerName: "Status",
+            cellRenderer: createActivity,
           },
           { field: "customerData.name", headerName: "Customer Name" },
           {
@@ -109,11 +178,6 @@ const QuotationsList = () => {
             },
           },
           { field: "type", headerName: "Quotation Type" },
-          {
-            field: "state",
-            headerName: "Status",
-            cellRenderer: createActivity,
-          },
 
           // {
           //   field: "date",
@@ -143,6 +207,7 @@ const QuotationsList = () => {
         ]}
         fetchUrl={config.resourceUrls.quotations}
         actionMenuData={actions}
+        settingsElement={elements}
       />
     </PageContent>
   );

@@ -30,6 +30,7 @@ export const ListAdvancedComponent = ({
   headerControls = true,
   listSearch = true,
   listHeader = true,
+  settingsElement,
 }) => {
   const [dataIsEmptyFlag, setDataIsEmptyFlag] = useState(false);
   const [response, setResponse] = useState("");
@@ -111,7 +112,6 @@ export const ListAdvancedComponent = ({
     headerName: "",
     cellRenderer: customActionCellRenderer,
     flex: 1,
-    resizable: false,
     cellStyle: {
       textAlign: "center",
       overflow: "visible",
@@ -349,7 +349,12 @@ export const ListAdvancedComponent = ({
               </div>
             )}
 
-            {headerControls && <ListHeadbarControls isFiltered={isFiltered} />}
+            {headerControls && (
+              <ListHeadbarControls
+                isFiltered={isFiltered}
+                elements={settingsElement}
+              />
+            )}
           </div>
         )}
 
