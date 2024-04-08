@@ -5,6 +5,8 @@ import groflexService from "../../../services/groflex.service";
 import config from "../../../../../newConfig";
 import { AdvancedCard } from "../../../shared/components/cards/AdvancedCard";
 import { ListAdvancedComponent } from "../../../shared/components/list-advanced/ListAdvancedComponent";
+import { formatCurrency } from "../../../helpers/formatCurrency";
+import { formatPercent } from "../../../helpers/formatPercent";
 
 const DeliveryChallanDetail = () => {
   const { deliveryChallanId } = useParams();
@@ -18,7 +20,7 @@ const DeliveryChallanDetail = () => {
         auth: true,
       })
       .then((res) => {
-        console.log(res);
+        // console.log(res);
       });
   };
   return (
@@ -75,7 +77,8 @@ const DeliveryChallanDetail = () => {
             <h2>Delivery Challan</h2>
             <span>The following is your Delivery Challan product details</span>
             <ListAdvancedComponent
-              headerControls={false}
+              checkBoxes={false}
+              listHeader={false}
               onRowClicked={(row) => {}}
               columnDefs={[
                 {
@@ -89,31 +92,75 @@ const DeliveryChallanDetail = () => {
                 {
                   field: "hsnSac",
                   headerName: "HSN/SAC",
+                  cellRenderer: (evt) => {
+                    return evt.value.length === 0 ? "-" : evt.value;
+                  },
+                  cellStyle: (evt) => {
+                    if (evt.value.length === 0) {
+                      return { textAlign: "center" };
+                    }
+                  },
                 },
                 {
                   field: "quantity",
                   headerName: "Quantity",
+                  cellRenderer: (evt) => {
+                    return `${evt.value} ${evt.data.unit}`;
+                  },
                 },
                 {
                   field: "price",
                   headerName: "Price/Unit",
+                  cellRenderer: (evt) => {
+                    return formatCurrency(evt.value);
+                  },
+                  cellStyle: { textAlign: "right" },
                 },
                 {
                   field: "gst",
                   headerName: "Gst",
+                  cellRenderer: (evt) => {
+                    return formatPercent(evt.value);
+                  },
                 },
                 {
                   field: "discount",
                   headerName: "Discount",
+                  cellRenderer: (evt) => {
+                    return formatPercent(evt.value);
+                  },
                 },
                 {
                   field: "totalAmount",
                   headerName: "Total Amount",
+                  cellRenderer: (evt) => {
+                    return formatCurrency(evt.value);
+                  },
+                  cellStyle: { textAlign: "right" },
                 },
               ]}
-              customRowData={[]}
+              fetchUrl={(offset, limit, filter) =>
+                `${config.resourceUrls.deliveryChallan}/${deliveryChallanId}`
+              }
+              responseDataMapFunc={(res) => {
+                let result = [];
+
+                res.positions.forEach((item, index) => {
+                  result.push({
+                    sNo: index + 1,
+                    articleName: item.title,
+                    hsnSac: item.hsnSacCode,
+                    quantity: item.amount,
+                    price: item.mrp,
+                    gst: item.vatPercent,
+                    discount: item.discountPercent,
+                    totalAmount: item.priceNet,
+                    unit: item.unit,
+                  });
+                });
+                return result;
+              }}
               pagination={false}
-              isFilter={false}
             />
           </div>
         </AdvancedCard>

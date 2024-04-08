@@ -28,6 +28,8 @@ export const ListAdvancedComponent = ({
   defaultFilterValue = "all",
   isFilter = true,
   headerControls = true,
+  listSearch = true,
+  listHeader = true,
 }) => {
   const [dataIsEmptyFlag, setDataIsEmptyFlag] = useState(false);
   const [response, setResponse] = useState("");
@@ -323,31 +325,33 @@ export const ListAdvancedComponent = ({
       }}
     >
       <div className="list-container">
-        <div className="list-container__sub-header">
-          <ListSearchComponent />
+        {listHeader && (
+          <div className="list-container__sub-header">
+            {listSearch && <ListSearchComponent />}
 
-          {isFilter && (
-            <div
-              style={{
-                width: "170px",
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                gap: "10px",
-                color: "#888787",
-              }}
-            >
-              <label>Filter:</label>
-              <SelectInput
-                value={filter}
-                onChange={handleFilterChange}
-                options={filterValues}
-              />
-            </div>
-          )}
+            {isFilter && (
+              <div
+                style={{
+                  width: "170px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  gap: "10px",
+                  color: "#888787",
+                }}
+              >
+                <label>Filter:</label>
+                <SelectInput
+                  value={filter}
+                  onChange={handleFilterChange}
+                  options={filterValues}
+                />
+              </div>
+            )}
 
-          {headerControls && <ListHeadbarControls isFiltered={isFiltered} />}
-        </div>
+            {headerControls && <ListHeadbarControls isFiltered={isFiltered} />}
+          </div>
+        )}
 
         <div className="my-grid-container ag-theme-alpine">
           {dataIsEmptyFlag ? (
