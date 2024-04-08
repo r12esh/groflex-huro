@@ -114,7 +114,7 @@ const TimesheetsList = () => {
             field: "priceTotal",
             headerName: "Amount",
             cellClass: ListAdvancedDefaultSettings.EXCEL_STYLE_IDS.Currency,
-            valueFormatter: ({ value }) => formatCurrency(value),
+
             valueFormatter: (evt) => {
               return formatCurrency(evt.value);
             },

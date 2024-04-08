@@ -63,7 +63,7 @@ const LetterMetaComponent = ({
   });
   const [fieldErrorMsgs, setFieldErrorMsgs] = useState({
     invoiceNumber: "",
-    offerNumber: "",
+
     purchaseOrderNumber: "",
     customerNumber: "",
     number: "",
@@ -80,7 +80,7 @@ const LetterMetaComponent = ({
   });
   const [labelErrorMsgs, setLabelErrorMsgs] = useState({
     invoiceNumber: "",
-    offerNumber: "",
+
     purchaseOrderNumber: "",
     customerNumber: "",
     number: "",
