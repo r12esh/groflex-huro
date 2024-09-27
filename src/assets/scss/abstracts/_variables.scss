@@ -13,7 +13,6 @@ $body-size: 14px;
 ========================================================================== */
 
 // $primary: #671cc9;
-$primary: #00a353;
 $secondary: #ff227d;
 $accent: #797bf2;
 
@@ -39,15 +38,8 @@ $light-grey: #eee;
 $lighter-grey: #e5e5e5;
 $widget-grey: #f5f6fa;
 
-$dark-text: #283252;
-$light-text: #a2a5b9;
-$title-grey: #a9abac;
-
-$danger: #e62965;
-$info: #039be5;
+// $danger: #e62965;
 // $success: #06d6a0;
-$success: #00a353;
-$warning: #faae42;
 
 $h-purple: #8269b2;
 $h-blue: #37c3ff;
@@ -64,3 +56,25 @@ $sidebar: #344258;
 
 $dark-sidebar: #232326;
 $dark-dark-text: #aaaab3;
+
+//Custom colors and and widely used one in app
+
+$primary: #00a353;
+$success: #00a353;
+
+$danger: #d94339;
+$warning: #ffaa2c;
+$info: #039be5;
+
+$light-green: #bef9dc;
+$light-red: #ffdcda;
+$light-yellow: FFEBCC;
+
+$dark-text: #283252;
+$light-text: #a2a5b9;
+$title-grey: #a9abac;
+
+//new font colors
+
+$font-color-secondary: #888787;
+$font-grey-dark: #c6c6c6;

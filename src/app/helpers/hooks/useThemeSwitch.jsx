@@ -1,29 +1,26 @@
-import React from "react";
-import { useContext } from "react";
-import { AppContext } from "../../shared/context/AppContext";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  SET_THEME_DARK,
+  SET_THEME_LIGHT,
+} from "../../redux/actions/actions.types";
 
 const useThemeSwitch = () => {
   /*
    * Returns a function that switches the theme from light to dark and vice-versa, also adds/removes "is-dark"
-   * class from body element. Takes no parameters
+   * class from body element. Takes no arguments
    **/
-  const { cssContext, setCssContext } = useContext(AppContext);
-  const useThemeSwitch = () => {
-    if (cssContext.theme === "light") {
+  const { theme } = useSelector((state) => state.themeData);
+  const dispatch = useDispatch();
+  const themeSwitcher = () => {
+    if (theme === "light") {
       document.body.classList.add("is-dark");
-      setCssContext({
-        ...cssContext,
-        theme: "dark",
-      });
+      dispatch({ type: SET_THEME_DARK });
     } else {
       document.body.classList.remove("is-dark");
-      setCssContext({
-        ...cssContext,
-        theme: "light",
-      });
+      dispatch({ type: SET_THEME_LIGHT });
     }
   };
-  return useThemeSwitch;
+  return themeSwitcher;
 };
 
 export default useThemeSwitch;

@@ -72,7 +72,8 @@ body {
   height: 100%;
   min-height: 100vh;
   width: calc(100% - 80px);
-  padding: 0 0 60px 0;
+  // padding: 0 0 60px 0;
+  padding: 0 0 0 0;
   margin-left: 80px;
   background: $background-grey;
   background: #f2f2f2;
@@ -95,7 +96,7 @@ body {
     &.is-pushed-block {
       margin-left: 280px;
       width: calc(100% - 280px);
-  
+
       .is-stuck {
         margin-left: 280px;
         width: calc(100% - 280px);

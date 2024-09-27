@@ -1,0 +1,23 @@
+.leads-overview-wrapper {
+  .status-label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 5px;
+    color: #ffffff;
+    border-radius: 4px;
+    width: 62px;
+    height: 28px;
+  }
+  .lead-activity {
+    display: flex;
+
+    align-items: center;
+    gap: 10px;
+  }
+  .lead-source {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+}

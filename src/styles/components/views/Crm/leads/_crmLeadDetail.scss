@@ -1,0 +1,60 @@
+.crm-lead-details-wrapper {
+  .left-card {
+    width: 370px;
+  }
+  .right-card {
+    width: 760px;
+    .list-container__sub-header {
+      display: none;
+    }
+  }
+  .lead-basic-info-card {
+    width: 352px;
+    height: 262px;
+    .lead-image {
+      height: 100px;
+    }
+    .lead-info {
+      display: flex;
+      justify-content: center;
+      flex-direction: column;
+      text-align: center;
+      margin-bottom: 10px;
+      .lead-role {
+        color: #888787;
+      }
+    }
+    .lead-button-container {
+      display: flex;
+      justify-content: center;
+    }
+  }
+  .lead-details-card {
+    width: 352px;
+    height: 262px;
+    .title {
+      color: #00a353;
+    }
+    .lead-details {
+      display: grid;
+      grid-template-columns: 50% 50%;
+      .lead-details-container {
+        margin-bottom: 15px;
+      }
+    }
+  }
+  .lead-additional-details-card {
+    width: 352px;
+    height: 199px;
+    .title {
+      color: #00a353;
+    }
+    .lead-additional-details-container {
+      display: flex;
+      justify-content: space-between;
+      .additional-info-heading {
+        color: #888787;
+      }
+    }
+  }
+}

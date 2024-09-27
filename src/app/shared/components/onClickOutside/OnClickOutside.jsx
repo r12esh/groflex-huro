@@ -1,6 +1,11 @@
 import { useEffect, useRef } from "react";
 
-export default function OnClickOutside({ onClickOutside, children }) {
+export default function OnClickOutside({
+  onClickOutside,
+  children,
+  className,
+  style,
+}) {
   const ref = useRef(null);
 
   useEffect(() => {
@@ -16,7 +21,7 @@ export default function OnClickOutside({ onClickOutside, children }) {
   }, [onClickOutside]);
 
   return (
-    <div ref={ref} className="info-box">
+    <div ref={ref} style={style} className={className}>
       {children}
     </div>
   );

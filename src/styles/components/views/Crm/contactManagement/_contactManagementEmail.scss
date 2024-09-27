@@ -1,0 +1,47 @@
+.contact-management-email-wrapper {
+  height: 592px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  .email-accordian-container {
+    border-bottom: 2px solid #ddd;
+    .collapse {
+      margin-bottom: 0px;
+      border: 0px;
+      .collapse-header {
+        .accordian-header-left-container {
+          display: flex;
+          gap: 8px;
+          align-items: center;
+        }
+        .accordian-header-middle-container {
+          display: flex;
+          justify-content: center;
+          .email-status-sent {
+            color: #888787;
+          }
+          .email-status-received {
+            color: #0071ca;
+          }
+        }
+        .accordian-header-right-container {
+          .accordian-header-right {
+            color: #888787;
+            font-size: 14px;
+            font-weight: 400;
+          }
+        }
+      }
+    }
+  }
+}
+.contact-management-email-wrapper::-webkit-scrollbar {
+  width: 8px;
+}
+.contact-management-email-wrapper::-webkit-scrollbar-thumb {
+  background: #00a353;
+  border-radius: 10px;
+}
+.contact-management-email-wrapper::-webkit-scrollbar-track {
+  background: #ddd;
+  border-radius: 10px;
+}

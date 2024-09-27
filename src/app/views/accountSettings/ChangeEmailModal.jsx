@@ -3,15 +3,20 @@ import { Input } from "../../shared/components/input/Input";
 import Modal from "../../shared/components/modal/Modal";
 import { FeatherIcon } from "../../shared/featherIcon/FeatherIcon";
 
-const ChangeEmailModal = ({ isActive = false, setIsActive }) => {
-  const [newEmail, setNewEmail] = useState("");
-  const [currentPassword, setCurrentPassword] = useState("");
+const ChangeEmailModal = ({
+  isActive = false,
+  setIsActive,
+  setProfileInfo,
+  profileInfo,
+}) => {
+  // const [newEmail, setNewEmail] = useState("");
+  // const [currentPassword, setCurrentPassword] = useState("");
 
   const handleEmailChange = (event) => {
-    setNewEmail(event.target.value);
+    setProfileInfo({ ...profileInfo, newEmail: event.target.value });
   };
   const handlePasswordChange = (event) => {
-    setCurrentPassword(event.target.value);
+    setProfileInfo({ ...profileInfo, currentPassword: event.target.value });
   };
 
   const handleSubmit = (event) => {
@@ -33,14 +38,18 @@ const ChangeEmailModal = ({ isActive = false, setIsActive }) => {
         <div className="columns">
           <div className="field column is-9">
             <label>New Email Address</label>
-            <Input value={newEmail} type="email" onChange={handleEmailChange} />
+            <Input
+              value={profileInfo.newEmail}
+              type="email"
+              onChange={handleEmailChange}
+            />
           </div>
         </div>
         <div className="columns">
           <div className="field column is-9">
             <label>Current Password</label>
             <Input
-              value={currentPassword}
+              value={profileInfo.currentPassword}
               type="password"
               onChange={handlePasswordChange}
             />

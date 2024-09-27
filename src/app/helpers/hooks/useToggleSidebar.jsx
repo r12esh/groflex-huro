@@ -1,18 +1,23 @@
-import React, { useContext } from "react";
-import { AppContext } from "../../shared/context/AppContext";
+import {
+  SET_SIDEBAR_PANEL_ACTIVE,
+  SET_SIDEBAR_PANEL_INACTIVE,
+} from "../../redux/actions/actions.types";
+import { useDispatch, useSelector } from "react-redux";
 
 const useToggleSidebar = () => {
   /*
-   * Returns a function that toggles the sidebar, takes no parameters
+   * Returns a function that toggles the sidebar, takes no arguments
    **/
-  const { cssContext, setCssContext } = useContext(AppContext);
-  const useToggleSidebar = () => {
-    setCssContext({
-      ...cssContext,
-      isPushedFull: !cssContext?.isPushedFull,
-    });
+  const dispatch = useDispatch();
+  const { sidebarIsActive } = useSelector((state) => state.themeData);
+  const toggleSideBar = () => {
+    if (sidebarIsActive) {
+      dispatch({ type: SET_SIDEBAR_PANEL_INACTIVE });
+    } else {
+      dispatch({ type: SET_SIDEBAR_PANEL_ACTIVE });
+    }
   };
-  return useToggleSidebar;
+  return toggleSideBar;
 };
 
 export default useToggleSidebar;

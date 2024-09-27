@@ -1,20 +1,36 @@
-import React, { useContext, useState } from "react";
-import station from "../../../assets/img/illustrations/login/station.svg";
-import useThemeSwitch from "../../helpers/hooks/useThemeSwitch";
-import { AppContext } from "../../shared/context/AppContext";
-import lightLogo from "../../../assets/img/logos/logo/logo.svg";
-import darkLogo from "../../../assets/img/logos/logo/logo-light.svg";
-import { useNavigate } from "react-router-dom";
-import { FeatherIcon } from "../../shared/featherIcon/FeatherIcon";
-// import invoiz from "../../services/invoiz.service";
+import React, { useEffect, useState } from "react";
+import googleIcon from "../../../assets/groflex/logos/google.png";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import config from "../../../../config";
+import groflexService from "../../services/groflex.service";
+import * as actionTypes from "../../redux/actions/actions.types";
+import webStorageKeyEnum from "../../enums/web-storage-key.enum";
+import webstorageService from "../../services/webstorage.service";
+import { AdvancedCard } from "../../shared/components/cards/AdvancedCard";
+import { Input } from "../../shared/components/input/Input";
+import { Button } from "../../shared/components/button/Button";
+import { InputAddons } from "../../shared/components/inputAddons/InputAddons";
+import { Checkbox } from "../../shared/components/checkbox/Checkbox";
+import FirstColumn from "./FirstColumn";
 
 const Login = () => {
-  const { cssContext } = useContext(AppContext);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [emailExistsFlag, setEmailExistsFlag] = useState(null);
   const [rememberMe, setRememberMe] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const themeSwitch = useThemeSwitch();
+
+  const [formErrors, setFormErrors] = useState({
+    emailError: "",
+    passwordError: "",
+  });
+  useEffect(() => {
+    if (config.checkLoginTokenIsValid()) {
+      navigate("/");
+    }
+  }, []);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value.trim());
@@ -25,46 +41,106 @@ const Login = () => {
   };
 
   const handleLogin = () => {
-    // const { resources } = this.props;
+    setFormErrors({ ...formErrors, emailError: "", passwordError: "" });
 
-    // if (email.length === 0 || password.length === 0) {
-    //   this.setState({
-    //     emailError: email.length === 0 ? resources.requiredFieldValidation : "",
-    //     passwordError:
-    //       password.length === 0 ? resources.requiredFieldValidation : "",
-    //   });
-    // } else if (!config.emailCheck.test(email)) {
-    //   this.setState({
-    //     emailError: resources.invalidEmailError,
-    //   });
-    // } else {
-    //   const loginUser = (response) => {
-    //     invoiz.user.userEmail = email;
-    //     return invoiz.user.login(response).then((redirectTo) => {
-    //       invoiz.router.navigate(redirectTo);
-    //     });
-    //   };
+    // Email is empty or not
+    if (!email) {
+      setFormErrors({ ...formErrors, emailError: "Please type email address" });
+      return;
+    }
 
-    //   this.setState({ isLogginIn: true }, () => {
-    //     invoiz
-    //       .request(config.account.endpoints.login, {
-    //         method: "POST",
-    //         data: {
-    //           email,
-    //           password,
-    //         },
-    //       })
-    //       .then(loginUser)
-    //       .catch(this.handleSubmitFailure);
-    //   });
-    // }
-    navigate("/");
+    // Email is valid or not
+    if (!config.regex.emailCheck.test(email)) {
+      setFormErrors({
+        ...formErrors,
+        emailError: "Please type a valid email address",
+      });
+      return;
+    }
+
+    // Check email exists or not
+    if (emailExistsFlag === null) {
+      groflexService.checkEmailExist(email).then((res) => {
+        if (
+          res.meta.email !== undefined &&
+          res.meta.email[0].code === "NOT_FOUND"
+        ) {
+          console.log(res, "Email not exists!");
+          webstorageService.setItem(
+            webStorageKeyEnum.REGISTRATION_EMAIL,
+            email
+          );
+          setEmailExistsFlag(false);
+          navigate("/signup");
+          return;
+        }
+        // console.log("Email exists!");
+        setEmailExistsFlag(true);
+      });
+      return;
+    }
+
+    // If Email exists then try login
+    if (emailExistsFlag) {
+      groflexService.login(email, password).then((res) => {
+        if (res.meta.email) {
+          // setFormErrors({ ...formErrors, emailError: "Email not found" });
+          navigate("/signup");
+          return;
+        } else if (res.meta.password) {
+          setFormErrors({ ...formErrors, passwordError: "Password is wrong" });
+          return;
+        }
+        console.log(res, "response after login");
+        // Set Token, and login time in localstorage
+        webstorageService.setItem(
+          webStorageKeyEnum.LOGIN_TOKEN_KEY,
+          res.data.token
+        );
+        webstorageService.setItem(
+          webStorageKeyEnum.LOGIN_TOKEN_START_TIME,
+          new Date().getTime()
+        );
+
+        groflexService
+          .request(config.resourceUrls.tenant, {
+            auth: true,
+          })
+          .then((res) => {
+            dispatch({
+              type: actionTypes.SET_TENANT_DATA,
+              payload: res.body.data,
+            });
+          })
+          .then(() => {
+            groflexService
+              .request(config.resourceUrls.user, {
+                auth: true,
+              })
+              .then((res) => {
+                dispatch({
+                  type: actionTypes.SET_USER_DATA,
+                  payload: res.body.data,
+                });
+              });
+          })
+          .then(() => {
+            groflexService
+              .request(config.resourceUrls.accountSettings, {
+                auth: true,
+              })
+              .then((res) => {
+                console.log(res.body.data);
+                dispatch({
+                  type: actionTypes.SET_ACCOUNTINFO_DATA,
+                  payload: res.body.data,
+                });
+                navigate("/");
+              });
+          });
+      });
+    }
   };
-
-  // Class dependent stuff
-  const logo = cssContext.theme === "light" ? lightLogo : darkLogo;
-  const logoClassnames =
-    cssContext.theme === "light" ? "light-image" : "dark-image";
 
   // console.log(email, password);
   return (
@@ -73,244 +149,167 @@ const Login = () => {
         <div className="underlay h-hidden-mobile h-hidden-tablet-p"></div>
 
         <div className="columns is-gapless is-vcentered">
-          <div className="column is-relative is-8 h-hidden-mobile h-hidden-tablet-p">
-            <div className="hero is-fullheight is-image">
-              <div className="hero-body">
-                <div className="container">
-                  <div className="columns">
-                    <div className="column">
-                      <img className="hero-image" src={station} alt="" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="column is-4 is-relative">
-            <a className="top-logo" href="/">
-              <img src={logo} alt="logo" className={logoClassnames} />
-            </a>
-            <label className="dark-mode ml-auto">
-              <input onClick={themeSwitch} type="checkbox" defaultChecked />
-              <span></span>
-            </label>
-            <div className="is-form">
-              <div className="hero-body">
-                <div className="form-text">
-                  <h2>Sign In</h2>
-                  <p>Welcome back to your account.</p>
-                </div>
-                <div className="form-text is-hidden">
-                  <h2>Recover Account</h2>
-                  <p>Reset your account password.</p>
-                </div>
-                <form
-                  onSubmit={handleLogin}
-                  id="login-form"
-                  className="login-wrapper"
-                  action="/"
-                >
-                  <div className="control has-validation">
-                    <input
-                      value={email}
-                      onChange={handleEmailChange}
-                      type="email"
-                      className="input"
-                      placeholder=""
-                    />
-                    <small className="error-text">
-                      This is a required field
-                    </small>
-                    <div className="auth-label">Email Address</div>
-                    <div className="auth-icon">
-                      <FeatherIcon name={"Mail"} />
-                    </div>
-                    <div className="validation-icon is-success">
-                      <div className="icon-wrapper">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-check"
-                        >
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="validation-icon is-error">
-                      <div className="icon-wrapper">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-x"
-                        >
-                          <line x1="18" y1="6" x2="6" y2="18"></line>
-                          <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="control has-validation">
-                    <input
-                      onChange={handlePasswordChange}
-                      type="password"
-                      className="input"
-                    />
-                    <div className="auth-label">Password</div>
-                    <div className="auth-icon">
-                      <FeatherIcon name={"Lock"} />
-                    </div>
-                  </div>
+          {/* First column */}
+          <FirstColumn />
 
-                  <div className="control is-flex">
-                    <label className="remember-toggle">
-                      <input
-                        value={rememberMe}
-                        type="checkbox"
-                        onChange={() => {
-                          setRememberMe(!setRememberMe);
+          {/* Second column */}
+          <div className="column is-5 is-relative">
+            <div className="is-form">
+              <AdvancedCard
+                type={"r-card"}
+                footer={emailExistsFlag ? false : true}
+                footerContentCenter={
+                  emailExistsFlag ? null : (
+                    <div style={{ margin: "10px 50px", textAlign: "center" }}>
+                      <div>By signing up, you agree to our</div>
+                      <Link to={"/login"} className="text-primary title is-6">
+                        Terms & Privacy
+                      </Link>
+                    </div>
+                  )
+                }
+              >
+                <h2
+                  style={{ textAlign: "center", margin: "20px 0" }}
+                  className="title is-4 is-bold"
+                >
+                  {emailExistsFlag ? "Welcome back" : "Welcome to Groflex"}
+                </h2>
+                <div style={{ margin: "20px 0" }} className="field">
+                  <form
+                    id="login-form"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleLogin();
+                    }}
+                  >
+                    <label>
+                      <p style={{ fontWeight: "500" }}>Email</p>
+                    </label>
+                    <Input
+                      helpText={formErrors.emailError}
+                      hasError={formErrors.emailError}
+                      hasValidation={true}
+                      name="email"
+                      onChange={handleEmailChange}
+                      placeholder={"Enter email"}
+                      type={"email"}
+                      value={email}
+                    />
+                    {emailExistsFlag ? (
+                      <>
+                        <label>
+                          <p style={{ fontWeight: "500" }}>Password</p>
+                        </label>
+                        <InputAddons
+                          hasValidation
+                          hasError={formErrors.passwordError}
+                          helpText={formErrors.passwordError}
+                          hasShowPassword
+                          name="password"
+                          onChange={handlePasswordChange}
+                          placeholder={"Enter password"}
+                          type="password"
+                          value={password}
+                        />
+                      </>
+                    ) : null}
+                  </form>
+                </div>
+                {emailExistsFlag ? (
+                  <div
+                    style={{
+                      margin: "20px 0",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                    className="field"
+                  >
+                    <Checkbox
+                      isOutlined
+                      isSuccess
+                      onChange={() => {
+                        setRememberMe(!rememberMe);
+                      }}
+                      checked={rememberMe}
+                      value={rememberMe}
+                      label={"Remember me"}
+                      labelStyle={{ padding: "0" }}
+                    />
+
+                    <h2
+                      style={{ cursor: "pointer", color: "#00A353" }}
+                      className="title is-6"
+                    >
+                      Forgot Password?
+                    </h2>
+                  </div>
+                ) : null}
+
+                <Button
+                  isDisabled={!email}
+                  isBold
+                  className={"mt-20 mb-20"}
+                  isFullWidth
+                  isSuccess={email}
+                  onClick={handleLogin}
+                >
+                  {emailExistsFlag ? "Login" : "Login / Register"}
+                </Button>
+
+                {emailExistsFlag ? null : (
+                  <>
+                    <div
+                      className="divider_with_message"
+                      style={{ display: "flex", alignItems: "center" }}
+                    >
+                      <div
+                        style={{
+                          backgroundColor: "#00A353",
+                          height: "1px",
+                          width: "100%",
                         }}
                       />
-                      <span className="toggler">
-                        <span className="active">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="feather feather-check"
-                          >
-                            <polyline points="20 6 9 17 4 12"></polyline>
-                          </svg>
-                        </span>
-                        <span className="inactive">
-                          <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            width="24"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            className="feather feather-circle"
-                          >
-                            <circle cx="12" cy="12" r="10"></circle>
-                          </svg>
-                        </span>
-                      </span>
-                    </label>
-                    <div className="remember-me">Remember Me</div>
-                    <a id="forgot-link">Forgot Password?</a>
-                  </div>
-                  <div className="button-wrap has-help">
-                    <button
-                      onClick={handleLogin}
-                      id="login-submit"
-                      type="button"
-                      className="button h-button is-big is-rounded is-primary is-bold is-raised"
-                    >
-                      Login Now
-                    </button>
-                    <span>
-                      Or <a href="/signup">Create</a> an account.
-                    </span>
-                  </div>
-                </form>
-
-                <form
-                  onSubmit={handleLogin}
-                  id="recover-form"
-                  className="login-wrapper is-hidden"
-                >
-                  <p className="recover-text">
-                    Enter your email and click on the confirm button to reset
-                    your password. We'll send you an email detailing the steps
-                    to complete the procedure.
-                  </p>
-                  <div className="control has-validation">
-                    <input type="text" className="input" />
-                    <small className="error-text">
-                      This is a required field
-                    </small>
-                    <div className="auth-label">Email Address</div>
-                    <div className="auth-icon">
-                      <i className="lnil lnil-envelope"></i>
+                      <div style={{ margin: "0 23px" }}>Or</div>
+                      <div
+                        style={{
+                          backgroundColor: "#00A353",
+                          height: "1px",
+                          width: "100%",
+                        }}
+                      />
                     </div>
-                    <div className="validation-icon is-success">
-                      <div className="icon-wrapper">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-check"
-                        >
-                          <polyline points="20 6 9 17 4 12"></polyline>
-                        </svg>
-                      </div>
-                    </div>
-                    <div className="validation-icon is-error">
-                      <div className="icon-wrapper">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          width="24"
-                          height="24"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth="2"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="feather feather-x"
-                        >
-                          <line x1="18" y1="6" x2="6" y2="18"></line>
-                          <line x1="6" y1="6" x2="18" y2="18"></line>
-                        </svg>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="button-wrap">
-                    <button
-                      id="cancel-recover"
-                      type="button"
-                      className="button h-button is-white is-big is-rounded is-lower"
+                    <Button
+                      isBold
+                      style={{
+                        margin: "20px 0",
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                      icon={
+                        <img
+                          width={20}
+                          height={20}
+                          style={{ margin: "0 10px 0 0" }}
+                          src={googleIcon}
+                          alt="loginwithgoogle"
+                        />
+                      }
+                      isFullWidth
+                      isOutlined
+                      isSuccess
                     >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      className="button h-button is-solid is-big is-rounded is-lower is-raised is-colored"
-                    >
-                      Confirm
-                    </button>
-                  </div>
-                </form>
-              </div>
+                      Continue with Google
+                    </Button>
+                  </>
+                )}
+                <div style={{ textAlign: "center" }}>
+                  Don't have an account?{" "}
+                  <Link to={"/signup"} className="text-primary title is-6">
+                    Sign up
+                  </Link>
+                </div>
+              </AdvancedCard>
             </div>
           </div>
         </div>

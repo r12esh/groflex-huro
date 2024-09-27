@@ -1,0 +1,60 @@
+.contact-management-details-wrapper {
+  .left-content {
+    width: 335px;
+    height: 776px;
+    .contact-image {
+      height: 164px;
+    }
+    .contact-basic-info-container {
+      .s-card-advanced {
+        height: 810px;
+        overflow-y: auto;
+        overflow-x: hidden;
+        .utility-icons-container {
+          display: flex;
+          justify-content: center;
+          gap: 26px;
+          .utility-icons {
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            gap: 8px;
+            .utilit-icon-label {
+              color: #888787;
+            }
+          }
+        }
+      }
+      .s-card-advanced::-webkit-scrollbar {
+        width: 4px;
+        height: 48px;
+      }
+      .s-card-advanced::-webkit-scrollbar-thumb {
+        background: #00a353;
+        // background: #ecfcf4;
+        border-radius: 10px;
+      }
+      .s-card-advanced::-webkit-scrollbar-track {
+        background: #ddd;
+        border-radius: 10px;
+      }
+      .form-divider {
+        border-top: 1px solid #c6c6c6;
+        margin-left: -20px;
+        width: 300px;
+        margin-bottom: 15px;
+      }
+    }
+    .contact-management-details-contact-list {
+      .contact-container {
+        margin-bottom: 16px;
+      }
+    }
+  }
+  .right-content {
+    width: 760px;
+    .list-container__sub-header {
+      display: none;
+    }
+  }
+}

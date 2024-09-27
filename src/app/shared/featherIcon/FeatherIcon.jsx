@@ -6,6 +6,7 @@ export function FeatherIcon({
   style,
   onClick,
   name,
+  primaryColor,
   color = "grey",
   size = 20,
   strokeWidth = 2,
@@ -16,7 +17,7 @@ export function FeatherIcon({
     <IconComponent
       style={style}
       onClick={onClick}
-      color={color}
+      color={primaryColor ? "#00a353" : color}
       size={size}
       strokeWidth={strokeWidth}
       {...rest}

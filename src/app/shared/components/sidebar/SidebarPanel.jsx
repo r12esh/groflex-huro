@@ -1,12 +1,37 @@
-import React, { useContext, useState } from "react";
-import { Link, NavLink } from "react-router-dom";
-import { FeatherIcon } from "../../featherIcon/FeatherIcon";
-import { AppContext } from "../../context/AppContext";
+import React from "react";
+import { NavLink } from "react-router-dom";
+import { useSelector } from "react-redux";
+import config from "../../../../../config";
 
-const SidebarPanel = ({ heading, panelLinks }) => {
-  const { cssContext } = useContext(AppContext);
+const SidebarPanel = () => {
+  const { sidebarIsActive } = useSelector((state) => state.themeData);
+
+  const SubmoduleNavlinks = () => {
+    if (sidebarIsActive) {
+      return (
+        <ul>
+          {currentModule?.links.map((link, id) => (
+            <li key={id}>
+              <NavLink
+                style={({ isActive }) => {
+                  if (isActive) {
+                    return { color: "#00a353" };
+                  }
+                }}
+                to={link.route}
+              >
+                {link.label}
+              </NavLink>
+            </li>
+          ))}
+        </ul>
+      );
+    }
+  };
+
+  const currentModule = config.getCurrentModule();
   const sidebarPanelClassNames = `sidebar-panel is-generic ${
-    cssContext?.isPushedFull ? "is-active" : ""
+    sidebarIsActive && currentModule?.heading ? "is-active" : ""
   }`;
 
   return (
@@ -16,10 +41,11 @@ const SidebarPanel = ({ heading, panelLinks }) => {
           style={{ marginRight: "0" }}
           className="dropdown project-dropdown dropdown-trigger is-spaced"
         >
+          {/* check huro docs */}
           {/* <span className="status-indicator"></span> */}
         </div>
         <h3 style={{ color: "#272D30", fontWeight: "500" }} className="no-mb">
-          {heading}
+          {currentModule?.heading}
         </h3>
       </div>
 
@@ -33,20 +59,7 @@ const SidebarPanel = ({ heading, panelLinks }) => {
             <div className="simplebar-offset">
               <div className="simplebar-content-wrapper">
                 <div className="simplebar-content">
-                  <ul>
-                    <li>
-                      <NavLink
-                        style={({ isActive }) => {
-                          if (isActive) {
-                            return { color: "#00a353" };
-                          }
-                        }}
-                        to="/dashboard"
-                      >
-                        Dashboard
-                      </NavLink>
-                    </li>
-                  </ul>
+                  <SubmoduleNavlinks />
                 </div>
               </div>
             </div>

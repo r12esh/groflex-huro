@@ -22,9 +22,9 @@
   transition: border-radius 0.3s;
   border-right: 1px solid #c6c6c6;
 
-  &.is-bordered {
-    border-right: 1px solid $fade-grey !important;
-  }
+  // &.is-bordered {
+  //   border-right: 1px solid $fade-grey !important;
+  // }
 
   &.is-open {
     box-shadow: 2px 0px 2px 0px rgba(0, 0, 0, 0.02);
@@ -364,7 +364,7 @@
       .profile-dropdown {
         .dropdown-menu {
           bottom: 0;
-          left: 145%;
+          left: 134%;
 
           .dropdown-content {
             padding-top: 0;
@@ -632,6 +632,24 @@ body {
           }
         }
       }
+    }
+  }
+}
+
+//redesign sidebar scrollbar
+.main-sidebar {
+  .sidebar-inner {
+    .icon-menu::-webkit-scrollbar {
+      width: 5px;
+      height: 48px;
+    }
+    .icon-menu::-webkit-scrollbar-thumb {
+      background: #888;
+      border-radius: 10px;
+    }
+    .icon-menu::-webkit-scrollbar-track {
+      background: #ddd;
+      border-radius: 10px;
     }
   }
 }

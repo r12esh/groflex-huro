@@ -1,0 +1,29 @@
+.collapse {
+  .collapse-header {
+    .accordian-header-left-container {
+      min-width: 280.4px;
+    }
+    .accordian-header-middle-container {
+      min-width: 198.4px;
+    }
+    .accordian-header-right-container {
+      min-width: 198.4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  }
+  .accordianOpen {
+    display: block;
+    padding: 0 20px 20px;
+    color: #a2a5b9;
+    font-family: roboto, sans-serif;
+  }
+
+  .accordianClose {
+    display: none;
+    padding: 0 20px 20px;
+    color: #a2a5b9;
+    font-family: roboto, sans-serif;
+  }
+}

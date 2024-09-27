@@ -1,189 +1,296 @@
-import React, { useState } from "react";
-import bankingImgLight from "../../../assets/img/illustrations/apps/huro-banking-light.png";
-import bankingImgDark from "../../../assets/img/illustrations/apps/huro-banking-dark.png";
-import logoLight from "../../../assets/img/logos/logo/logo.svg";
-import logoDark from "../../../assets/img/logos/logo/logo-light.svg";
+import React, { useEffect, useState } from "react";
+import googleIcon from "../../../assets/groflex/logos/google.png";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import config from "../../../../config";
+import groflexService from "../../services/groflex.service";
+import * as actionTypes from "../../redux/actions/actions.types";
+import store from "../../redux/store";
+import webStorageKeyEnum from "../../enums/web-storage-key.enum";
+import webstorageService from "../../services/webstorage.service";
+import { AdvancedCard } from "../../shared/components/cards/AdvancedCard";
 import { Input } from "../../shared/components/input/Input";
 import { Button } from "../../shared/components/button/Button";
-import { Switch } from "../../shared/components/switch/Switch";
-import useThemeSwitch from "../../helpers/hooks/useThemeSwitch";
+import { InputAddons } from "../../shared/components/inputAddons/InputAddons";
+import FontAwesomeIcon from "../../shared/fontAwesomeIcon/FontAwesomeIcon";
+import FirstColumn from "./FirstColumn";
 
-export const SignUp = () => {
-  const themeSwitch = useThemeSwitch();
+const stepWisePage = {
+  code: "/email-verification",
+  mobile: "/mobile-verification",
+  mobileOtp: "/mobile-verification",
+};
+
+const Signup = () => {
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
-  const [receivePromotionalOffers, setReceivePromotionalOffers] =
-    useState(false);
+  const [passwordValidations, setPasswordValidations] = useState({
+    passwordLengthValid: false,
+    passwordHasAlphabets: false,
+    passwordHasSpecialOrNumber: false,
+    allValid: false,
+  });
+  const [formErrors, setFormErrors] = useState({
+    emailError: "",
+    passwordError: "",
+  });
+
+  useEffect(() => {
+    if (config.checkLoginTokenIsValid()) {
+      navigate("/");
+      return;
+    }
+    const regEmail = webstorageService.getItem(
+      webStorageKeyEnum.REGISTRATION_EMAIL
+    );
+    const user = webstorageService.getItem(webStorageKeyEnum.USER);
+
+    if (!regEmail) {
+      return;
+    } else {
+      setEmail(regEmail);
+      // If registration email exists in webstorage
+      if (user?.registrationStep) {
+        // if registration email exists AND registration step is SET in websotrage
+        navigate(stepWisePage[user.registrationStep]);
+      }
+    }
+  }, []);
 
   const handleEmailChange = (event) => {
     setEmail(event.target.value.trim());
   };
+
   const handlePasswordChange = (event) => {
-    setPassword(event.target.value.trim());
-  };
-  const handleRepeatPasswordChange = (event) => {
-    setRepeatPassword(event.target.value.trim());
+    const inputPassword = event.target.value.trim();
+    const passwordLengthValid = inputPassword.length > 7;
+    const passwordHasAlphabets = /(?=.*[a-z])(?=.*[A-Z])/.test(inputPassword);
+    const passwordHasSpecialOrNumber = /[^a-zA-Z]/.test(inputPassword);
+    const allValid =
+      passwordLengthValid && passwordHasAlphabets && passwordHasSpecialOrNumber;
+
+    setPasswordValidations({
+      ...passwordValidations,
+      passwordLengthValid,
+      passwordHasAlphabets,
+      passwordHasSpecialOrNumber,
+      allValid,
+    });
+
+    setPassword(inputPassword);
   };
 
-  const handleUserNameChange = (event) => {
-    setUsername(event.target.value.trim());
-  };
-  const handleReceivePromotionalOffers = () => {
-    setReceivePromotionalOffers(!receivePromotionalOffers);
-  };
-
+  //Signup
   const handleSignup = () => {
-    navigate("/");
+    if (!passwordValidations.allValid || !email) return;
+
+    setFormErrors({ ...formErrors, emailError: "", passwordError: "" });
+    // Email is empty or not
+    if (!email) {
+      setFormErrors({ ...formErrors, emailError: "Please type email address" });
+      return;
+    }
+
+    // Email is valid or not
+    if (!config.regex.emailCheck.test(email)) {
+      setFormErrors({
+        ...formErrors,
+        emailError: "Please type a valid email address",
+      });
+      return;
+    }
+
+    // Once email regex is valid, Send Email OTP
+    groflexService
+      .getRegistartionToken(email)
+      .then((res) => {
+        if (res?.meta?.email[0]?.code === "EXISTS") {
+          setFormErrors({ emailError: "Email already exists" });
+          return;
+        }
+        webstorageService.setItem(webStorageKeyEnum.REGISTRATION_EMAIL, email);
+        webstorageService.setItem(webStorageKeyEnum.REGISTRATION_PASS, password);
+        webstorageService.setItem(
+          webStorageKeyEnum.REGISTRATION_TOKEN,
+          res.data.token
+        );
+        console.log(res.data, "Token 1st");
+        return res;
+      })
+      .then(() => {
+        groflexService.sendEmailOtp(email, password).then((res) => {
+          webstorageService.setItem(
+            webStorageKeyEnum.REGISTRATION_TOKEN,
+            res.data.token
+          );
+          webstorageService.setItem(webStorageKeyEnum.USER, {
+            registrationStep: "code",
+          });
+          console.log(res.data, "Token 2nd");
+          navigate(stepWisePage["code"]);
+        });
+      });
   };
-  console.log(
-    username,
-    email,
-    password,
-    repeatPassword,
-    receivePromotionalOffers
-  );
+
+  // console.log(email, password);
+  // console.log(passwordValidations, "Password validation");
 
   return (
-    <div className="app-wrapper">
-      <div className="pageloader is-full"></div>
-      <div className="infraloader is-full"></div>
+    <div className="auth-wrapper is-dark">
+      <div className="modern-login">
+        <div className="underlay h-hidden-mobile h-hidden-tablet-p"></div>
 
-      <div className="auth-wrapper">
-        {/* Page Body */}
-        {/* Wrapper */}
-        <div className="auth-wrapper-inner columns is-gapless">
-          {/* Form Section */}
-          <div className="column is-5">
-            <div className="hero is-fullheight is-white">
-              <div className="hero-heading">
-                <label className="dark-mode ml-auto">
-                  <input
-                    type="checkbox"
-                    defaultChecked
-                    onChange={themeSwitch}
-                  />
-                  <span></span>
-                </label>
+        <div className="columns is-gapless is-vcentered">
+          {/* First column */}
+          <FirstColumn />
 
-                <div className="auth-logo">
-                  <a href="/">
-                    <img
-                      className="top-logo light-image"
-                      src={logoLight}
-                      alt="Logo"
+          {/* Second column */}
+          <div className="column is-5 is-relative">
+            <div className="is-form">
+              <AdvancedCard
+                type={"r-card"}
+                footer
+                footerContentCenter={
+                  <div style={{ margin: "10px 50px", textAlign: "center" }}>
+                    <div>By signing up, you agree to our</div>
+                    <Link to={"/signup"} className="text-primary title is-6">
+                      Terms & Privacy
+                    </Link>
+                  </div>
+                }
+              >
+                <h2
+                  style={{ textAlign: "center", margin: "20px 0" }}
+                  className="title is-4 is-bold"
+                >
+                  Create Groflex account
+                </h2>
+                <div style={{ margin: "20px 0" }} className="field">
+                  <form
+                    id="signup-form"
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleSignup();
+                    }}
+                  >
+                    <label>
+                      <p style={{ fontWeight: "500" }}>Email</p>
+                    </label>
+                    <Input
+                      helpText={formErrors.emailError}
+                      hasError={formErrors.emailError}
+                      hasValidation
+                      name="email"
+                      onChange={handleEmailChange}
+                      placeholder={"Enter email"}
+                      type={"email"}
+                      value={email}
                     />
-                    <img
-                      className="top-logo dark-image"
-                      src={logoDark}
-                      alt="Logo"
+
+                    <label>
+                      <p style={{ fontWeight: "500" }}>Create a password</p>
+                    </label>
+                    <InputAddons
+                      hasError={formErrors.passwordError}
+                      helpText={formErrors.passwordError}
+                      hasShowPassword
+                      name="password"
+                      onChange={handlePasswordChange}
+                      placeholder={"Enter password"}
+                      type="password"
+                      value={password}
                     />
-                  </a>
-                </div>
-              </div>
-
-              <div className="hero-body">
-                <div className="container">
-                  <div className="columns">
-                    <div className="column is-12">
-                      <div className="auth-content">
-                        <h2>Join Us Now.</h2>
-                        <p>Start by creating your account</p>
-                        <Link to={"/login"}>I already have an account</Link>
-                      </div>
-
-                      <div className="auth-form-wrapper">
-                        {/* Login Form */}
-                        <form onSubmit={handleSignup}>
-                          <div className="login-form">
-                            <Input
-                              value={username}
-                              onChange={handleUserNameChange}
-                              placeholder={"Username"}
-                              hasIcon
-                              iconType={"user"}
-                            />
-                            <Input
-                              value={email}
-                              onChange={handleEmailChange}
-                              placeholder={"Email Address"}
-                              hasIcon
-                              iconType={"envelope"}
-                            />
-                            <Input
-                              value={password}
-                              onChange={handlePasswordChange}
-                              placeholder={"Password"}
-                              hasIcon
-                              iconType={"lock"}
-                            />
-                            <Input
-                              value={repeatPassword}
-                              onChange={handleRepeatPasswordChange}
-                              placeholder={"Repeat Password"}
-                              hasIcon
-                              iconType={"lock"}
-                            />
-
-                            <div className="setting-item">
-                              <Switch
-                                value={receivePromotionalOffers}
-                                onChange={handleReceivePromotionalOffers}
-                                isPrimary
-                              />
-                              <div className="setting-meta">
-                                <span>Receive promotional offers</span>
-                              </div>
-                            </div>
-
-                            <div className="control login">
-                              <Button
-                                onClick={handleSignup}
-                                isPrimary
-                                isBold
-                                isRaised
-                                isFullWidth
-                              >
-                                Sign Up
-                              </Button>
-                            </div>
-                          </div>
-                        </form>
-                      </div>
+                  </form>
+                  <div className="validaiton-info-container mt-5">
+                    <div className="mt-2">
+                      <FontAwesomeIcon
+                        size={13}
+                        name={"check-circle"}
+                        primaryColor={passwordValidations.passwordLengthValid}
+                      />
+                      <p className="is-inline-block">At least 8 characters</p>
+                    </div>
+                    <div className="mt-2">
+                      <FontAwesomeIcon
+                        size={13}
+                        name={"check-circle"}
+                        primaryColor={passwordValidations.passwordHasAlphabets}
+                      />
+                      <p className="is-inline-block">
+                        At least 1 upper and lower case letter
+                      </p>
+                    </div>
+                    <div className="mt-2">
+                      <FontAwesomeIcon
+                        size={13}
+                        name={"check-circle"}
+                        primaryColor={
+                          passwordValidations.passwordHasSpecialOrNumber
+                        }
+                      />
+                      <p className="is-inline-block">
+                        At least 1 number or special character
+                      </p>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Image Section (hidden on mobile) */}
-          <div className="column login-column is-7 is-hidden-mobile h-hidden-tablet-p hero-banner">
-            <div className="hero login-hero is-fullheight is-app-grey">
-              <div className="hero-body">
-                <div className="columns">
-                  <div className="column is-10 is-offset-1">
-                    <img
-                      className="light-image has-light-shadow has-light-border"
-                      src={bankingImgLight}
-                      alt="Banking Image"
-                    />
-
-                    <img
-                      className="dark-image has-light-shadow"
-                      src={bankingImgDark}
-                      alt="Banking Image"
-                    />
-                  </div>
+                <Button
+                  style={{ margin: "20px 0" }}
+                  isBold
+                  isFullWidth
+                  isLight={!passwordValidations.allValid || !email}
+                  isSuccess={passwordValidations.allValid && email}
+                  onClick={handleSignup}
+                >
+                  Create account
+                </Button>
+                <div style={{ display: "flex", alignItems: "center" }}>
+                  <div
+                    style={{
+                      backgroundColor: "#00A353",
+                      height: "1px",
+                      width: "100%",
+                    }}
+                  />
+                  <div style={{ margin: "0 23px" }}>Or</div>
+                  <div
+                    style={{
+                      backgroundColor: "#00A353",
+                      height: "1px",
+                      width: "100%",
+                    }}
+                  />
                 </div>
-              </div>
-
-              <div className="hero-footer">
-                <p className="has-text-centered"></p>
-              </div>
+                <Button
+                  isBold
+                  style={{
+                    margin: "20px 0",
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                  icon={
+                    <img
+                      width={20}
+                      height={20}
+                      style={{ margin: "0 10px 0 0" }}
+                      src={googleIcon}
+                      alt="signupwithgoogle"
+                    />
+                  }
+                  isFullWidth
+                  isOutlined
+                  isSuccess
+                >
+                  Continue with Google
+                </Button>
+                <div style={{ textAlign: "center" }}>
+                  Already have an account?{" "}
+                  <Link to={"/login"} className="text-primary title is-6">
+                    Log in
+                  </Link>
+                </div>
+              </AdvancedCard>
             </div>
           </div>
         </div>
@@ -191,3 +298,5 @@ export const SignUp = () => {
     </div>
   );
 };
+
+export default Signup;

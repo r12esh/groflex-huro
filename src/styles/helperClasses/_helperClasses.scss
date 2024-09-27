@@ -1,0 +1,139 @@
+//Font classes
+.font-14px {
+  font-size: 14px;
+}
+.font-15px {
+  font-size: 15px;
+}
+.font-16px {
+  font-size: 16px;
+}
+.font-17px {
+  font-size: 17px;
+}
+.font-18px {
+  font-size: 18px;
+}
+.font-19px {
+  font-size: 19px;
+}
+.font-20px {
+  font-size: 20px;
+}
+
+// Color classes
+.color-secondary {
+  color: $font-color-secondary;
+}
+.color-primary {
+  color: $primary;
+}
+.color-warning {
+  color: $warning;
+}
+.color-danger {
+  color: $danger;
+}
+
+//scrollable
+// .scrollable {
+//   overflow-y: scroll;
+//   scrollbar-width: thin;
+//   scrollbar-color: transparent transparent;
+//   transition: scrollbar-color 0.5s ease, margin-right 0.5s ease;
+//   padding-right: 5px;
+
+//   &::-webkit-scrollbar {
+//     width: 5px;
+//   }
+
+//   &::-webkit-scrollbar-thumb {
+//     background-color: lighten($font-color-secondary, 30);
+//     transition: background-color 0.5s ease;
+//     border-radius: 10px;
+//   }
+
+//   // On hover of .scrollable
+//   &:hover {
+//     &::-webkit-scrollbar-thumb {
+//       background-color: lighten($font-color-secondary, 30);
+//     }
+//   }
+
+//   //On hover of scrollbar thumb itself
+//   &::-webkit-scrollbar-thumb:hover {
+//     background-color: $font-color-secondary;
+//     width: 10px !important;
+//   }
+// }
+
+.scrollable {
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    margin-right: -3px;
+    &:hover {
+      width: 10px;
+    }
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 10px;
+    background-color: lighten($font-color-secondary, 30);
+    transition: background-color 0.5s ease, width 0.5s ease;
+    &:hover {
+      background-color: $font-color-secondary;
+    }
+  }
+}
+
+//Marign and padding
+.p-0 {
+  padding: 0;
+}
+.p-5 {
+  padding: 5px;
+}
+.p-10 {
+  padding: 10px;
+}
+.p-15 {
+  padding: 15px;
+}
+.p-20 {
+  padding: 20px;
+}
+.p-25 {
+  padding: 25px;
+}
+.m-0 {
+  margin: 0;
+}
+.m-5 {
+  margin: 5px;
+}
+.m-10 {
+  margin: 10px;
+}
+.m-15 {
+  margin: 15px;
+}
+.m-20 {
+  margin: 20px;
+}
+.m-25 {
+  margin: 25px;
+}
+
+//Flex
+.flex-space-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+.content-flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

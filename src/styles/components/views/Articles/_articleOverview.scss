@@ -1,0 +1,32 @@
+.articleDetailDropdownContainer {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  border-radius: 0 0 4px 4px;
+  background-color: white;
+  width: 135px;
+  border: 1px solid #dddddd;
+  border-width: 0 1px 1px 1px;
+}
+
+.articleDetailropdownItem {
+  color: #888787;
+  color: $light-text;
+  display: flex;
+  justify-content: flext-start;
+  align-items: center;
+  height: 20px;
+  padding: 19px 0 19px 15px;
+  transition: all 0.2s ease-in-out;
+  &:hover {
+    background-color: #f5f5f5;
+    color: $dark-text;
+  }
+}
+
+@media (min-width: 766px) {
+  .prices-card-container,
+  .coming-soon-container {
+    padding-left: 0rem !important;
+  }
+}
